@@ -163,33 +163,6 @@ if (isset($_GET['success'])) {
       color: var(--gray-600);
     }
 
-    .action-buttons {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .btn-edit {
-      background: #3b82f6;
-      color: white;
-      border: none;
-      flex: 1;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .btn-delete {
-      background: #ef4444;
-      color: white;
-      border: none;
-      flex: 1;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    .btn-edit:hover { background: #2563eb; }
-    .btn-delete:hover { background: #dc2626; }
-
     .empty-state {
       text-align: center;
       padding: 4rem 1rem;
@@ -283,6 +256,46 @@ if (isset($_GET['success'])) {
       .toast-container { top: 0.5rem; right: 0.5rem; left: 0.5rem; }
       .toast { min-width: auto; }
     }
+
+    /* ---------- ACTION AREA (IMPROVED) ---------- */
+    .action-area .btn {
+      font-weight: 600;
+      min-height: 44px;
+      border-radius: .75rem;
+      transition: all .2s ease;
+    }
+    .action-area .btn-primary {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+    .action-area .btn-primary:hover,
+    .action-area .btn-primary:focus {
+      background: var(--gold-dark);
+      border-color: var(--gold-dark);
+      box-shadow: 0 0 0 3px rgba(255,215,0,.3);
+    }
+    .action-area .btn-outline-danger {
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+    .action-area .btn-outline-danger:hover,
+    .action-area .btn-outline-danger:focus {
+      background: var(--danger);
+      color: #fff;
+      box-shadow: 0 0 0 3px rgba(239,68,68,.3);
+    }
+
+    /* Modal tweaks */
+    .modal-content {
+      border-radius: 1rem;
+    }
+    .modal-header .modal-title {
+      font-weight: 600;
+    }
+    .modal-footer .btn {
+      min-height: 44px;
+      border-radius: .75rem;
+    }
   </style>
 </head>
 <body>
@@ -345,7 +358,7 @@ if (isset($_GET['success'])) {
         $src = $img ?: $placeholder;
       ?>
         <div class="col">
-          <div data-aos="fade-up" class="car-card">
+          <article data-aos="fade-up" class="car-card">
             <!-- Image -->
             <div class="car-image ratio ratio-4x3">
               <img src="<?= htmlspecialchars($src, ENT_QUOTES) ?>"
@@ -358,21 +371,13 @@ if (isset($_GET['success'])) {
               <h3 class="car-name"><?= htmlspecialchars($row['name']) ?></h3>
 
               <div class="meta-tags">
-                <span class="tag">
-                  <i class="bi bi-person"></i> <?= (int)$row['seats'] ?> Seats
-                </span>
-                <span class="tag">
-                  <i class="bi bi-briefcase"></i> <?= (int)$row['bags'] ?> Bags
-                </span>
+                <span class="tag"><i class="bi bi-person"></i> <?= (int)$row['seats'] ?> Seats</span>
+                <span class="tag"><i class="bi bi-briefcase"></i> <?= (int)$row['bags'] ?> Bags</span>
               </div>
 
               <div class="d-flex justify-content-between text-muted small mb-3">
-                <span class="tag">
-                  <i class="bi bi-gear"></i> <?= htmlspecialchars($row['gear']) ?>
-                </span>
-                <span class="tag">
-                  <i class="bi bi-fuel-pump"></i> <?= htmlspecialchars($row['fuel']) ?>
-                </span>
+                <span class="tag"><i class="bi bi-gear"></i> <?= htmlspecialchars($row['gear']) ?></span>
+                <span class="tag"><i class="bi bi-fuel-pump"></i> <?= htmlspecialchars($row['fuel']) ?></span>
               </div>
 
               <!-- Price -->
@@ -384,19 +389,50 @@ if (isset($_GET['success'])) {
                 </div>
               </div>
 
-              <!-- Actions -->
-              <div class="action-buttons">
-                <a href="edit.php?id=<?= (int)$row['id'] ?>" class="btn btn-edit btn-sm">
-                  <i class="bi bi-pencil"></i> Edit
+              <!-- ==== ACTION AREA ==== -->
+              <div class="action-area mt-3">
+                <!-- Edit – primary -->
+                <a href="edit.php?id=<?= (int)$row['id'] ?>"
+                   class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
+                   aria-label="Edit <?= htmlspecialchars($row['name']) ?>">
+                  <i class="bi bi-pencil-fill"></i> Edit
                 </a>
+
+                <!-- Delete – secondary + modal -->
+                <button type="button"
+                        class="btn btn-outline-danger w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal<?= $row['id'] ?>"
+                        aria-label="Delete <?= htmlspecialchars($row['name']) ?>">
+                  <i class="bi bi-trash-fill"></i> Delete
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- ==== DELETE CONFIRMATION MODAL ==== -->
+        <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+              <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body pt-2">
+                <p class="mb-0">Permanently delete <strong><?= htmlspecialchars($row['name']) ?></strong>?</p>
+              </div>
+              <div class="modal-footer border-0 pt-0">
                 <form action="delete.php" method="POST" class="d-inline w-100">
                   <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
                   <input type="hidden" name="csrf" value="<?= $csrf ?>">
-                  <button type="submit" class="btn btn-delete btn-sm w-100"
-                          onclick="return confirm('Delete this car permanently?')">
-                    <i class="bi bi-trash"></i> Delete
+                  <button type="submit"
+                          class="btn btn-danger w-100"
+                          onclick="this.disabled=true; this.closest('form').submit();">
+                    <i class="bi bi-trash"></i> Yes, Delete
                   </button>
                 </form>
+                <button type="button" class="btn btn-secondary w-100 mt-2" data-bs-dismiss="modal">Cancel</button>
               </div>
             </div>
           </div>
@@ -406,7 +442,9 @@ if (isset($_GET['success'])) {
   </div>
 </div>
 
+<!-- Scripts -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   AOS.init({ once: true, duration: 600, easing: 'ease-out-quart' });
 
