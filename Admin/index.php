@@ -49,37 +49,34 @@ if (isset($_GET['success'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
     :root {
-      --gold: #FFD700;
-      --gold-dark: #e6c200;
-      --gray-50: #f9fafb;
-      --gray-100: #f3f4f6;
-      --gray-200: #e5e7eb;
-      --gray-600: #4b5563;
-      --gray-700: #374151;
-      --gray-900: #111827;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
+        --dark-bg: #36454F;
+        --darker-bg: #2C3A44;
+        --border: #4A5A66;
+        --text: #FFFFFF;
+        --text-muted: #D1D5DB;
+        --gold: #FFD700;
+        --gold-dark: #e6c200;
     }
 
     * { font-family: 'Inter', sans-serif; }
-    body { background: var(--gray-50); color: var(--gray-900); }
+    body { background: var(--dark-bg); color: var(--text); }
 
     .page-header {
-      background: white;
+      background: var(--darker-bg);
       padding: 1.5rem 0;
-      border-bottom: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--border);
       margin-bottom: 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
 
     .car-card {
-      background: white;
+      background: var(--darker-bg)/90;
+      backdrop-filter: blur(12px);
       border-radius: 1rem;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       transition: all 0.25s ease;
-      border: 1px solid var(--gray-200);
+      border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -87,14 +84,14 @@ if (isset($_GET['success'])) {
 
     .car-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 20px 30px rgba(0,0,0,0.12);
+      box-shadow: 0 20px 30px rgba(255,215,0,0.15);
       border-color: var(--gold);
     }
 
     .car-image {
       position: relative;
       overflow: hidden;
-      background: var(--gray-100);
+      background: var(--darker-bg);
     }
 
     .car-image img {
@@ -119,7 +116,7 @@ if (isset($_GET['success'])) {
       font-size: 1.125rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
-      color: var(--gray-900);
+      color: var(--text);
       display: -webkit-box;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
@@ -132,23 +129,24 @@ if (isset($_GET['success'])) {
       gap: 0.5rem;
       margin-bottom: 0.75rem;
       font-size: 0.875rem;
-      color: var(--gray-600);
+      color: var(--text-muted);
     }
 
     .tag {
       display: flex;
       align-items: center;
       gap: 0.25rem;
-      background: var(--gray-100);
+      background: var(--darker-bg);
       padding: 0.25rem 0.5rem;
       border-radius: 0.5rem;
       font-weight: 500;
+      color: var(--text-muted);
     }
 
     .price-section {
       margin-top: auto;
       padding-top: 1rem;
-      border-top: 1px dashed var(--gray-200);
+      border-top: 1px dashed var(--border);
     }
 
     .price-main {
@@ -160,18 +158,18 @@ if (isset($_GET['success'])) {
 
     .price-sub {
       font-size: 0.8rem;
-      color: var(--gray-600);
+      color: var(--text-muted);
     }
 
     .empty-state {
       text-align: center;
       padding: 4rem 1rem;
-      color: var(--gray-600);
+      color: var(--text-muted);
     }
 
     .empty-state i {
       font-size: 3rem;
-      color: var(--gray-300);
+      color: #6b7280;
       margin-bottom: 1rem;
     }
 
@@ -189,9 +187,9 @@ if (isset($_GET['success'])) {
     .toast {
       min-width: 300px;
       max-width: 400px;
-      background: white;
+      background: var(--darker-bg);
       border-radius: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       overflow: hidden;
       border-left: 5px solid;
       animation: slideIn 0.4s ease, fadeOut 0.5s ease 4.5s forwards;
@@ -207,9 +205,9 @@ if (isset($_GET['success'])) {
       to { transform: translateX(120%); opacity: 0; }
     }
 
-    .toast.success { border-left-color: var(--success); }
-    .toast.danger { border-left-color: var(--danger); }
-    .toast.warning { border-left-color: var(--warning); }
+    .toast.success { border-left-color: #10b981; }
+    .toast.danger { border-left-color: #ef4444; }
+    .toast.warning { border-left-color: #f59e0b; }
 
     .toast-header {
       padding: 0.75rem 1rem;
@@ -220,14 +218,14 @@ if (isset($_GET['success'])) {
       font-size: 0.95rem;
     }
 
-    .toast.success .toast-header { color: var(--success); }
-    .toast.danger .toast-header { color: var(--danger); }
-    .toast.warning .toast-header { color: var(--warning); }
+    .toast.success .toast-header { color: #10b981; }
+    .toast.danger .toast-header { color: #ef4444; }
+    .toast.warning .toast-header { color: #f59e0b; }
 
     .toast-body {
       padding: 0 1rem 1rem 1rem;
       font-size: 0.875rem;
-      color: var(--gray-700);
+      color: var(--text-muted);
     }
 
     .toast-close {
@@ -235,7 +233,7 @@ if (isset($_GET['success'])) {
       background: none;
       border: none;
       font-size: 1.2rem;
-      color: var(--gray-500);
+      color: var(--text-muted);
       cursor: pointer;
       padding: 0;
       width: 24px;
@@ -248,8 +246,8 @@ if (isset($_GET['success'])) {
     }
 
     .toast-close:hover {
-      background: var(--gray-100);
-      color: var(--gray-700);
+      background: var(--border);
+      color: var(--text);
     }
 
     @media (max-width: 576px) {
@@ -267,6 +265,7 @@ if (isset($_GET['success'])) {
     .action-area .btn-primary {
       background: var(--gold);
       border-color: var(--gold);
+      color: #000;
     }
     .action-area .btn-primary:hover,
     .action-area .btn-primary:focus {
@@ -275,18 +274,20 @@ if (isset($_GET['success'])) {
       box-shadow: 0 0 0 3px rgba(255,215,0,.3);
     }
     .action-area .btn-outline-danger {
-      color: var(--danger);
-      border-color: var(--danger);
+      color: #ef4444;
+      border-color: #ef4444;
     }
     .action-area .btn-outline-danger:hover,
     .action-area .btn-outline-danger:focus {
-      background: var(--danger);
+      background: #ef4444;
       color: #fff;
       box-shadow: 0 0 0 3px rgba(239,68,68,.3);
     }
 
     /* Modal tweaks */
     .modal-content {
+      background: var(--darker-bg);
+      border: 1px solid var(--border);
       border-radius: 1rem;
     }
     .modal-header .modal-title {
@@ -296,6 +297,109 @@ if (isset($_GET['success'])) {
       min-height: 44px;
       border-radius: .75rem;
     }
+    .modal-body, .modal-header, .modal-footer { color: var(--text); }
+
+    /* DAY MODE TOGGLE */
+    .day-mode-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1000;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #000;
+      border: none;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(255,215,0,.4);
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+    .day-mode-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(255,215,0,.5);
+    }
+    .day-mode-toggle i { transition: transform .3s; }
+    .day-mode-toggle.active i { transform: rotate(180deg); }
+
+    /* LIGHT MODE (DAY) */
+    body.day-mode {
+      --dark-bg: #f8fafc;
+      --darker-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+    body.day-mode .page-header,
+    body.day-mode .car-card,
+    body.day-mode .modal-content,
+    body.day-mode .toast {
+      background: var(--darker-bg);
+      border-color: var(--border);
+    }
+    body.day-mode .car-card:hover {
+      box-shadow: 0 20px 30px rgba(0,0,0,0.08);
+      border-color: var(--gold);
+    }
+    body.day-mode .tag,
+    body.day-mode .car-info {
+      background: transparent;
+    }
+    body.day-mode .price-main { color: var(--gold); }
+    body.day-mode .btn-primary {
+      background: var(--gold);
+      color: #000;
+    }
+    body.day-mode .btn-outline-danger {
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+    body.day-mode .btn-outline-danger:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+    .price-main {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  line-height: 1.2;
+}
+
+.price-main .currency {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.price-main .amount {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.price-main .per-day {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 0.25rem;
+}
+
+/* Day Mode Adjustment */
+body.day-mode .price-main .currency,
+body.day-mode .price-main .amount {
+  color: var(--gold);
+}
+body.day-mode .price-main .per-day {
+  color: var(--text-muted);
+}
   </style>
 </head>
 <body>
@@ -303,11 +407,16 @@ if (isset($_GET['success'])) {
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- DAY MODE TOGGLE -->
+<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
+  <i class="bi bi-sun-fill"></i>
+</button>
+
 <!-- Header -->
 <div class="page-header">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-      <h2 class="h4 mb-0 fw-bold text-gray-900 d-flex align-items-center gap-2">
+      <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
         <i class="bi bi-car-front-fill" style="color: var(--gold);"></i>
         Car Management
       </h2>
@@ -354,7 +463,7 @@ if (isset($_GET['success'])) {
     <?php else: ?>
       <?php foreach ($cars as $row):
         $img = getCarImage($row['image']);
-        $placeholder = 'https://via.placeholder.com/400x300/e5e7eb/9ca3af?text=' . urlencode($row['name']);
+        $placeholder = 'https://via.placeholder.com/400x300/2C3A44/D1D5DB?text=' . urlencode($row['name']);
         $src = $img ?: $placeholder;
       ?>
         <div class="col">
@@ -363,7 +472,7 @@ if (isset($_GET['success'])) {
             <div class="car-image ratio ratio-4x3">
               <img src="<?= htmlspecialchars($src, ENT_QUOTES) ?>"
                    alt="<?= htmlspecialchars($row['name']) ?>"
-                   onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/dddddd/666666?text=No+Image';">
+                   onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/2C3A44/D1D5DB?text=No+Image';">
             </div>
 
             <!-- Info -->
@@ -382,10 +491,13 @@ if (isset($_GET['success'])) {
 
               <!-- Price -->
               <div class="price-section">
-                <div class="price-main">$<?= number_format((float)$row['price_day']) ?><span class="text-muted small">/day</span></div>
-                <div class="price-sub">
-                  Week: <strong>$<?= number_format((float)$row['price_week']) ?></strong> |
-                  Month: <strong>$<?= number_format((float)$row['price_month']) ?></strong>
+<div class="price-main">
+  <span class="currency">MAD</span>
+  <span class="amount"><?= number_format((float)$row['price_day']) ?></span>
+  <span class="per-day">/day</span>
+</div>                <div class="price-sub">
+                  Week: <strong>MAD <?= number_format((float)$row['price_week']) ?></strong> |
+                  Month: <strong>MAD <?= number_format((float)$row['price_month']) ?></strong>
                 </div>
               </div>
 
@@ -414,10 +526,10 @@ if (isset($_GET['success'])) {
         <!-- ==== DELETE CONFIRMATION MODAL ==== -->
         <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
+            <div class="modal-content">
               <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body pt-2">
                 <p class="mb-0">Permanently delete <strong><?= htmlspecialchars($row['name']) ?></strong>?</p>
@@ -448,7 +560,7 @@ if (isset($_GET['success'])) {
 <script>
   AOS.init({ once: true, duration: 600, easing: 'ease-out-quart' });
 
-  // Image loading shimmer
+  // Image loading
   document.addEventListener('DOMContentLoaded', () => {
     const images = document.querySelectorAll('.car-image img');
     images.forEach(img => {
@@ -466,25 +578,20 @@ if (isset($_GET['success'])) {
       <div class="toast-header">
         <i class="bi ${getIcon(<?= json_encode($alert['type']) ?>)}"></i>
         <span>${getTitle(<?= json_encode($alert['type']) ?>)}</span>
-        <button type="button" class="toast-close" onclick="this.parentElement.parentElement.remove()">&times;</button>
+        <button type="button" class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
       </div>
       <div class="toast-body">
         <?= htmlspecialchars($alert['msg']) ?>
       </div>
     `;
     container.appendChild(toast);
-
-    // Auto-remove after 5s
-    setTimeout(() => {
-      if (toast.parentElement) toast.remove();
-    }, 5000);
+    setTimeout(() => toast.remove(), 5000);
 
     function getIcon(type) {
       return type === 'success' ? 'bi-check-circle-fill' :
              type === 'danger' ? 'bi-x-circle-fill' :
              'bi-exclamation-triangle-fill';
     }
-
     function getTitle(type) {
       return type === 'success' ? 'Success' :
              type === 'danger' ? 'Deleted' :
@@ -492,6 +599,27 @@ if (isset($_GET['success'])) {
     }
   })();
   <?php endif; ?>
+
+  // === DAY/NIGHT MODE TOGGLE ===
+  const toggleBtn = document.getElementById('dayModeToggle');
+  const body = document.body;
+  const icon = toggleBtn.querySelector('i');
+
+  // Load saved preference
+  if (localStorage.getItem('dayMode') === 'true') {
+    body.classList.add('day-mode');
+    icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+    toggleBtn.classList.add('active');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('day-mode');
+    const isDay = body.classList.contains('day-mode');
+    icon.classList.toggle('bi-sun-fill', !isDay);
+    icon.classList.toggle('bi-moon-fill', isDay);
+    toggleBtn.classList.toggle('active', isDay);
+    localStorage.setItem('dayMode', isDay);
+  });
 </script>
 </body>
 </html>

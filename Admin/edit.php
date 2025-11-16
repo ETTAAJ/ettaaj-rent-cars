@@ -148,18 +148,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Edit Car</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <style>
-    .current-img { max-width: 150px; border-radius: 8px; }
-    .alert { margin-top: 1rem; }
+    :root {
+        --dark-bg: #36454F;
+        --darker-bg: #2C3A44;
+        --border: #4A5A66;
+        --text: #FFFFFF;
+        --text-muted: #D1D5DB;
+        --gold: #FFD700;
+        --gold-dark: #e6c200;
+    }
+    * { font-family: 'Inter', sans-serif; }
+    body {
+        background: var(--dark-bg);
+        color: var(--text);
+        min-height: 100vh;
+    }
+    .page-header {
+        background: var(--darker-bg);
+        padding: 1.5rem 0;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .container { max-width: 1000px; }
+    .card {
+        background: var(--darker-bg)/90;
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .form-control, .form-select {
+        background: var(--darker-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+    .form-control:focus, .form-select:focus {
+        background: var(--darker-bg);
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.2rem rgba(255,215,0,.25);
+        color: var(--text);
+    }
+    .form-control::placeholder { color: #9CA3AF; }
+    .form-label { color: var(--text-muted); font-weight: 500; }
+    .btn-primary {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #000;
+        font-weight: 600;
+    }
+    .btn-primary:hover {
+        background: var(--gold-dark);
+        border-color: var(--gold-dark);
+    }
+    .btn-secondary {
+        background: #4A5A66;
+        border-color: #4A5A66;
+        color: var(--text);
+    }
+    .btn-secondary:hover {
+        background: #5A6B77;
+        border-color: #5A6B77;
+    }
+    .alert-danger {
+        background: rgba(239,68,68,.15);
+        border: 1px solid #ef4444;
+        color: #fca5a5;
+    }
+    .current-img {
+        max-width: 150px;
+        border-radius: .75rem;
+        border: 1px solid var(--border);
+    }
+    .text-gold { color: var(--gold); }
+    .small-muted { color: var(--text-muted); font-size: .875rem; }
   </style>
 </head>
-<body class="bg-light">
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Edit Car</h2>
-    <a href="index.php" class="btn btn-secondary">Back to List</a>
-  </div>
+<body>
 
+<!-- Header -->
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
+        <i class="bi bi-pencil-square text-gold"></i>
+        Edit Car
+      </h2>
+      <a href="index.php" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Back to List
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5 pb-5">
   <?php if (!empty($errors)): ?>
     <div class="alert alert-danger">
       <ul class="mb-0">
@@ -170,83 +254,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endif; ?>
 
-  <form method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded shadow">
-    <input type="hidden" name="csrf" value="<?= $csrf ?>">
+  <div class="card p-4 p-md-5">
+    <form method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="csrf" value="<?= $csrf ?>">
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="mb-3">
-          <label class="form-label">Car Name *</label>
-          <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($car['name']) ?>" required>
-          <small class="text-muted">Image will be renamed to match this name.</small>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Car Name *</label>
+            <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($car['name']) ?>" required>
+            <small class="small-muted">Image will be renamed to match this name.</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Current Image</label><br>
+            <?php if ($car['image']): ?>
+              <img src="../uploads/<?= htmlspecialchars($car['image']) ?>?v=<?= time() ?>"
+                   alt="Current" class="current-img img-thumbnail mt-2">
+              <p class="small-muted mt-1">File: <strong><?= htmlspecialchars($car['image']) ?></strong></p>
+            <?php else: ?>
+              <p class="small-muted">No image</p>
+            <?php endif; ?>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Replace Image (optional)</label>
+            <input type="file" name="image" class="form-control" accept="image/jpeg,image/png">
+            <small class="small-muted">JPG/PNG only, max 2MB</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Seats *</label>
+            <input type="number" name="seats" class="form-control" value="<?= $car['seats'] ?>" min="1" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Bags *</label>
+            <input type="number" name="bags" class="form-control" value="<?= $car['bags'] ?>" min="0" required>
+          </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Current Image</label><br>
-          <?php if ($car['image']): ?>
-            <img src="../uploads/<?= htmlspecialchars($car['image']) ?>?v=<?= time() ?>"
-                 alt="Current" class="current-img img-thumbnail">
-            <p class="small text-muted mt-1">File: <strong><?= htmlspecialchars($car['image']) ?></strong></p>
-          <?php else: ?>
-            <p class="text-muted">No image</p>
-          <?php endif; ?>
-        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Gear *</label>
+            <select name="gear" class="form-select" required>
+              <option value="Manual"   <?= $car['gear'] == 'Manual' ? 'selected' : '' ?>>Manual</option>
+              <option value="Automatic" <?= $car['gear'] == 'Automatic' ? 'selected' : '' ?>>Automatic</option>
+            </select>
+          </div>
 
-        <div class="mb-3">
-          <label class="form-label">Replace Image (optional)</label>
-          <input type="file" name="image" class="form-control" accept="image/jpeg,image/png">
-          <small class="text-muted">JPG/PNG only, max 2MB</small>
-        </div>
+          <div class="mb-3">
+            <label class="form-label">Fuel *</label>
+            <select name="fuel" class="form-select" required>
+              <option value="Petrol" <?= $car['fuel'] == 'Petrol' ? 'selected' : '' ?>>Petrol</option>
+              <option value="Diesel" <?= $car['fuel'] == 'Diesel' ? 'selected' : '' ?>>Diesel</option>
+            </select>
+          </div>
 
-        <div class="mb-3">
-          <label class="form-label">Seats *</label>
-          <input type="number" name="seats" class="form-control" value="<?= $car['seats'] ?>" min="1" required>
-        </div>
+          <div class="mb-3">
+            <label class="form-label">Price per Day (MAD)*</label>
+            <input type="number" step="0.01" name="price_day" class="form-control" value="<?= $car['price_day'] ?>" required>
+          </div>
 
-        <div class="mb-3">
-          <label class="form-label">Bags *</label>
-          <input type="number" name="bags" class="form-control" value="<?= $car['bags'] ?>" min="0" required>
+          <div class="mb-3">
+            <label class="form-label">Price per Week (MAD)*</label>
+            <input type="number" step="0.01" name="price_week" class="form-control" value="<?= $car['price_week'] ?>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Price per Month (MAD)*</label>
+            <input type="number" step="0.01" name="price_month" class="form-control" value="<?= $car['price_month'] ?>" required>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-6">
-        <div class="mb-3">
-          <label class="form-label">Gear *</label>
-          <select name="gear" class="form-select" required>
-            <option value="Manual"   <?= $car['gear'] == 'Manual' ? 'selected' : '' ?>>Manual</option>
-            <option value="Automatic" <?= $car['gear'] == 'Automatic' ? 'selected' : '' ?>>Automatic</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Fuel *</label>
-          <select name="fuel" class="form-select" required>
-            <option value="Petrol" <?= $car['fuel'] == 'Petrol' ? 'selected' : '' ?>>Petrol</option>
-            <option value="Diesel" <?= $car['fuel'] == 'Diesel' ? 'selected' : '' ?>>Diesel</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Price per Day ($)*</label>
-          <input type="number" step="0.01" name="price_day" class="form-control" value="<?= $car['price_day'] ?>" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Price per Week ($)*</label>
-          <input type="number" step="0.01" name="price_week" class="form-control" value="<?= $car['price_week'] ?>" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Price per Month ($)*</label>
-          <input type="number" step="0.01" name="price_month" class="form-control" value="<?= $car['price_month'] ?>" required>
-        </div>
+      <div class="text-center mt-5">
+        <button type="submit" class="btn btn-primary btn-lg px-5">
+          <i class="bi bi-check-circle"></i> Update Car
+        </button>
       </div>
-    </div>
-
-    <div class="text-center mt-4">
-      <button type="submit" class="btn btn-primary btn-lg px-5">Update Car</button>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
+
 </body>
 </html>
