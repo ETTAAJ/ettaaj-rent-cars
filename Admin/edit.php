@@ -77,12 +77,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (file_exists($oldPath)) @unlink($oldPath);
                 }
 
-                // === NAME IMAGE AFTER CAR ===
                 $baseName = preg_replace('/[^a-zA-Z0-9\s-]/', '', $name);
                 $baseName = trim(preg_replace('/\s+/', ' ', $baseName));
                 $fileName = $baseName . '.' . $ext;
 
-                // Prevent overwrite
                 $counter = 1;
                 $targetPath = __DIR__ . '/../uploads/' . $fileName;
                 while (file_exists($targetPath)) {
@@ -174,8 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     .container { max-width: 1000px; }
     .card {
-        background: var(--darker-bg)/90;
-        backdrop-filter: blur(12px);
+        background: var(--darker-bg);
         border: 1px solid var(--border);
         border-radius: 1rem;
         box-shadow: 0 8px 32px rgba(0,0,0,0.2);
@@ -224,9 +221,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     .text-gold { color: var(--gold); }
     .small-muted { color: var(--text-muted); font-size: .875rem; }
+
+    /* ---------- DAY MODE OVERRIDES ---------- */
+    body.day-mode {
+        --dark-bg: #f8fafc;
+        --darker-bg: #ffffff;
+        --border: #e2e8f0;
+        --text: #1e293b;
+        --text-muted: #64748b;
+    }
+    body.day-mode .page-header,
+    body.day-mode .card {
+        background: var(--darker-bg);
+        border-color: var(--border);
+    }
+    body.day-mode .form-control,
+    body.day-mode .form-select {
+        background: #f8fafc;
+        color: #1e293b;
+    }
+    body.day-mode .form-label { color: #64748b; }
+    body.day-mode .btn-secondary { background: #e2e8f0; color: #1e293b; }
+    body.day-mode .alert-danger { background: rgba(239,68,68,.1); color: #ef4444; }
+
+    /* ---------- TOGGLE BUTTON ---------- */
+    .day-mode-toggle {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--gold);
+        color: #000;
+        border: none;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(255,215,0,.4);
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    .day-mode-toggle:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(255,215,0,.5); }
+    .day-mode-toggle i { transition: transform .3s; }
+    .day-mode-toggle.active i { transform: rotate(180deg); }
   </style>
 </head>
 <body>
+
+<!-- DAY MODE TOGGLE -->
+<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
+    <i class="bi bi-sun-fill"></i>
+</button>
 
 <!-- Header -->
 <div class="page-header">
@@ -337,5 +385,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Day/Night Mode Toggle - same as index.php
+  const toggleBtn = document.getElementById('dayModeToggle');
+  const body = document.body;
+  const icon = toggleBtn.querySelector('i');
+
+  // Load saved preference
+  if (localStorage.getItem('dayMode') === 'true') {
+      body.classList.add('day-mode');
+      icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+      toggleBtn.classList.add('active');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('day-mode');
+      const isDay = body.classList.contains('day-mode');
+
+      if (isDay) {
+          icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+      } else {
+          icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+      }
+      toggleBtn.classList.toggle('active', isDay);
+      localStorage.setItem('dayMode', isDay);
+  });
+</script>
 </body>
 </html>
