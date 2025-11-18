@@ -29,19 +29,26 @@
   $sql .= " ORDER BY $order";
 
   /* -------------------------------------------------
-     2. renderCarCard() – DARK GLASS + GOLD ACCENTS
+     2. renderCarCard() – FIXED IMAGE HANDLING (only change!)
      ------------------------------------------------- */
   function renderCarCard($car, $index = 0): string
   {
-      $baseImg = !empty($car['image'])
-          ? 'uploads/' . basename($car['image'])
-          : 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($car['name']);
-      $cacheBuster = '';
-      $fullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $baseImg;
-      if (file_exists($fullPath)) {
-          $cacheBuster = '?v=' . filemtime($fullPath);
+      // DEFAULT: beautiful placeholder with car name
+      $imgUrl = 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($car['name']);
+
+      // ONLY if there is a real image → try to use it + cache busting
+      if (!empty($car['image']) && is_string($car['image'])) {
+          $filename   = basename($car['image']);                    // safe now
+          $relative   = 'uploads/' . $filename;                     // correct web path
+          $fullPath   = $_SERVER['DOCUMENT_ROOT'] . '/' . $relative;
+
+          if (file_exists($fullPath)) {
+              $imgUrl = $relative . '?v=' . filemtime($fullPath);   // cache busting
+          } else {
+              $imgUrl = $relative; // still try (in case file is there but permission issue)
+          }
       }
-      $imgUrl = $baseImg . $cacheBuster;
+
       $delay = 100 + ($index % 8) * 80;
       ob_start(); ?>
       <div data-aos="fade-up" data-aos-delay="<?= $delay ?>" data-aos-duration="700"
@@ -50,7 +57,7 @@
                   border border-border flex flex-col h-full">
           <!-- Image -->
           <div class="relative w-full pt-[56.25%] bg-card-dark overflow-hidden border-b border-border">
-              <img src="<?= htmlspecialchars($imgUrl) ?>"
+              <img src="<?= htmlspecialchars($imgUrl, ENT_QUOTES) ?>"
                    alt="<?= htmlspecialchars($car['name']) ?> - ETTAAJ RENT CARS"
                    class="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                    onerror="this.onerror=null; this.src='https://via.placeholder.com/600x338/36454F/FFFFFF?text=No+Image';

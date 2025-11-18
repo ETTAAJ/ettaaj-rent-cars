@@ -150,10 +150,33 @@ if (isset($_GET['success'])) {
     }
 
     .price-main {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--gold);
       margin-bottom: 0.25rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      line-height: 1.2;
+    }
+
+    .price-main .currency {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .price-main .amount {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .price-main .per-day {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 0.25rem;
     }
 
     .price-sub {
@@ -255,7 +278,6 @@ if (isset($_GET['success'])) {
       .toast { min-width: auto; }
     }
 
-    /* ---------- ACTION AREA (IMPROVED) ---------- */
     .action-area .btn {
       font-weight: 600;
       min-height: 44px;
@@ -284,122 +306,54 @@ if (isset($_GET['success'])) {
       box-shadow: 0 0 0 3px rgba(239,68,68,.3);
     }
 
-    /* Modal tweaks */
     .modal-content {
       background: var(--darker-bg);
       border: 1px solid var(--border);
       border-radius: 1rem;
     }
-    .modal-header .modal-title {
-      font-weight: 600;
-    }
-    .modal-footer .btn {
-      min-height: 44px;
-      border-radius: .75rem;
-    }
-    .modal-body, .modal-header, .modal-footer { color: var(--text); }
 
-    /* DAY MODE TOGGLE */
     .day-mode-toggle {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
       z-index: 1000;
       width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: var(--gold);
-      color: #000;
-      border: none;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 20px rgba(255,215,0,.4);
-      cursor: pointer;
-      transition: all .3s ease;
+      height:60px;
+      border-radius:50%;
+      background:var(--gold);
+      color:#000;
+      border:none;
+      font-size:1.5rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 8px 20px rgba(255,215,0,.4);
+      cursor:pointer;
+      transition:all .3s ease;
     }
-    .day-mode-toggle:hover {
-      transform: scale(1.1);
-      box-shadow: 0 12px 30px rgba(255,215,0,.5);
-    }
-    .day-mode-toggle i { transition: transform .3s; }
-    .day-mode-toggle.active i { transform: rotate(180deg); }
+    .day-mode-toggle:hover{transform:scale(1.1);box-shadow:0 12px 30px rgba(255,215,0,.5);}
+    .day-mode-toggle i{transition:transform .3s;}
+    .day-mode-toggle.active i{transform:rotate(180deg);}
 
-    /* LIGHT MODE (DAY) */
-    body.day-mode {
-      --dark-bg: #f8fafc;
-      --darker-bg: #ffffff;
-      --border: #e2e8f0;
-      --text: #1e293b;
-      --text-muted: #64748b;
+    body.day-mode{
+      --dark-bg:#f8fafc;--darker-bg:#ffffff;--border:#e2e8f0;--text:#1e293b;--text-muted:#64748b;
     }
     body.day-mode .page-header,
     body.day-mode .car-card,
     body.day-mode .modal-content,
-    body.day-mode .toast {
-      background: var(--darker-bg);
-      border-color: var(--border);
+    body.day-mode .toast{
+      background:var(--darker-bg);border-color:var(--border);
     }
-    body.day-mode .car-card:hover {
-      box-shadow: 0 20px 30px rgba(0,0,0,0.08);
-      border-color: var(--gold);
-    }
+    body.day-mode .car-card:hover{box-shadow:0 20px 30px rgba(0,0,0,0.08);border-color:var(--gold);}
     body.day-mode .tag,
-    body.day-mode .car-info {
-      background: transparent;
-    }
-    body.day-mode .price-main { color: var(--gold); }
-    body.day-mode .btn-primary {
-      background: var(--gold);
-      color: #000;
-    }
-    body.day-mode .btn-outline-danger {
-      color: #ef4444;
-      border-color: #ef4444;
-    }
-    body.day-mode .btn-outline-danger:hover {
-      background: #ef4444;
-      color: #fff;
-    }
-    .price-main {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--gold);
-  margin-bottom: 0.25rem;
-  display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  line-height: 1.2;
-}
-
-.price-main .currency {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--gold);
-}
-
-.price-main .amount {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-}
-
-.price-main .per-day {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  margin-left: 0.25rem;
-}
-
-/* Day Mode Adjustment */
-body.day-mode .price-main .currency,
-body.day-mode .price-main .amount {
-  color: var(--gold);
-}
-body.day-mode .price-main .per-day {
-  color: var(--text-muted);
-}
+    body.day-mode .car-info{background:transparent;}
+    body.day-mode .price-main{color:var(--gold);}
+    body.day-mode .btn-primary{background:var(--gold);color:#000;}
+    body.day-mode .btn-outline-danger{color:#ef4444;border-color:#ef4444;}
+    body.day-mode .btn-outline-danger:hover{background:#ef4444;color:#fff;}
+    body.day-mode .price-main .currency,
+    body.day-mode .price-main .amount{color:var(--gold);}
+    body.day-mode .price-main .per-day{color:var(--text-muted);}
   </style>
 </head>
 <body>
@@ -438,7 +392,8 @@ body.day-mode .price-main .per-day {
 <div class="container pb-5">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     <?php
-    function getCarImage(string $filename): string {
+    // FIXED: Removed strict type hint → now accepts null safely
+    function getCarImage($filename): string {
         if (empty($filename)) return '';
         $safe = basename($filename);
         $path = '../uploads/' . $safe;
@@ -468,14 +423,12 @@ body.day-mode .price-main .per-day {
       ?>
         <div class="col">
           <article data-aos="fade-up" class="car-card">
-            <!-- Image -->
             <div class="car-image ratio ratio-4x3">
               <img src="<?= htmlspecialchars($src, ENT_QUOTES) ?>"
                    alt="<?= htmlspecialchars($row['name']) ?>"
                    onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/2C3A44/D1D5DB?text=No+Image';">
             </div>
 
-            <!-- Info -->
             <div class="car-info">
               <h3 class="car-name"><?= htmlspecialchars($row['name']) ?></h3>
 
@@ -489,33 +442,28 @@ body.day-mode .price-main .per-day {
                 <span class="tag"><i class="bi bi-fuel-pump"></i> <?= htmlspecialchars($row['fuel']) ?></span>
               </div>
 
-              <!-- Price -->
               <div class="price-section">
-<div class="price-main">
-  <span class="currency">MAD</span>
-  <span class="amount"><?= number_format((float)$row['price_day']) ?></span>
-  <span class="per-day">/day</span>
-</div>                <div class="price-sub">
+                <div class="price-main">
+                  <span class="currency">MAD</span>
+                  <span class="amount"><?= number_format((float)$row['price_day']) ?></span>
+                  <span class="per-day">/day</span>
+                </div>
+                <div class="price-sub">
                   Week: <strong>MAD <?= number_format((float)$row['price_week']) ?></strong> |
                   Month: <strong>MAD <?= number_format((float)$row['price_month']) ?></strong>
                 </div>
               </div>
 
-              <!-- ==== ACTION AREA ==== -->
               <div class="action-area mt-3">
-                <!-- Edit – primary -->
                 <a href="edit.php?id=<?= (int)$row['id'] ?>"
-                   class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
-                   aria-label="Edit <?= htmlspecialchars($row['name']) ?>">
+                   class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
                   <i class="bi bi-pencil-fill"></i> Edit
                 </a>
 
-                <!-- Delete – secondary + modal -->
                 <button type="button"
                         class="btn btn-outline-danger w-100 mt-2 d-flex align-items-center justify-content-center gap-2"
                         data-bs-toggle="modal"
-                        data-bs-target="#deleteModal<?= $row['id'] ?>"
-                        aria-label="Delete <?= htmlspecialchars($row['name']) ?>">
+                        data-bs-target="#deleteModal<?= $row['id'] ?>">
                   <i class="bi bi-trash-fill"></i> Delete
                 </button>
               </div>
@@ -523,13 +471,13 @@ body.day-mode .price-main .per-day {
           </article>
         </div>
 
-        <!-- ==== DELETE CONFIRMATION MODAL ==== -->
-        <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
+        <!-- DELETE MODAL -->
+        <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1">
           <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Confirm Delete</h5>
-                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal"></button>
               </div>
               <div class="modal-body pt-2">
                 <p class="mb-0">Permanently delete <strong><?= htmlspecialchars($row['name']) ?></strong>?</p>
@@ -538,9 +486,8 @@ body.day-mode .price-main .per-day {
                 <form action="delete.php" method="POST" class="d-inline w-100">
                   <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
                   <input type="hidden" name="csrf" value="<?= $csrf ?>">
-                  <button type="submit"
-                          class="btn btn-danger w-100"
-                          onclick="this.disabled=true; this.closest('form').submit();">
+                  <button type="submit" class="btn btn-danger w-100"
+                          onclick="this.disabled=true;this.closest('form').submit();">
                     <i class="bi bi-trash"></i> Yes, Delete
                   </button>
                 </form>
@@ -554,13 +501,11 @@ body.day-mode .price-main .per-day {
   </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   AOS.init({ once: true, duration: 600, easing: 'ease-out-quart' });
 
-  // Image loading
   document.addEventListener('DOMContentLoaded', () => {
     const images = document.querySelectorAll('.car-image img');
     images.forEach(img => {
@@ -568,7 +513,6 @@ body.day-mode .price-main .per-day {
     });
   });
 
-  // === TOAST ALERT SYSTEM ===
   <?php if ($alert): ?>
   (function() {
     const container = document.getElementById('toastContainer');
@@ -589,8 +533,8 @@ body.day-mode .price-main .per-day {
 
     function getIcon(type) {
       return type === 'success' ? 'bi-check-circle-fill' :
-             type === 'danger' ? 'bi-x-circle-fill' :
-             'bi-exclamation-triangle-fill';
+      type === 'danger' ? 'bi-x-circle-fill' :
+      'bi-exclamation-triangle-fill';
     }
     function getTitle(type) {
       return type === 'success' ? 'Success' :
@@ -600,12 +544,11 @@ body.day-mode .price-main .per-day {
   })();
   <?php endif; ?>
 
-  // === DAY/NIGHT MODE TOGGLE ===
+  // Day/Night Toggle
   const toggleBtn = document.getElementById('dayModeToggle');
   const body = document.body;
   const icon = toggleBtn.querySelector('i');
 
-  // Load saved preference
   if (localStorage.getItem('dayMode') === 'true') {
     body.classList.add('day-mode');
     icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
