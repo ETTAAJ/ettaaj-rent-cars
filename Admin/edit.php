@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price_day   = (float)($_POST['price_day'] ?? 0);
         $price_week  = (float)($_POST['price_week'] ?? 0);
         $price_month = (float)($_POST['price_month'] ?? 0);
+        $discount    = (int)($_POST['discount'] ?? 0);
 
         // Validation
         if (empty($name)) $errors[] = "Car name is required.";
@@ -55,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array($gear, ['Manual', 'Automatic'])) $errors[] = "Invalid gear type.";
         if (!in_array($fuel, ['Petrol', 'Diesel'])) $errors[] = "Invalid fuel type.";
         if ($price_day <= 0) $errors[] = "Price per day must be positive.";
+        if ($discount < 0 || $discount > 100) $errors[] = "Discount must be between 0 and 100.";
 
         $image = $car['image']; // Default: keep old
 
@@ -126,12 +128,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("
                 UPDATE cars SET 
                     name = ?, image = ?, seats = ?, bags = ?, gear = ?, fuel = ?,
-                    price_day = ?, price_week = ?, price_month = ?
+                    price_day = ?, price_week = ?, price_month = ?, discount = ?
                 WHERE id = ?
             ");
             $stmt->execute([
                 $name, $image, $seats, $bags, $gear, $fuel,
-                $price_day, $price_week, $price_month, $id
+                $price_day, $price_week, $price_month, $discount, $id
             ]);
             header("Location: index.php?success=1");
             exit;
@@ -281,11 +283,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
-        <i class="bi bi-pencil-square text-gold"></i>
         Edit Car
       </h2>
       <a href="index.php" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back to List
+        Back to List
       </a>
     </div>
   </div>
@@ -340,6 +341,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Bags *</label>
             <input type="number" name="bags" class="form-control" value="<?= $car['bags'] ?>" min="0" required>
           </div>
+
+          <div class="mb-3">
+            <label class="form-label">Discount (%)</label>
+            <input type="number" name="discount" class="form-control" min="0" max="100" value="<?= $car['discount'] ?? 0 ?>">
+            <small class="small-muted">Enter discount percentage (0 = no discount)</small>
+          </div>
         </div>
 
         <div class="col-md-6">
@@ -378,7 +385,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <div class="text-center mt-5">
         <button type="submit" class="btn btn-primary btn-lg px-5">
-          <i class="bi bi-check-circle"></i> Update Car
+          Update Car
         </button>
       </div>
     </form>

@@ -12,7 +12,14 @@ if (!$car) {
 }
 
 $minDays     = 3;
-$pricePerDay = (float)$car['price_day'];
+
+// === DISCOUNT LOGIC ===
+$discountPercent = (int)($car['discount'] ?? 0);
+$originalPricePerDay = (float)$car['price_day'];
+$discountedPricePerDay = $discountPercent > 0 
+    ? $originalPricePerDay * (1 - $discountPercent / 100) 
+    : $originalPricePerDay;
+$hasDiscount = $discountPercent > 0;
 ?>
 
 <?php include 'header.php'; ?>
@@ -106,6 +113,26 @@ $pricePerDay = (float)$car['price_day'];
     transition: all 0.4s ease;
   }
 
+  /* DISCOUNT BADGE */
+  .discount-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: #10b981;
+    color: white;
+    font-weight: 800;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
   /* SUCCESS ALERT ANIMATIONS */
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -146,11 +173,11 @@ $pricePerDay = (float)$car['price_day'];
 
   <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
 
-    <!-- LEFT: CAR CARD – NOW 100% IDENTICAL TO car-detail.php -->
+    <!-- LEFT: CAR CARD WITH DISCOUNT -->
     <div data-aos="fade-right" class="h-full">
       <div class="group relative bg-card/90 backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-gold/20 transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border border-border flex flex-col h-full">
         
-        <!-- Car Image -->
+        <!-- Car Image + Discount Badge -->
         <div class="relative w-full pt-[56.25%] bg-card-dark overflow-hidden border-b border-border">
           <?php
           $imgUrl = !empty($car['image'])
@@ -160,50 +187,56 @@ $pricePerDay = (float)$car['price_day'];
           <img src="<?= htmlspecialchars($imgUrl) ?>" 
                alt="<?= htmlspecialchars($car['name']) ?>" 
                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+
+          <?php if ($hasDiscount): ?>
+            <div class="discount-badge">-<?= $discountPercent ?>%</div>
+          <?php endif; ?>
         </div>
 
         <!-- Card Content -->
         <div class="p-6 flex-1 flex flex-col">
           <h3 class="text-2xl font-extrabold text-center mb-4"><?= htmlspecialchars($car['name']) ?></h3>
 
-          <!-- Seats & Bags -->
+          <!-- Seats & Bags (Bootstrap Icons for consistency) -->
           <div class="flex justify-center gap-8 text-sm mb-4">
             <div class="text-center">
-              <svg class="w-6 h-6 mx-auto mb-1 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
-              </svg>
+              <i class="bi bi-person-fill w-6 h-6 mx-auto mb-1 text-gold"></i>
               <span><?= $car['seats'] ?> Seats</span>
             </div>
             <div class="text-center">
-              <svg class="w-6 h-6 mx-auto mb-1 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M5 3h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/>
-              </svg>
+              <i class="bi bi-briefcase-fill w-6 h-6 mx-auto mb-1 text-gold"></i>
               <span><?= $car['bags'] ?> Bags</span>
             </div>
           </div>
 
-          <!-- Gear & Fuel -->
           <div class="flex justify-center gap-4 mb-6">
             <span class="px-4 py-1 bg-card-dark rounded-full text-sm border border-border"><?= htmlspecialchars($car['gear']) ?></span>
             <span class="px-4 py-1 bg-card-dark rounded-full text-sm border border-border"><?= htmlspecialchars($car['fuel']) ?></span>
           </div>
 
-          <!-- Price -->
+          <!-- PRICE WITH DISCOUNT -->
           <div class="text-center mb-6">
-            <div class="text-5xl font-black"><?= number_format($car['price_day']) ?></div>
+            <div class="flex items-center justify-center gap-4 flex-wrap">
+              <?php if ($hasDiscount): ?>
+                <span class="text-3xl text-[var(--text-muted)] line-through opacity-70">
+                  MAD <?= number_format($originalPricePerDay) ?>
+                </span>
+              <?php endif; ?>
+              <div class="text-5xl font-black <?= $hasDiscount ? 'text-green-400' : '' ?>">
+                <?= number_format($discountedPricePerDay) ?>
+              </div>
+            </div>
             <span class="inline-block px-4 py-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-sm mt-2">
               MAD/day
             </span>
           </div>
 
-          <!-- Minimum Days Info -->
           <div class="text-center mt-auto pt-4 border-t border-border/40">
             <p class="text-[var(--text-muted)] text-sm">
               Minimum rental: <span class="text-gold font-bold"><?= $minDays ?> days</span>
             </p>
           </div>
 
-          <!-- Optional: View Details Button (matches detail page) -->
           <div class="mt-6">
             <a href="car-detail.php?id=<?= $car['id'] ?>" 
                class="block text-center bg-gradient-to-r from-gold to-yellow-500 hover:from-yellow-500 hover:to-orange-400 text-black font-bold py-3 rounded-2xl transition transform hover:scale-105">
@@ -236,7 +269,6 @@ $pricePerDay = (float)$car['price_day'];
           <h3 class="text-2xl font-bold text-gold text-center mb-6">Protection Plan</h3>
           <div class="grid gap-4">
 
-            <!-- Basic Insurance -->
             <div class="insurance-option">
               <input type="radio" name="insurance" id="basic" value="Basic Insurance - Included" checked>
               <label for="basic" class="block p-6 bg-card-dark/80 rounded-2xl border border-border hover:border-gold/50 transition-all cursor-pointer">
@@ -256,7 +288,6 @@ $pricePerDay = (float)$car['price_day'];
               </label>
             </div>
 
-            <!-- Smart Insurance -->
             <div class="insurance-option">
               <input type="radio" name="insurance" id="smart" value="Smart Insurance - +$8.90/day">
               <label for="smart" class="block p-6 bg-card-dark/80 rounded-2xl border border-border hover:border-gold/50 transition-all cursor-pointer">
@@ -277,7 +308,6 @@ $pricePerDay = (float)$car['price_day'];
               </label>
             </div>
 
-            <!-- Premium Insurance -->
             <div class="insurance-option">
               <input type="radio" name="insurance" id="premium" value="Premium Insurance - +$14.40/day">
               <label for="premium" class="block p-6 bg-card-dark/80 rounded-2xl border border-border hover:border-gold/50 transition-all cursor-pointer">
@@ -310,6 +340,9 @@ $pricePerDay = (float)$car['price_day'];
           <p id="total-price" class="text-5xl font-black text-[var(--text-primary)]">MAD0</p>
           <p id="days-count" class="text-[var(--text-muted)] mt-2 text-lg"></p>
           <p id="insurance-info" class="text-sm text-gold mt-3 font-medium">Basic Insurance (included)</p>
+          <?php if ($hasDiscount): ?>
+            <p class="text-green-400 text-sm mt-2 font-bold">You save MAD<?= number_format(($originalPricePerDay - $discountedPricePerDay) * $minDays) ?> on minimum rental!</p>
+          <?php endif; ?>
         </div>
 
         <!-- PERSONAL INFO -->
@@ -331,6 +364,7 @@ $pricePerDay = (float)$car['price_day'];
 
 <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <script>
   AOS.init({ once: true, duration: 800 });
@@ -344,9 +378,13 @@ $pricePerDay = (float)$car['price_day'];
   const error = document.getElementById('date-error');
   const btn = document.getElementById('submit-btn');
   const form = document.getElementById('booking-form');
-  const pricePerDay = <?= $pricePerDay ?>;
-  const minDays = <?= $minDays ?>;
 
+  const pricePerDay = <?= json_encode($discountedPricePerDay) ?>;
+  const originalPricePerDay = <?= json_encode($originalPricePerDay) ?>;
+  const hasDiscount = <?= $hasDiscount ? 'true' : 'false' ?>;
+  const discountPercent = <?= $discountPercent ?>;
+
+  const minDays = <?= $minDays ?>;
   const insurancePrices = { 'basic': 0, 'smart': 8.90, 'premium': 14.40 };
 
   function updateTotal() {
@@ -373,12 +411,10 @@ $pricePerDay = (float)$car['price_day'];
     btn.disabled = false;
   }
 
-  // Insurance change
   document.querySelectorAll('input[name="insurance"]').forEach(radio => {
     radio.addEventListener('change', updateTotal);
   });
 
-  // Date changes
   pickup.addEventListener('change', () => {
     const minReturn = new Date(pickup.value);
     minReturn.setDate(minReturn.getDate() + minDays);
@@ -387,7 +423,6 @@ $pricePerDay = (float)$car['price_day'];
   });
   ret.addEventListener('change', updateTotal);
 
-  // Tab animation back to details
   document.getElementById('details-tab-link')?.addEventListener('click', function(e) {
     e.preventDefault();
     const tabBar = document.getElementById('tab-bar');
@@ -397,7 +432,6 @@ $pricePerDay = (float)$car['price_day'];
     setTimeout(() => window.location.href = this.getAttribute('href'), 500);
   });
 
-  // BEAUTIFUL SUCCESS ALERT
   function showSuccessAlert() {
     const overlay = document.createElement('div');
     overlay.style.cssText = `
@@ -431,8 +465,6 @@ $pricePerDay = (float)$car['price_day'];
     `;
 
     document.body.appendChild(overlay);
-
-    // Auto close after 7 seconds
     setTimeout(() => {
       if (overlay.parentElement) {
         overlay.style.animation = 'fadeOut 0.8s ease-in forwards';
@@ -441,36 +473,35 @@ $pricePerDay = (float)$car['price_day'];
     }, 7000);
   }
 
-  // FORM SUBMIT → WhatsApp + Luxury Alert
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
     const days = Math.ceil((new Date(ret.value) - new Date(pickup.value)) / 86400000);
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
     const insuranceText = selectedInsurance.value;
-
-    const carTotal = days * pricePerDay;
     const insuranceCost = insurancePrices[selectedInsurance.id] * days;
+    const carTotal = days * pricePerDay;
     const grandTotal = carTotal + insuranceCost;
+
+    const discountText = hasDiscount ? ` (-${discountPercent}% discount applied)` : '';
 
     const msg = `NEW BOOKING - ET TAAJ RENT CARS\n\n` +
                 `Car: <?= htmlspecialchars($car['name']) ?>\n` +
                 `Pickup: ${pickup.value}\n` +
                 `Return: ${ret.value}\n` +
                 `Duration: ${days} days\n` +
-                `Car Price: MAD${carTotal.toLocaleString()}\n` +
+                `Price per day: MAD<?= number_format($discountedPricePerDay) ?>${discountText}\n` +
+                `Car Total: MAD${carTotal.toLocaleString()}\n` +
                 `Insurance: ${insuranceText}\n` +
-                `Total Amount: MAD${grandTotal.toLocaleString()}\n\n` +
+                `GRAND TOTAL: MAD${grandTotal.toLocaleString()}\n\n` +
                 `Name: ${form.name.value}\n` +
                 `Email: ${form.email.value}\n` +
                 `Phone: ${form.phone.value}\n\n` +
                 `Please confirm availability & send payment link!`;
 
     window.open(`https://wa.me/212772331080?text=${encodeURIComponent(msg)}`, '_blank');
-    
     showSuccessAlert();
 
-    // Reset form
     form.reset();
     totalEl.textContent = 'MAD0';
     daysEl.textContent = '';
@@ -478,7 +509,6 @@ $pricePerDay = (float)$car['price_day'];
     btn.disabled = true;
   });
 
-  // Set min date to today
   document.addEventListener('DOMContentLoaded', () => {
     pickup.min = new Date().toISOString().split('T')[0];
   });

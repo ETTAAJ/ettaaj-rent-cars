@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price_day   = (float)($_POST['price_day'] ?? 0);
         $price_week  = (float)($_POST['price_week'] ?? 0);
         $price_month = (float)($_POST['price_month'] ?? 0);
+        $discount    = (int)($_POST['discount'] ?? 0);
 
         if (empty($name)) $errors['name'] = "Car name is required.";
         if ($seats < 1) $errors['seats'] = "Seats must be at least 1.";
@@ -32,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array($gear, ['Manual', 'Automatic'])) $errors['gear'] = "Invalid gear.";
         if (!in_array($fuel, ['Petrol', 'Diesel'])) $errors['fuel'] = "Invalid fuel.";
         if ($price_day <= 0) $errors['price_day'] = "Price per day must be positive.";
+        if ($discount < 0 || $discount > 100) $errors['discount'] = "Discount must be between 0 and 100.";
 
         $image = '';
         if (!empty($_FILES['image']['name'])) {
@@ -70,10 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($errors)) {
             $stmt = $pdo->prepare("
-                INSERT INTO cars (name, image, seats, bags, gear, fuel, price_day, price_week, price_month)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO cars (name, image, seats, bags, gear, fuel, price_day, price_week, price_month, discount)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-            $stmt->execute([$name, $image, $seats, $bags, $gear, $fuel, $price_day, $price_week, $price_month]);
+            $stmt->execute([$name, $image, $seats, $bags, $gear, $fuel, $price_day, $price_week, $price_month, $discount]);
             header("Location: index.php?success=1");
             exit;
         }
@@ -237,11 +239,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
-        <i class="bi bi-plus-circle text-gold"></i>
         Add New Car
       </h2>
       <a href="index.php" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back to List
+        Back to List
       </a>
     </div>
   </div>
@@ -283,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <div class="image-preview" id="imagePreview">
               <div class="placeholder">
-                <i class="bi bi-image fs-3"></i><br>No image selected
+                No image selected
               </div>
             </div>
           </div>
@@ -304,6 +305,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if (isset($errors['bags'])): ?>
               <div class="text-danger small"><?= htmlspecialchars($errors['bags']) ?></div>
             <?php endif; ?>
+          </div>
+
+          <!-- NEW: Discount Field -->
+          <div class="mb-3">
+            <label class="form-label">Discount (%)</label>
+            <input type="number" name="discount" class="form-control" min="0" max="100"
+                   value="<?= $_POST['discount'] ?? '0' ?>">
+            <?php if (isset($errors['discount'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['discount']) ?></div>
+            <?php endif; ?>
+            <small class="small-muted">Enter discount percentage (0 = no discount)</small>
           </div>
         </div>
 
@@ -357,7 +369,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <div class="text-center mt-5">
         <button type="submit" class="btn btn-primary btn-lg px-5">
-          <i class="bi bi-plus-circle"></i> Add Car
+          Add Car
         </button>
       </div>
     </form>
@@ -377,7 +389,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
       preview.innerHTML = `
         <div class="placeholder">
-          <i class="bi bi-image fs-3"></i><br>No image selected
+          No image selected
         </div>`;
     }
   }
@@ -387,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     document.querySelector('input[name="name"]').focus();
   });
 
-  // Day/Night Mode Toggle (same as index.php & edit.php)
+  // Day/Night Mode Toggle
   const toggleBtn = document.getElementById('dayModeToggle');
   const body = document.body;
   const icon = toggleBtn.querySelector('i');

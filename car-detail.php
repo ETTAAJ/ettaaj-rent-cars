@@ -28,9 +28,18 @@ function carImageUrl($image)
     $v = file_exists($full) ? '?v=' . filemtime($full) : '';
     return $file . $v;
 }
+
+// Calculate discount
+$discount = (int)($car['discount'] ?? 0);
+$originalPrice = (float)$car['price_day'];
+$discountedPrice = $discount > 0 ? $originalPrice * (1 - $discount / 100) : $originalPrice;
+$hasDiscount = $discount > 0;
 ?>
 
 <?php include 'header.php'; ?>
+
+<!-- Bootstrap Icons (for correct bag icon) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
   .tab-bar {
@@ -73,19 +82,34 @@ function carImageUrl($image)
     .tab-item svg { width: 22px; height: 22px; }
     .tab-item span { display: block; margin-top: 6px; font-size: 0.8rem; }
   }
+
+  /* Discount Badge */
+  .discount-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: #10b981;
+    color: white;
+    font-weight: 800;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    animation: pulse 2s infinite;
+  }
 </style>
 
-<!-- ONLY THIS BUTTON BACKGROUND IS CHANGED TO NEW GREEN COLOR -->
+<!-- Green Book Button -->
 <style>
   .new-book-btn {
-    background: linear-gradient(to right, #10b981, #059669) !important; /* Emerald Green */
+    background: linear-gradient(to right, #10b981, #059669) !important;
   }
   .new-book-btn:hover {
-    background: linear-gradient(to right, #059669, #047857) !important; /* Darker on hover */
+    background: linear-gradient(to right, #059669, #047857) !important;
     transform: scale(1.05);
   }
 </style>
-<!-- END OF CHANGE -->
 
 <main class="max-w-7xl mx-auto px-4 py-12 bg-[var(--bg)] text-[var(--text-primary)]">
 
@@ -135,22 +159,26 @@ function carImageUrl($image)
           <img src="<?= htmlspecialchars($imgUrl) ?>" 
                alt="<?= htmlspecialchars($car['name']) ?>" 
                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+
+          <!-- Discount Badge -->
+          <?php if ($hasDiscount): ?>
+            <div class="discount-badge">
+              -<?= $discount ?>%
+            </div>
+          <?php endif; ?>
         </div>
 
         <div class="p-6 flex-1 flex flex-col">
           <h3 class="text-2xl font-extrabold text-center mb-4"><?= htmlspecialchars($car['name']) ?></h3>
 
+          <!-- Seats & Bags – Fixed Icons -->
           <div class="flex justify-center gap-8 text-sm mb-4">
             <div class="text-center">
-              <svg class="w-6 h-6 mx-auto mb-1 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
-              </svg>
+              <i class="bi bi-person-fill w-6 h-6 mx-auto mb-1 text-gold"></i>
               <span><?= $car['seats'] ?> Seats</span>
             </div>
             <div class="text-center">
-              <svg class="w-6 h-6 mx-auto mb-1 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M5 3h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/>
-              </svg>
+              <i class="bi bi-briefcase-fill w-6 h-6 mx-auto mb-1 text-gold"></i>
               <span><?= $car['bags'] ?> Bags</span>
             </div>
           </div>
@@ -160,8 +188,19 @@ function carImageUrl($image)
             <span class="px-4 py-1 bg-card-dark rounded-full text-sm border border-border"><?= htmlspecialchars($car['fuel']) ?></span>
           </div>
 
+          <!-- Price with Discount -->
           <div class="text-center mb-6">
-            <div class="text-5xl font-black"><?= number_format($car['price_day']) ?></div>
+            <div class="flex items-center justify-center gap-4 flex-wrap">
+              <?php if ($hasDiscount): ?>
+                <span class="text-3xl text-muted line-through opacity-70">
+                  MAD <?= number_format($originalPrice) ?>
+                </span>
+              <?php endif; ?>
+
+              <div class="text-5xl font-black <?= $hasDiscount ? 'text-green-400' : '' ?>">
+                <?= number_format($discountedPrice) ?>
+              </div>
+            </div>
             <span class="inline-block px-4 py-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-sm mt-2">
               MAD/day
             </span>
@@ -174,12 +213,10 @@ function carImageUrl($image)
           </div>
 
           <div class="mt-6 space-y-4">
-            <!-- ONLY THIS BUTTON HAS NEW GREEN BACKGROUND -->
             <a href="booking.php?id=<?= $car['id'] ?>" 
                class="new-book-btn block text-center text-white font-bold py-4 rounded-2xl transition transform hover:scale-105 text-lg shadow-lg">
               Book This Car Now
             </a>
-            <!-- END OF CHANGE -->
 
             <a href="index.php" class="block text-center border border-gold/50 text-gold hover:bg-gold/10 py-3 rounded-2xl transition text-lg">
               Back to Fleet
@@ -189,21 +226,21 @@ function carImageUrl($image)
       </div>
     </div>
 
-    <!-- RIGHT SIDE REMAINS 100% UNCHANGED -->
+    <!-- RIGHT SIDE – UNCHANGED -->
     <div data-aos="fade-left" class="space-y-8">
       <div class="bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-10">
         <h2 class="text-3xl font-bold text-gold mb-8 text-center">Vehicle Specifications</h2>
         <div class="grid grid-cols-2 gap-6 text-lg">
-          <div class="flex items-center gap-4"><svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg><div><strong>Seats:</strong> <?= $car['seats'] ?></div></div>
-          <div class="flex items-center gap-4"><svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20"><path d="M5 3h10a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg><div><strong>Bags:</strong> <?= $car['bags'] ?></div></div>
-          <div class="flex items-center gap-4"><svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><div><strong>Gearbox:</strong> <?= ucfirst($car['gear']) ?></div></div>
-          <div class="flex items-center gap-4"><svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><div><strong>Fuel:</strong> <?= $car['fuel'] ?></div></div>
-          <div class="flex items-center gap-4"><svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><div><strong>Year:</strong> <?= $car['year'] ?? '2025' ?></div></div>
-          <div class="flex items-center gap-4"><svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div><strong>Status:</strong> <span class="text-green-400 font-bold">Available</span></div></div>
+          <div class="flex items-center gap-4"><i class="bi bi-person-fill w-8 h-8 text-gold"></i><div><strong>Seats:</strong> <?= $car['seats'] ?></div></div>
+          <div class="flex items-center gap-4"><i class="bi bi-briefcase-fill w-8 h-8 text-gold"></i><div><strong>Bags:</strong> <?= $car['bags'] ?></div></div>
+          <div class="flex items-center gap-4"><i class="bi bi-gear-fill w-8 h-8 text-gold"></i><div><strong>Gearbox:</strong> <?= ucfirst($car['gear']) ?></div></div>
+          <div class="flex items-center gap-4"><i class="bi bi-fuel-pump w-8 h-8 text-gold"></i><div><strong>Fuel:</strong> <?= $car['fuel'] ?></div></div>
+          <div class="flex items-center gap-4"><i class="bi bi-calendar3 w-8 h-8 text-gold"></i><div><strong>Year:</strong> <?= $car['year'] ?? '2025' ?></div></div>
+          <div class="flex items-center gap-4"><i class="bi bi-check-circle-fill w-8 h-8 text-green-400"></i><div><strong>Status:</strong> <span class="text-green-400 font-bold">Available</span></div></div>
         </div>
       </div>
 
-      <a href="https://wa.me/212772331080?text=Hi!%20I'm%20interested%20in%20the%20<?= urlencode($car['name']) ?>%20-%20<?= number_format($car['price_day']) ?>%20MAD/day" 
+      <a href="https://wa.me/212772331080?text=Hi!%20I'm%20interested%20in%20the%20<?= urlencode($car['name']) ?>%20-%20<?= $hasDiscount ? number_format($discountedPrice) : number_format($originalPrice) ?>%20MAD/day%20(<?= $hasDiscount ? "-{$discount}%" : '' ?>)" 
          class="block text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl py-6 rounded-2xl shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-4">
         <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.134.297-.347.446-.52.149-.174.198-.297.297-.446.099-.148.05-.273-.024-.385-.074-.112-.67-1.62-.92-2.22-.246-.594-.495-.59-.67-.599-.174-.008-.371-.008-.569-.008-.197 0-.52.074-.792.372-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.558 5.745 8.623 3.05.297.149.595.223.893.298.297.074.595.05.893-.025.297-.074 1.255-.52 1.43-.966.173-.446.173-.82.124-.966-.05-.148-.198-.297-.446-.446zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
@@ -213,23 +250,38 @@ function carImageUrl($image)
     </div>
   </div>
 
-  <!-- SIMILAR CARS SECTION -->
+  <!-- SIMILAR CARS SECTION – Also Updated with Discount Logic -->
   <?php if ($similarCars): ?>
   <section class="mt-32">
     <h2 class="text-4xl font-bold text-center mb-16 text-gold">You Might Also Like</h2>
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <?php foreach ($similarCars as $index => $similar): ?>
+      <?php foreach ($similarCars as $index => $similar): 
+        $s_discount = (int)($similar['discount'] ?? 0);
+        $s_original = (float)$similar['price_day'];
+        $s_discounted = $s_discount > 0 ? $s_original * (1 - $s_discount / 100) : $s_original;
+        $s_hasDiscount = $s_discount > 0;
+      ?>
         <div data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
           <div class="group relative bg-card/90 backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-gold/20 transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border border-border flex flex-col h-full">
             <div class="relative w-full pt-[56.25%] bg-card-dark overflow-hidden border-b border-border">
               <img src="<?= htmlspecialchars(carImageUrl($similar['image']) ?: 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($similar['name'])) ?>" 
                    alt="<?= htmlspecialchars($similar['name']) ?>" 
                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+              <?php if ($s_hasDiscount): ?>
+                <div class="absolute top-3 right-3 z-10 bg-green-600 text-white font-bold text-xs px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+                  -<?= $s_discount ?>%
+                </div>
+              <?php endif; ?>
             </div>
             <div class="p-6 flex-1 flex flex-col">
               <h3 class="text-xl font-extrabold text-center mb-3"><?= htmlspecialchars($similar['name']) ?></h3>
               <div class="text-center mb-4">
-                <div class="text-4xl font-black"><?= number_format($similar['price_day']) ?></div>
+                <?php if ($s_hasDiscount): ?>
+                  <div class="text-xl text-muted line-through opacity-70">MAD <?= number_format($s_original) ?></div>
+                <?php endif; ?>
+                <div class="text-4xl font-black <?= $s_hasDiscount ? 'text-green-400' : '' ?>">
+                  <?= number_format($s_discounted) ?>
+                </div>
                 <span class="inline-block px-3 py-1 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-xs">MAD/day</span>
               </div>
               <div class="mt-auto">

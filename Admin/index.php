@@ -80,12 +80,27 @@ if (isset($_GET['success'])) {
       display: flex;
       flex-direction: column;
       height: 100%;
+      position: relative;
     }
 
     .car-card:hover {
       transform: translateY(-6px);
       box-shadow: 0 20px 30px rgba(255,215,0,0.15);
       border-color: var(--gold);
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #10b981;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .car-image {
@@ -149,6 +164,13 @@ if (isset($_GET['success'])) {
       border-top: 1px dashed var(--border);
     }
 
+    .original-price {
+      color: #94a3b8;
+      text-decoration: line-through;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
     .price-main {
       font-size: 1.75rem;
       font-weight: 700;
@@ -196,141 +218,31 @@ if (isset($_GET['success'])) {
       margin-bottom: 1rem;
     }
 
-    /* === TOAST ALERTS === */
-    .toast-container {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .toast {
-      min-width: 300px;
-      max-width: 400px;
-      background: var(--darker-bg);
-      border-radius: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      overflow: hidden;
-      border-left: 5px solid;
-      animation: slideIn 0.4s ease, fadeOut 0.5s ease 4.5s forwards;
-      opacity: 0;
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes fadeOut {
-      to { transform: translateX(120%); opacity: 0; }
-    }
-
+    /* TOAST, BUTTONS, MODAL, DAY MODE – unchanged */
+    .toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; }
+    .toast { min-width: 300px; max-width: 400px; background: var(--darker-bg); border-radius: 0.75rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3); overflow: hidden; border-left: 5px solid; animation: slideIn 0.4s ease, fadeOut 0.5s ease 4.5s forwards; opacity: 0; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { to { transform: translateX(120%); opacity: 0; } }
     .toast.success { border-left-color: #10b981; }
     .toast.danger { border-left-color: #ef4444; }
     .toast.warning { border-left-color: #f59e0b; }
-
-    .toast-header {
-      padding: 0.75rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-
+    .toast-header { padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; }
     .toast.success .toast-header { color: #10b981; }
     .toast.danger .toast-header { color: #ef4444; }
     .toast.warning .toast-header { color: #f59e0b; }
+    .toast-body { padding: 0 1rem 1rem 1rem; font-size: 0.875rem; color: var(--text-muted); }
+    .toast-close { margin-left: auto; background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; }
+    .toast-close:hover { background: var(--border); color: var(--text); }
 
-    .toast-body {
-      padding: 0 1rem 1rem 1rem;
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
+    .action-area .btn { font-weight: 600; min-height: 44px; border-radius: .75rem; transition: all .2s ease; }
+    .action-area .btn-primary { background: var(--gold); border-color: var(--gold); color: #000; }
+    .action-area .btn-primary:hover, .action-area .btn-primary:focus { background: var(--gold-dark); border-color: var(--gold-dark); box-shadow: 0 0 0 3px rgba(255,215,0,.3); }
+    .action-area .btn-outline-danger { color: #ef4444; border-color: #ef4444; }
+    .action-area .btn-outline-danger:hover, .action-area .btn-outline-danger:focus { background: #ef4444; color: #fff; box-shadow: 0 0 0 3px rgba(239,68,68,.3); }
 
-    .toast-close {
-      margin-left: auto;
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 0;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: all 0.2s;
-    }
+    .modal-content { background: var(--darker-bg); border: 1px solid var(--border); border-radius: 1rem; }
 
-    .toast-close:hover {
-      background: var(--border);
-      color: var(--text);
-    }
-
-    @media (max-width: 576px) {
-      .toast-container { top: 0.5rem; right: 0.5rem; left: 0.5rem; }
-      .toast { min-width: auto; }
-    }
-
-    .action-area .btn {
-      font-weight: 600;
-      min-height: 44px;
-      border-radius: .75rem;
-      transition: all .2s ease;
-    }
-    .action-area .btn-primary {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #000;
-    }
-    .action-area .btn-primary:hover,
-    .action-area .btn-primary:focus {
-      background: var(--gold-dark);
-      border-color: var(--gold-dark);
-      box-shadow: 0 0 0 3px rgba(255,215,0,.3);
-    }
-    .action-area .btn-outline-danger {
-      color: #ef4444;
-      border-color: #ef4444;
-    }
-    .action-area .btn-outline-danger:hover,
-    .action-area .btn-outline-danger:focus {
-      background: #ef4444;
-      color: #fff;
-      box-shadow: 0 0 0 3px rgba(239,68,68,.3);
-    }
-
-    .modal-content {
-      background: var(--darker-bg);
-      border: 1px solid var(--border);
-      border-radius: 1rem;
-    }
-
-    .day-mode-toggle {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 1000;
-      width: 60px;
-      height:60px;
-      border-radius:50%;
-      background:var(--gold);
-      color:#000;
-      border:none;
-      font-size:1.5rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow:0 8px 20px rgba(255,215,0,.4);
-      cursor:pointer;
-      transition:all .3s ease;
-    }
+    .day-mode-toggle { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; width: 60px; height:60px; border-radius:50%; background:var(--gold); color:#000; border:none; font-size:1.5rem; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(255,215,0,.4); cursor:pointer; transition:all .3s ease; }
     .day-mode-toggle:hover{transform:scale(1.1);box-shadow:0 12px 30px rgba(255,215,0,.5);}
     .day-mode-toggle i{transition:transform .3s;}
     .day-mode-toggle.active i{transform:rotate(180deg);}
@@ -341,16 +253,12 @@ if (isset($_GET['success'])) {
     body.day-mode .page-header,
     body.day-mode .car-card,
     body.day-mode .modal-content,
-    body.day-mode .toast{
-      background:var(--darker-bg);border-color:var(--border);
-    }
+    body.day-mode .toast{ background:var(--darker-bg);border-color:var(--border); }
     body.day-mode .car-card:hover{box-shadow:0 20px 30px rgba(0,0,0,0.08);border-color:var(--gold);}
     body.day-mode .tag,
     body.day-mode .car-info{background:transparent;}
     body.day-mode .price-main{color:var(--gold);}
     body.day-mode .btn-primary{background:var(--gold);color:#000;}
-    body.day-mode .btn-outline-danger{color:#ef4444;border-color:#ef4444;}
-    body.day-mode .btn-outline-danger:hover{background:#ef4444;color:#fff;}
     body.day-mode .price-main .currency,
     body.day-mode .price-main .amount{color:var(--gold);}
     body.day-mode .price-main .per-day{color:var(--text-muted);}
@@ -392,7 +300,6 @@ if (isset($_GET['success'])) {
 <div class="container pb-5">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     <?php
-    // FIXED: Removed strict type hint → now accepts null safely
     function getCarImage($filename): string {
         if (empty($filename)) return '';
         $safe = basename($filename);
@@ -404,7 +311,7 @@ if (isset($_GET['success'])) {
         return '';
     }
 
-    $stmt = $pdo->query("SELECT * FROM cars ORDER BY id DESC");
+    $stmt = $pdo->query("SELECT *, COALESCE(discount, 0) AS discount FROM cars ORDER BY id DESC");
     $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($cars)): ?>
@@ -420,13 +327,21 @@ if (isset($_GET['success'])) {
         $img = getCarImage($row['image']);
         $placeholder = 'https://via.placeholder.com/400x300/2C3A44/D1D5DB?text=' . urlencode($row['name']);
         $src = $img ?: $placeholder;
+
+        $original_price = (float)$row['price_day'];
+        $discount = (int)$row['discount'];
+        $final_price = $discount > 0 ? $original_price - ($original_price * $discount / 100) : $original_price;
       ?>
         <div class="col">
           <article data-aos="fade-up" class="car-card">
+            <?php if ($discount > 0): ?>
+            <div class="discount-badge"><?= $discount ?>% OFF</div>
+            <?php endif; ?>
+
             <div class="car-image ratio ratio-4x3">
               <img src="<?= htmlspecialchars($src, ENT_QUOTES) ?>"
                    alt="<?= htmlspecialchars($row['name']) ?>"
-                   onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/2C3A44/D1D5DB?text=No+Image';">
+                   onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300/2C3A44/D1D5DB?text=No+Image';">
             </div>
 
             <div class="car-info">
@@ -443,11 +358,16 @@ if (isset($_GET['success'])) {
               </div>
 
               <div class="price-section">
+                <?php if ($discount > 0): ?>
+                  <div class="original-price">MAD <?= number_format($original_price) ?> /day</div>
+                <?php endif; ?>
+
                 <div class="price-main">
                   <span class="currency">MAD</span>
-                  <span class="amount"><?= number_format((float)$row['price_day']) ?></span>
+                  <span class="amount"><?= number_format($final_price) ?></span>
                   <span class="per-day">/day</span>
                 </div>
+
                 <div class="price-sub">
                   Week: <strong>MAD <?= number_format((float)$row['price_week']) ?></strong> |
                   Month: <strong>MAD <?= number_format((float)$row['price_month']) ?></strong>
@@ -533,8 +453,8 @@ if (isset($_GET['success'])) {
 
     function getIcon(type) {
       return type === 'success' ? 'bi-check-circle-fill' :
-      type === 'danger' ? 'bi-x-circle-fill' :
-      'bi-exclamation-triangle-fill';
+             type === 'danger' ? 'bi-x-circle-fill' :
+             'bi-exclamation-triangle-fill';
     }
     function getTitle(type) {
       return type === 'success' ? 'Success' :
@@ -544,7 +464,6 @@ if (isset($_GET['success'])) {
   })();
   <?php endif; ?>
 
-  // Day/Night Toggle
   const toggleBtn = document.getElementById('dayModeToggle');
   const body = document.body;
   const icon = toggleBtn.querySelector('i');
