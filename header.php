@@ -21,7 +21,7 @@ require_once 'config.php';
         theme: {
           extend: {
             colors: { 
-              gold: '#FFD700', 
+              gold: '#FFB22C', 
               'gold-dark': '#E6C200',
               'light-gold': '#d97706'
             }
@@ -34,17 +34,23 @@ require_once 'config.php';
 
   <style>
     :root {
-      --bg: #36454F;
-      --bg-dark: #2C3A44;
-      --card: #36454F;
-      --card-dark: #2C3A44;
+      --primary-color: #FFB22C;
+      --secondary-color: #000000;
+      --therde: #854836;
+      --text-color: #F7F7F7;
+      --light-bg: #353333;
+      --shadow: 0 5px 15px rgba(246, 176, 0, 0.496);
+      --bg: var(--light-bg);
+      --bg-dark: var(--light-bg);
+      --card: var(--light-bg);
+      --card-dark: var(--light-bg);
       --border: #4A5A66;
-      --primary: #FFFFFF;
+      --primary: var(--text-color);
       --muted: #D1D5DB;
-      --gold: #FFD700;
+      --gold: var(--primary-color);
       --gold-dark: #E6C200;
-      --hover-bg: rgba(255, 215, 0, 0.1);
-      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, #C6A667 120%);
+      --hover-bg: rgba(255, 178, 44, 0.1);
+      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, var(--therde) 120%);
     }
     .light {
       --bg: #f8fafc;

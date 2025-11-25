@@ -165,17 +165,92 @@
           $html .= renderCarCard($c, $i);
       }
 
+      // Get counts for filter options based on current search
+      $countWhere = [];
+      $countParams = [];
+      if ($search !== '') {
+          $countWhere[] = "name LIKE ?";
+          $countParams[] = "%$search%";
+      }
+      $countWhereClause = !empty($countWhere) ? " WHERE " . implode(' AND ', $countWhere) : "";
+      
+      $gearCountStmt = $pdo->prepare("SELECT gear, COUNT(*) as count FROM cars $countWhereClause GROUP BY gear");
+      $gearCountStmt->execute($countParams);
+      $gearCounts = [];
+      while ($row = $gearCountStmt->fetch(PDO::FETCH_ASSOC)) {
+          $gearCounts[$row['gear']] = (int)$row['count'];
+      }
+      
+      $fuelCountStmt = $pdo->prepare("SELECT fuel, COUNT(*) as count FROM cars $countWhereClause GROUP BY fuel");
+      $fuelCountStmt->execute($countParams);
+      $fuelCounts = [];
+      while ($row = $fuelCountStmt->fetch(PDO::FETCH_ASSOC)) {
+          $fuelCounts[$row['fuel']] = (int)$row['count'];
+      }
+      
+      $totalCountStmt = $pdo->prepare("SELECT COUNT(*) as total FROM cars $countWhereClause");
+      $totalCountStmt->execute($countParams);
+      $totalCount = (int)$totalCountStmt->fetch(PDO::FETCH_ASSOC)['total'];
+
       header('Content-Type: application/json; charset=utf-8');
-      echo json_encode(['html' => $html, 'count' => count($cars)]);
+      echo json_encode([
+          'html' => $html, 
+          'count' => count($cars),
+          'options' => [
+              'total' => $totalCount,
+              'gear' => $gearCounts,
+              'fuel' => $fuelCounts
+          ]
+      ]);
       exit;
   }
 
   // ================================================
-  // 4. Normal Page Load
+  // 5. Normal Page Load
   // ================================================
   $stmt = $pdo->prepare($sql);
   $stmt->execute($params);
   $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  
+  // Get all cars for hero slider (limit to 10 for performance)
+  $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 10");
+  $sliderStmt->execute();
+  $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+  
+  // Get all cars for dropdown list
+  $allCarsStmt = $pdo->prepare("SELECT id, name FROM cars ORDER BY name ASC");
+  $allCarsStmt->execute();
+  $allCars = $allCarsStmt->fetchAll(PDO::FETCH_ASSOC);
+  
+  // Get counts per option for filter dropdowns
+  $countWhere = [];
+  $countParams = [];
+  if ($search !== '') {
+    $countWhere[] = "name LIKE ?";
+    $countParams[] = "%$search%";
+  }
+  $countWhereClause = !empty($countWhere) ? " WHERE " . implode(' AND ', $countWhere) : "";
+  
+  // Count by gear type
+  $gearCountStmt = $pdo->prepare("SELECT gear, COUNT(*) as count FROM cars $countWhereClause GROUP BY gear");
+  $gearCountStmt->execute($countParams);
+  $gearCounts = [];
+  while ($row = $gearCountStmt->fetch(PDO::FETCH_ASSOC)) {
+    $gearCounts[$row['gear']] = (int)$row['count'];
+  }
+  
+  // Count by fuel type
+  $fuelCountStmt = $pdo->prepare("SELECT fuel, COUNT(*) as count FROM cars $countWhereClause GROUP BY fuel");
+  $fuelCountStmt->execute($countParams);
+  $fuelCounts = [];
+  while ($row = $fuelCountStmt->fetch(PDO::FETCH_ASSOC)) {
+    $fuelCounts[$row['fuel']] = (int)$row['count'];
+  }
+  
+  // Total count
+  $totalCountStmt = $pdo->prepare("SELECT COUNT(*) as total FROM cars $countWhereClause");
+  $totalCountStmt->execute($countParams);
+  $totalCount = (int)$totalCountStmt->fetch(PDO::FETCH_ASSOC)['total'];
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>" class="scroll-smooth" dir="<?= getDir() ?>">
@@ -191,7 +266,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { gold: '#FFD700' } } }
+      theme: { extend: { colors: { gold: '#FFB22C' } } }
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -200,24 +275,73 @@
 
   <style>
     :root {
-      --bg: #36454F; --bg-dark: #2C3A44; --card: #36454F; --card-dark: #2C3A44;
-      --border: #4A5A66; --primary: #FFFFFF; --muted: #D1D5DB; --gold: #FFD700;
-      --text-primary: var(--primary); --text-muted: var(--muted);
-      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, #C6A667 120%);
+      --primary-color: #FFB22C;
+      --secondary-color: #000000;
+      --therde: #854836;
+      --text-color: #F7F7F7;
+      --light-bg: #353333;
+      --shadow: 0 5px 15px rgba(246, 176, 0, 0.496);
+      --bg: var(--light-bg); --bg-dark: var(--light-bg); --card: var(--light-bg); --card-dark: var(--light-bg);
+      --border: #4A5A66; --primary: var(--text-color); --muted: #D1D5DB; --gold: var(--primary-color);
+      --text-primary: var(--text-color); --text-muted: var(--muted);
+      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, var(--therde) 120%);
     }
     .light {
-      --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #ffffff; --card-dark: #f1f5f9;
+      --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #EFECE3; --card-dark: #EFECE3;
       --border: #cbd5e1; --primary: #1e293b; --muted: #64748b; --gold: #d97706;
       --text-primary: var(--primary); --text-muted: var(--muted);
     }
     body { background-color: var(--bg); color: var(--primary); font-family: 'Inter', sans-serif; }
     .bg-card { background-color: var(--card); }
     .bg-card-dark { background-color: var(--card-dark); }
-    .car-card-bg { background: var(--card-dark-gradient); }
+    .car-card-bg { background: #000000 !important; }
+    .light .car-card-bg { background: #EFECE3 !important; }
+    .light .car-card-bg .text-white { color: #000000 !important; }
+    .light .car-card-bg .text-primary { color: #000000 !important; }
+    .light .car-card-bg .text-muted { color: #000000 !important; }
+    .light .car-card-bg h3 { color: #000000 !important; }
+    .light .car-card-bg .bg-card-dark .text-primary { color: #000000 !important; }
     .border-border { border-color: var(--border); }
     .text-primary { color: var(--primary); }
     .text-muted { color: var(--muted); }
     .text-gold { color: var(--gold); }
+
+    /* Search Dropdown Styles */
+    #search {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 12px;
+    }
+    #search option {
+      background: white;
+      color: #333;
+      padding: 8px;
+    }
+
+    /* Responsive Filter Bar */
+    #filter-form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    @media (min-width: 640px) {
+      #filter-form {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      #filter-form > div:first-child {
+        grid-column: span 2;
+      }
+    }
+    @media (min-width: 1024px) {
+      #filter-form {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      #filter-form > div:first-child {
+        grid-column: span 1;
+      }
+    }
 
     .spinner { width: 40px; height: 40px; border: 4px solid var(--bg-dark); border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 40px auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -309,174 +433,191 @@
       .brand-slider-wrapper { gap: 1.5rem; }
       .brand-logo img { width: 90px; height: 60px; }
     }
+
+    /* Infinite Car Slider Styles */
+    .car-slider-container {
+      position: relative;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+    .car-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      animation: slideCars 30s linear infinite;
+      width: fit-content;
+    }
+    .car-slider-track:hover {
+      animation-play-state: paused;
+    }
+    .car-slide-item {
+      flex: 0 0 280px;
+      min-width: 280px;
+    }
+    @keyframes slideCars {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(calc(-280px * 10 - 1.5rem * 10));
+      }
+    }
+    @media (max-width: 768px) {
+      .car-slide-item {
+        flex: 0 0 240px;
+        min-width: 240px;
+      }
+      @keyframes slideCars {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(-240px * 10 - 1.5rem * 10)); }
+      }
+    }
+    @media (max-width: 640px) {
+      .car-slide-item {
+        flex: 0 0 200px;
+        min-width: 200px;
+      }
+      @keyframes slideCars {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(-200px * 10 - 1.5rem * 10)); }
+      }
+    }
+
+    /* 3D Logo Animation */
+    .logo-3d-container {
+      perspective: 1000px;
+      perspective-origin: center center;
+      display: inline-block;
+    }
+    .logo-3d {
+      transform-style: preserve-3d;
+      animation: logo3dFloat 6s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+    .logo-3d:hover {
+      animation-play-state: paused;
+      transform: rotateY(15deg) rotateX(5deg) scale(1.05);
+    }
+    @keyframes logo3dFloat {
+      0%, 100% {
+        transform: rotateY(0deg) rotateX(0deg) translateZ(0px);
+      }
+      25% {
+        transform: rotateY(5deg) rotateX(-3deg) translateZ(10px);
+      }
+      50% {
+        transform: rotateY(0deg) rotateX(0deg) translateZ(20px);
+      }
+      75% {
+        transform: rotateY(-5deg) rotateX(3deg) translateZ(10px);
+      }
+    }
+    .logo-3d img {
+      transform-style: preserve-3d;
+      filter: drop-shadow(0 10px 30px rgba(255, 178, 44, 0.3));
+      transition: filter 0.3s ease;
+    }
+    .logo-3d:hover img {
+      filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.5));
+    }
   </style>
 </head>
 <body class="min-h-screen">
 
 <?php include 'header.php'; ?>
 
-<!-- HERO SECTION -->
-<section class="relative overflow-hidden bg-[#36454F] isolate">
-  <div class="absolute inset-0 -z-10">
-    <div class="absolute inset-0 bg-gradient-to-br from-gold/10 via-[#36454F] to-yellow-600/5"></div>
-    <div class="absolute inset-0 bg-gradient-to-tl from-[#2C3A44]/80 via-transparent to-gold/5"></div>
-    <div id="particles-js" class="absolute inset-0"></div>
-  </div>
-
-  <div class="absolute top-0 left-0 w-96 h-96 bg-gold/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
-  <div class="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 animate-ping"></div>
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-gold/30 to-transparent rounded-full blur-3xl animate-spin-slow"></div>
-
-  <div class="relative max-w-7xl mx-auto px-6 py-24 sm:py-32 lg:py-40 text-center">
-    <div data-aos="fade-up">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-primary mb-6 leading-tight">
-        <?= $text['hero_title'] ?>
-      </h1>
-      <p class="text-xl sm:text-2xl text-muted max-w-4xl mx-auto mb-10">
-        <?= $text['hero_subtitle'] ?>
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-        <a href="https://wa.me/212772331080?text=Hi, I want to rent a car at Marrakech Airport!"
-           target="_blank"
-           class="group inline-flex items-center gap-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-10 py-5 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300">
-          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-1.174-2.294-.174-.338-.434-.327-.672-.327-.227 0-.482.074-.735.174-.67.267-1.25.85-1.25 2.076 0 1.226.89 2.407 1.013 2.567.124.16 1.772 2.708 4.293 3.796 1.52.654 2.158.75 2.92.625.76-.124 2.03-.83 2.317-1.632.287-.802.287-1.49.2-1.632-.087-.15-.346-.25-.644-.3z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.132.547 4.135 1.507 5.987L0 24l6.2-1.625C8.002 23.227 9.973 23.773 12 23.773c6.627 0 12-5.373 12-12 0-6.627-5.373-12-12-12z"/></svg>
-          <?= $text['book_on_whatsapp'] ?>
-        </a>
-
-        <a href="#cars" class="inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur border border-gold/30 text-primary font-bold text-lg px-10 py-5 rounded-2xl shadow-xl transform hover:scale-105 transition-all">
-          <?= $text['view_all_cars'] ?>
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-        </a>
-      </div>
-
-      <div class="mt-12 flex flex-wrap justify-center gap-8 text-muted">
-        <div class="flex items-center gap-2"><span class="text-gold">✓</span> <?= $text['no_hidden_fees'] ?></div>
-        <div class="flex items-center gap-2"><span class="text-gold">✓</span> <?= $text['free_cancellation'] ?></div>
-        <div class="flex items-center gap-2"><span class="text-gold">✓</span> <?= $text['support_24_7'] ?></div>
-        <div class="flex items-center gap-2"><span class="text-gold">✓</span> <?= $text['fully_insured'] ?></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BRAND LOGOS SLIDER -->
-  <div class="relative border-t border-white/10 pt-8 pb-8">
-    <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-center text-2xl sm:text-3xl font-bold text-primary mb-8"><?= $text['big_brands'] ?></h2>
-      <div class="brand-slider-container">
-        <div class="brand-slider">
-          <div class="brand-slider-wrapper">
-            <!-- Audi -->
-            <div class="brand-logo">
-              <img src="uploads/Audi Q8 S-Line.jpg" alt="Audi" loading="lazy">
-            </div>
-            <!-- BMW -->
-            <div class="brand-logo">
-              <img src="uploads/BMW 420d Pack M Convertible.jpg" alt="BMW" loading="lazy">
-            </div>
-            <!-- Mercedes-Benz - Active -->
-            <div class="brand-logo active">
-              <img src="uploads/Mercedes-Benz S-Class (1).jpg" alt="Mercedes-Benz" loading="lazy">
-            </div>
-            <!-- Range Rover -->
-            <div class="brand-logo">
-              <img src="uploads/Range Rover Sport.jpg" alt="Range Rover" loading="lazy">
-            </div>
-            <!-- Porsche -->
-            <div class="brand-logo">
-              <img src="uploads/Porsche Cayenne Coup.jpg" alt="Porsche" loading="lazy">
-            </div>
-            <!-- Cupra/SEAT - Active -->
-            <div class="brand-logo active">
-              <img src="uploads/Cupra Leon.jpg" alt="Cupra" loading="lazy">
-            </div>
-            <!-- Volkswagen -->
-            <div class="brand-logo">
-              <img src="uploads/Volkswagen Golf 8.jpg" alt="Volkswagen" loading="lazy">
-            </div>
-            <!-- Renault -->
-            <div class="brand-logo">
-              <img src="uploads/Renault Clio 5.jpg" alt="Renault" loading="lazy">
-            </div>
-            <!-- Dacia -->
-            <div class="brand-logo">
-              <img src="uploads/Dacia Duster (1).jpg" alt="Dacia" loading="lazy">
-            </div>
-            <!-- Fiat -->
-            <div class="brand-logo">
-              <img src="uploads/Fiat 500 Convertible.jpg" alt="Fiat" loading="lazy">
-            </div>
-          </div>
-          <!-- Duplicate for seamless loop -->
-          <div class="brand-slider-wrapper">
-            <!-- Audi -->
-            <div class="brand-logo">
-              <img src="uploads/Audi Q8 S-Line.jpg" alt="Audi" loading="lazy">
-            </div>
-            <!-- BMW -->
-            <div class="brand-logo">
-              <img src="uploads/BMW 420d Pack M Convertible.jpg" alt="BMW" loading="lazy">
-            </div>
-            <!-- Mercedes-Benz - Active -->
-            <div class="brand-logo active">
-              <img src="uploads/Mercedes-Benz S-Class (1).jpg" alt="Mercedes-Benz" loading="lazy">
-            </div>
-            <!-- Range Rover -->
-            <div class="brand-logo">
-              <img src="uploads/Range Rover Sport.jpg" alt="Range Rover" loading="lazy">
-            </div>
-            <!-- Porsche -->
-            <div class="brand-logo">
-              <img src="uploads/Porsche Cayenne Coup.jpg" alt="Porsche" loading="lazy">
-            </div>
-            <!-- Cupra/SEAT - Active -->
-            <div class="brand-logo active">
-              <img src="uploads/Cupra Leon.jpg" alt="Cupra" loading="lazy">
-            </div>
-            <!-- Volkswagen -->
-            <div class="brand-logo">
-              <img src="uploads/Volkswagen Golf 8.jpg" alt="Volkswagen" loading="lazy">
-            </div>
-            <!-- Renault -->
-            <div class="brand-logo">
-              <img src="uploads/Renault Clio 5.jpg" alt="Renault" loading="lazy">
-            </div>
-            <!-- Dacia -->
-            <div class="brand-logo">
-              <img src="uploads/Dacia Duster (1).jpg" alt="Dacia" loading="lazy">
-            </div>
-            <!-- Fiat -->
-            <div class="brand-logo">
-              <img src="uploads/Fiat 500 Convertible.jpg" alt="Fiat" loading="lazy">
-            </div>
-          </div>
+<!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
+<section class="relative overflow-hidden py-16 lg:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-card-dark rounded-xl shadow-lg border border-border p-6 sm:p-8 lg:p-12">
+    <!-- Logo Section -->
+    <div class="text-center mb-12" data-aos="fade-down">
+      <div class="logo-3d-container mb-8">
+        <div class="logo-3d">
+          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" 
+               alt="ETTAAJ Rent Cars Logo" 
+               class="max-w-xs sm:max-w-sm md:max-w-md mx-auto rounded-2xl shadow-2xl border-4 border-[var(--primary-color)]"
+               style="box-shadow: var(--shadow);">
         </div>
       </div>
-      <div class="mt-6 border-b border-white/10"></div>
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] via-yellow-400 to-[var(--primary-color)] mb-4">
+        <?= $text['hero_title'] ?? 'Premium Car Rental' ?>
+      </h1>
+      <p class="text-xl sm:text-2xl text-[var(--text-color)]/80 max-w-3xl mx-auto">
+        <?= $text['hero_subtitle'] ?? 'Your trusted partner for luxury car rental in Marrakech' ?>
+      </p>
+    </div>
+
+    <!-- Infinite Car Images Slider -->
+    <div class="relative" data-aos="fade-up">
+      <div class="car-slider-container overflow-hidden py-8">
+        <div class="car-slider-track">
+          <?php 
+          // Duplicate cars for seamless loop
+          $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars);
+          foreach ($sliderCarsDuplicated as $car): 
+            $carImg = !empty($car['image']) 
+              ? 'uploads/' . basename($car['image']) 
+              : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
+          ?>
+            <div class="car-slide-item">
+              <div class="relative group">
+                <img src="<?= htmlspecialchars($carImg) ?>" 
+                     alt="<?= htmlspecialchars($car['name']) ?>"
+                     class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                     onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
+                  <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($car['name']) ?></p>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 </section>
 
 <!-- CARS SECTION -->
 <section id="cars" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <div data-aos="fade-up" class="bg-card-dark p-6 rounded-xl shadow-lg mb-8 border border-border">
-    <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      <input type="text" id="search" placeholder="<?= $text['search_car'] ?>" value="<?= htmlspecialchars($search) ?>" class="p-4 bg-card border border-border text-primary placeholder-muted rounded-lg focus:ring-2 focus:ring-gold text-sm">
-      <select id="gear" class="p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
-        <option value=""><?= $text['all_transmission'] ?></option>
-        <option value="Manual" <?= $gear==='Manual'?'selected':'' ?>><?= $text['manual'] ?></option>
-        <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?>><?= $text['automatic'] ?></option>
+  <div data-aos="fade-up" class="bg-card-dark p-4 sm:p-6 rounded-xl shadow-lg mb-8 border border-border">
+    <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <!-- Car Dropdown - Full width on mobile, spans 2 columns on md -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 sm:col-span-2 lg:col-span-1">
+        <label for="search" class="text-muted text-sm font-medium whitespace-nowrap sm:min-w-[50px]">Car:</label>
+        <select id="search" class="w-full flex-1 p-3 bg-white border border-gray-300 text-gray-900 rounded-md focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] text-sm cursor-pointer" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 12px; padding-right: 2.5rem;">
+          <option value="">All</option>
+          <?php foreach ($allCars as $carOption): ?>
+            <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?>>
+              <?= htmlspecialchars($carOption['name']) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      
+      <!-- Gear Select -->
+      <select id="gear" class="w-full p-3 sm:p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
+        <option value=""><?= $text['all_transmission'] ?> (<?= formatNumber($totalCount) ?>)</option>
+        <option value="Manual" <?= $gear==='Manual'?'selected':'' ?>><?= $text['manual'] ?> (<?= formatNumber($gearCounts['Manual'] ?? 0) ?>)</option>
+        <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?>><?= $text['automatic'] ?> (<?= formatNumber($gearCounts['Automatic'] ?? 0) ?>)</option>
       </select>
-      <select id="fuel" class="p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
-        <option value=""><?= $text['all_fuel'] ?></option>
-        <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?>><?= $text['diesel'] ?></option>
-        <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?>><?= $text['petrol'] ?></option>
+      
+      <!-- Fuel Select -->
+      <select id="fuel" class="w-full p-3 sm:p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
+        <option value=""><?= $text['all_fuel'] ?> (<?= formatNumber($totalCount) ?>)</option>
+        <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?>><?= $text['diesel'] ?> (<?= formatNumber($fuelCounts['Diesel'] ?? 0) ?>)</option>
+        <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?>><?= $text['petrol'] ?> (<?= formatNumber($fuelCounts['Petrol'] ?? 0) ?>)</option>
       </select>
-      <select id="sort" class="p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
+      
+      <!-- Sort Select -->
+      <select id="sort" class="w-full p-3 sm:p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
         <option value="low" <?= $sort==='low'?'selected':'' ?>><?= $text['low_to_high'] ?></option>
         <option value="high" <?= $sort==='high'?'selected':'' ?>><?= $text['high_to_low'] ?></option>
       </select>
-      <a href="?" class="bg-gold/20 hover:bg-gold/30 text-gold font-bold py-4 rounded-lg text-center"><?= $text['clear'] ?></a>
+      
+      <!-- Clear Button -->
+      <a href="?" class="w-full bg-gold/20 hover:bg-gold/30 text-gold font-bold py-3 sm:py-4 rounded-lg text-center transition-colors"><?= $text['clear'] ?></a>
     </form>
   </div>
 
@@ -494,22 +635,8 @@
 
 <!-- SCRIPTS -->
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
   AOS.init({ once: true, duration: 800 });
-
-  particlesJS("particles-js", {
-    particles: {
-      number: { value: 80, density: { enable: true, value_area: 800 } },
-      color: { value: "#FFD700" },
-      shape: { type: "circle" },
-      opacity: { value: 0.15, random: true },
-      size: { value: 4, random: true },
-      move: { enable: true, speed: 1, random: true, out_mode: "out" }
-    },
-    interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "repulse" } } },
-    retina_detect: true
-  });
 
   const els = { search: document.getElementById('search'), gear: document.getElementById('gear'), fuel: document.getElementById('fuel'), sort: document.getElementById('sort') };
   const container = document.getElementById('cars-container');
@@ -521,7 +648,7 @@
     isLoading = true;
 
     const params = new URLSearchParams({
-      search: els.search.value.trim(),
+      search: els.search.value || '',
       gear: els.gear.value,
       fuel: els.fuel.value,
       sort: els.sort.value,
@@ -535,13 +662,43 @@
       .then(data => {
         container.innerHTML = data.html || '<p class="col-span-full text-center text-muted"><?= $text['no_cars_found'] ?></p>';
         countEl.innerHTML = `<span dir="ltr">${data.count}</span> <?= $text['vehicles_available'] ?>`;
+        
+        // Update filter option counts
+        if (data.options) {
+          const gearSelect = els.gear;
+          const fuelSelect = els.fuel;
+          
+          // Update gear options
+          Array.from(gearSelect.options).forEach(opt => {
+            if (opt.value === '') {
+              opt.text = '<?= $text['all_transmission'] ?> (' + data.options.total + ')';
+            } else if (opt.value === 'Manual') {
+              opt.text = '<?= $text['manual'] ?> (' + (data.options.gear.Manual || 0) + ')';
+            } else if (opt.value === 'Automatic') {
+              opt.text = '<?= $text['automatic'] ?> (' + (data.options.gear.Automatic || 0) + ')';
+            }
+          });
+          
+          // Update fuel options
+          Array.from(fuelSelect.options).forEach(opt => {
+            if (opt.value === '') {
+              opt.text = '<?= $text['all_fuel'] ?> (' + data.options.total + ')';
+            } else if (opt.value === 'Diesel') {
+              opt.text = '<?= $text['diesel'] ?> (' + (data.options.fuel.Diesel || 0) + ')';
+            } else if (opt.value === 'Petrol') {
+              opt.text = '<?= $text['petrol'] ?> (' + (data.options.fuel.Petrol || 0) + ')';
+            }
+          });
+        }
+        
         AOS.refreshHard();
       })
       .catch(() => container.innerHTML = '<p class="col-span-full text-center text-red-400">Error.</p>')
       .finally(() => isLoading = false);
   };
 
-  els.search.addEventListener('input', () => { clearTimeout(window.debounce); window.debounce = setTimeout(fetchCars, 300); });
+  // Search dropdown change event
+  els.search.addEventListener('change', fetchCars);
   els.gear.addEventListener('change', fetchCars);
   els.fuel.addEventListener('change', fetchCars);
   els.sort.addEventListener('change', fetchCars);

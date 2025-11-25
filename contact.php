@@ -61,7 +61,7 @@ require_once 'config.php';
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { gold: '#FFD700' } } }
+      theme: { extend: { colors: { gold: '#FFB22C' } } }
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -70,14 +70,26 @@ require_once 'config.php';
   
   <style>
     :root {
-      --bg: #36454F; --bg-dark: #2C3A44; --card: #36454F; --card-dark: #2C3A44;
-      --border: #4A5A66; --primary: #FFFFFF; --muted: #D1D5DB; --gold: #FFD700;
-      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, #C6A667 120%);
+      --primary-color: #FFB22C;
+      --secondary-color: #000000;
+      --therde: #854836;
+      --text-color: #F7F7F7;
+      --light-bg: #353333;
+      --shadow: 0 5px 15px rgba(246, 176, 0, 0.496);
+      --bg: var(--light-bg); --bg-dark: var(--light-bg); --card: var(--light-bg); --card-dark: var(--light-bg);
+      --border: #4A5A66; --primary: var(--text-color); --muted: #D1D5DB; --gold: var(--primary-color);
+      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, var(--therde) 120%);
     }
+    .light {
+      --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #EFECE3; --card-dark: #EFECE3;
+      --border: #cbd5e1; --primary: #1e293b; --muted: #64748b; --gold: #d97706;
+      --text-primary: var(--primary); --text-muted: var(--muted);
+    }
+    .car-card-bg { background: #000000 !important; }
     body { background-color: var(--bg); color: var(--primary); font-family: 'Inter', sans-serif; }
     .bg-card { background-color: var(--card); }
     .bg-card-dark { background-color: var(--card-dark); }
-    .car-card-bg { background: var(--card-dark-gradient); }
+    .car-card-bg { background: #000000 !important; }
     .border-border { border-color: var(--border); }
     .text-primary { color: var(--primary); }
     .text-muted { color: var(--muted); }
@@ -125,6 +137,18 @@ require_once 'config.php';
           <div>
             <p class="font-bold"><?= $text['office_airport'] ?></p>
             <p class="text-gold font-semibold"><?= $text['marrakech_airport'] ?></p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+          <div class="bg-gold/10 dark:bg-gold/20 p-4 rounded-xl border border-gold/30">
+            <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold"><?= $text['office_airport'] ?? 'Office & Airport' ?></p>
+            <p class="text-gold font-semibold">Casablanca Airport, Morocco</p>
           </div>
         </div>
 

@@ -38,20 +38,32 @@ function carImageUrl($image)
 
 <style>
   :root {
-    --bg: #36454F; --bg-dark: #2C3A44; --card: #36454F; --card-dark: #2C3A44;
-    --border: #4A5A66; --primary: #FFFFFF; --muted: #D1D5DB; --gold: #FFD700;
-    --text-primary: var(--primary); --text-muted: var(--muted);
-    --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, #C6A667 120%);
+    --primary-color: #FFB22C;
+    --secondary-color: #000000;
+    --therde: #854836;
+    --text-color: #F7F7F7;
+    --light-bg: #353333;
+    --shadow: 0 5px 15px rgba(246, 176, 0, 0.496);
+    --bg: var(--light-bg); --bg-dark: var(--light-bg); --card: var(--light-bg); --card-dark: var(--light-bg);
+    --border: #4A5A66; --primary: var(--text-color); --muted: #D1D5DB; --gold: var(--primary-color);
+    --text-primary: var(--text-color); --text-muted: var(--muted);
+    --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, var(--therde) 120%);
   }
   .light {
-    --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #ffffff; --card-dark: #f1f5f9;
+    --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #EFECE3; --card-dark: #EFECE3;
     --border: #cbd5e1; --primary: #1e293b; --muted: #64748b; --gold: #d97706;
     --text-primary: var(--primary); --text-muted: var(--muted);
   }
   body { background-color: var(--bg); color: var(--primary); }
   .bg-card { background-color: var(--card); }
   .bg-card-dark { background-color: var(--card-dark); }
-  .car-card-bg { background: var(--card-dark-gradient); }
+  .car-card-bg { background: #000000 !important; }
+  .light .car-card-bg { background: #EFECE3 !important; }
+  .light .car-card-bg .text-white { color: #000000 !important; }
+  .light .car-card-bg .text-primary { color: #000000 !important; }
+  .light .car-card-bg .text-muted { color: #000000 !important; }
+  .light .car-card-bg h3 { color: #000000 !important; }
+  .light .bg-card-dark .text-primary { color: #000000 !important; }
   .border-border { border-color: var(--border); }
   .text-primary { color: var(--primary); }
   .text-muted { color: var(--muted); }
@@ -79,7 +91,7 @@ function carImageUrl($image)
     bottom: 0; left: 0;
     width: 50%;
     height: 5px;
-    background: linear-gradient(90deg, #FFD700, #FFA500);
+    background: linear-gradient(90deg, #FFB22C, #FFA500);
     border-radius: 3px;
     transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
     transform: translateX(100%);
@@ -97,7 +109,7 @@ function carImageUrl($image)
   .tab-item.active { color: #000; }
   .tab-item:not(.active) { color: rgba(255,255,255,0.75); }
   .light .tab-item:not(.active) { color: rgba(30, 41, 59, 0.75); }
-  .tab-item:hover:not(.active) { color: #FFD700; }
+  .tab-item:hover:not(.active) { color: #FFB22C; }
   .light .tab-item:hover:not(.active) { color: #d97706; }
 
   @media (max-width: 640px) {
@@ -145,7 +157,7 @@ function carImageUrl($image)
     cursor: pointer;
   }
   .insurance-option input[type="radio"]:checked + label {
-    border: 2px solid #FFD700;
+    border: 2px solid #FFB22C;
     background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,165,0,0.05));
     box-shadow: 0 0 25px rgba(255,215,0,0.3);
   }
@@ -183,11 +195,11 @@ function carImageUrl($image)
   .extra-item svg {
     width: 24px;
     height: 24px;
-    color: #FFD700;
+    color: #FFB22C;
   }
   .extra-price {
     font-weight: bold;
-    color: #FFD700;
+    color: #FFB22C;
     font-size: 1rem;
   }
 
@@ -229,7 +241,7 @@ function carImageUrl($image)
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
   input:checked + .slider {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background: linear-gradient(135deg, #FFB22C, #FFA500);
   }
   input:checked + .slider:before {
     transform: translateX(24px);
@@ -595,7 +607,7 @@ function carImageUrl($image)
     });
   };
 
-  const sliderActiveBackground = 'linear-gradient(135deg, #FFD700, #FFA500)';
+  const sliderActiveBackground = 'linear-gradient(135deg, #FFB22C, #FFA500)';
   const setSliderColor = (checkbox) => {
     const slider = checkbox.closest('.toggle-switch')?.querySelector('.slider');
     if (!slider) { return; }

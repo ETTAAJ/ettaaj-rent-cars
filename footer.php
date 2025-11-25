@@ -69,9 +69,14 @@
             </svg>
             <div>
               <span class="block text-sm text-gray-500"><?= $text['location'] ?></span>
-              <a href="https://maps.app.goo.gl/qNu7pL2mrhwVVxGp6" target="_blank" class="text-gold hover:underline font-semibold text-base">
-                <?= $text['marrakech_morocco'] ?>
-              </a>
+              <div class="space-y-2">
+                <a href="https://maps.app.goo.gl/qNu7pL2mrhwVVxGp6" target="_blank" class="block text-gold hover:underline font-semibold text-base">
+                  <?= $text['marrakech_morocco'] ?>
+                </a>
+                <a href="https://www.google.com/maps?q=Mohammed+V+International+Airport+Casablanca" target="_blank" class="block text-gold hover:underline font-semibold text-base">
+                  Casablanca, Morocco
+                </a>
+              </div>
             </div>
           </li>
         </ul>
@@ -105,7 +110,15 @@
 
   <!-- Custom CSS -->
   <style>
-    .text-gold { color: #FFD700 !important; }
+    :root {
+      --primary-color: #FFB22C;
+      --secondary-color: #000000;
+      --therde: #854836;
+      --text-color: #F7F7F7;
+      --light-bg: #353333;
+      --shadow: 0 5px 15px rgba(246, 176, 0, 0.496);
+    }
+    .text-gold { color: var(--primary-color, #FFB22C) !important; }
     /* Phone number always LTR even in RTL */
     .phone-number { direction: ltr !important; display: inline-block; unicode-bidi: embed; }
     

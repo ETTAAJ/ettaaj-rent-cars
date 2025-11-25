@@ -23,10 +23,8 @@ require_once 'config.php';
   <link rel="canonical" href="https://www.ettaajrentcars.ma/about.php" />
 
   <!-- Favicon -->
-  <link rel="icon" href="/pub_img/favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/pub_img/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/pub_img/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/pub_img/favicon-16x16.png" />
+  <link rel="icon" href="pub_img/ETTAAJ-RENT-CARS.jpg" type="image/png" sizes="512x512">
+  <link rel="icon" href="pub_img/favicon.ico" type="image/x-icon">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -86,7 +84,7 @@ require_once 'config.php';
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { gold: '#FFD700' } } }
+      theme: { extend: { colors: { gold: '#FFB22C' } } }
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -98,24 +96,56 @@ require_once 'config.php';
 
   <style>
     :root {
-      --bg: #36454F; --bg-dark: #2C3A44; --card: #36454F; --card-dark: #2C3A44;
-      --border: #4A5A66; --primary: #FFFFFF; --muted: #D1D5DB; --gold: #FFD700;
-      --text-primary: var(--primary); --text-muted: var(--muted);
-      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, #C6A667 120%);
+      --primary-color: #FFB22C;
+      --secondary-color: #000000;
+      --therde: #854836;
+      --text-color: #F7F7F7;
+      --light-bg: #353333;
+      --shadow: 0 5px 15px rgba(246, 176, 0, 0.496);
+      --bg: var(--light-bg); --bg-dark: var(--light-bg); --card: var(--light-bg); --card-dark: var(--light-bg);
+      --border: #4A5A66; --primary: var(--text-color); --muted: #D1D5DB; --gold: var(--primary-color);
+      --text-primary: var(--text-color); --text-muted: var(--muted);
+      --card-dark-gradient: linear-gradient(135deg, #0B0B0C 0%, #121212 55%, var(--therde) 120%);
     }
+    .car-card-bg { background: #000000 !important; }
     .light {
-      --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #ffffff; --card-dark: #f1f5f9;
+      --bg: #f8fafc; --bg-dark: #e2e8f0; --card: #EFECE3; --card-dark: #EFECE3;
       --border: #cbd5e1; --primary: #1e293b; --muted: #64748b; --gold: #d97706;
       --text-primary: var(--primary); --text-muted: var(--muted);
     }
     body { background-color: var(--bg); color: var(--primary); font-family: 'Inter', sans-serif; }
     .bg-card { background-color: var(--card); }
     .bg-card-dark { background-color: var(--card-dark); }
-    .car-card-bg { background: var(--card-dark-gradient); }
+    .car-card-bg { background: #000000 !important; }
     .border-border { border-color: var(--border); }
     .text-primary { color: var(--primary); }
     .text-muted { color: var(--muted); }
     .text-gold { color: var(--gold); }
+    
+    /* Infinite Car Slider Styles */
+    .car-slider-container {
+      position: relative;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+    .car-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      animation: slideCars 25s linear infinite;
+      width: fit-content;
+    }
+    .car-slider-track:hover {
+      animation-play-state: paused;
+    }
+    .car-slide-item {
+      flex: 0 0 240px;
+      min-width: 240px;
+    }
+    @keyframes slideCars {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-240px * 8 - 1.5rem * 8)); }
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -171,6 +201,35 @@ require_once 'config.php';
       </div>
     </div>
   </section>
+
+  <!-- Car Images Slider -->
+  <?php
+    $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 8");
+    $sliderStmt->execute();
+    $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
+  <?php if (!empty($sliderCars)): ?>
+  <section class="mb-16 py-8 bg-[var(--light-bg)] rounded-3xl">
+    <div class="car-slider-container overflow-hidden py-6">
+      <div class="car-slider-track">
+        <?php 
+        $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars);
+        foreach ($sliderCarsDuplicated as $car): 
+          $carImg = !empty($car['image']) 
+            ? 'uploads/' . basename($car['image']) 
+            : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
+        ?>
+          <div class="car-slide-item">
+            <img src="<?= htmlspecialchars($carImg) ?>" 
+                 alt="<?= htmlspecialchars($car['name']) ?>"
+                 class="w-full h-40 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 hover:border-[var(--primary-color)] transition-all duration-300"
+                 onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 
   <!-- Mission & Vision -->
   <section id="mission" class="grid md:grid-cols-2 gap-8 mb-16">
@@ -248,7 +307,7 @@ require_once 'config.php';
 <!-- Original Styles (100% unchanged) -->
 <style>
   .particle {
-    position: absolute; width: 4px; height: 4px; background: #FFD700; border-radius: 50%;
+    position: absolute; width: 4px; height: 4px; background: #FFB22C; border-radius: 50%;
     opacity: 0.6; animation: float 6s infinite ease-in-out;
   }
   .particle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
