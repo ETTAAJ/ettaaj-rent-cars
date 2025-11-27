@@ -26,6 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price_week  = (float)($_POST['price_week'] ?? 0);
         $price_month = (float)($_POST['price_month'] ?? 0);
         $discount    = (int)($_POST['discount'] ?? 0);
+        $insurance_basic_price    = (float)($_POST['insurance_basic_price'] ?? 0);
+        $insurance_smart_price    = (float)($_POST['insurance_smart_price'] ?? 0);
+        $insurance_premium_price  = (float)($_POST['insurance_premium_price'] ?? 0);
+        $insurance_basic_deposit  = (float)($_POST['insurance_basic_deposit'] ?? 0);
+        $insurance_smart_deposit  = (float)($_POST['insurance_smart_deposit'] ?? 0);
+        $insurance_premium_deposit = (float)($_POST['insurance_premium_deposit'] ?? 0);
 
         if (empty($name)) $errors['name'] = "Car name is required.";
         if ($seats < 1) $errors['seats'] = "Seats must be at least 1.";
@@ -72,10 +78,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($errors)) {
             $stmt = $pdo->prepare("
-                INSERT INTO cars (name, image, seats, bags, gear, fuel, price_day, price_week, price_month, discount)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO cars (name, image, seats, bags, gear, fuel, price_day, price_week, price_month, discount,
+                                  insurance_basic_price, insurance_smart_price, insurance_premium_price,
+                                  insurance_basic_deposit, insurance_smart_deposit, insurance_premium_deposit)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-            $stmt->execute([$name, $image, $seats, $bags, $gear, $fuel, $price_day, $price_week, $price_month, $discount]);
+            $stmt->execute([
+                $name, $image, $seats, $bags, $gear, $fuel, $price_day, $price_week, $price_month, $discount,
+                $insurance_basic_price, $insurance_smart_price, $insurance_premium_price,
+                $insurance_basic_deposit, $insurance_smart_deposit, $insurance_premium_deposit
+            ]);
             header("Location: index.php?success=1");
             exit;
         }
@@ -316,6 +328,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div class="text-danger small"><?= htmlspecialchars($errors['discount']) ?></div>
             <?php endif; ?>
             <small class="small-muted">Enter discount percentage (0 = no discount)</small>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <hr class="my-4" style="border-color: var(--border);">
+          <h5 class="text-gold mb-4">Insurance Plans</h5>
+        </div>
+
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label class="form-label">Basic Insurance - Price per Day (MAD)</label>
+            <input type="number" step="0.01" name="insurance_basic_price" class="form-control"
+                   value="<?= $_POST['insurance_basic_price'] ?? '0' ?>" min="0">
+            <?php if (isset($errors['insurance_basic_price'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_basic_price']) ?></div>
+            <?php endif; ?>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Basic Insurance - Deposit (MAD)</label>
+            <input type="number" step="0.01" name="insurance_basic_deposit" class="form-control"
+                   value="<?= $_POST['insurance_basic_deposit'] ?? '0' ?>" min="0">
+            <?php if (isset($errors['insurance_basic_deposit'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_basic_deposit']) ?></div>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label class="form-label">Smart Insurance - Price per Day (MAD)</label>
+            <input type="number" step="0.01" name="insurance_smart_price" class="form-control"
+                   value="<?= $_POST['insurance_smart_price'] ?? '0' ?>" min="0">
+            <?php if (isset($errors['insurance_smart_price'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_smart_price']) ?></div>
+            <?php endif; ?>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Smart Insurance - Deposit (MAD)</label>
+            <input type="number" step="0.01" name="insurance_smart_deposit" class="form-control"
+                   value="<?= $_POST['insurance_smart_deposit'] ?? '0' ?>" min="0">
+            <?php if (isset($errors['insurance_smart_deposit'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_smart_deposit']) ?></div>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="mb-3">
+            <label class="form-label">Premium Insurance - Price per Day (MAD)</label>
+            <input type="number" step="0.01" name="insurance_premium_price" class="form-control"
+                   value="<?= $_POST['insurance_premium_price'] ?? '0' ?>" min="0">
+            <?php if (isset($errors['insurance_premium_price'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_premium_price']) ?></div>
+            <?php endif; ?>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Premium Insurance - Deposit (MAD)</label>
+            <input type="number" step="0.01" name="insurance_premium_deposit" class="form-control"
+                   value="<?= $_POST['insurance_premium_deposit'] ?? '0' ?>" min="0">
+            <?php if (isset($errors['insurance_premium_deposit'])): ?>
+              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_premium_deposit']) ?></div>
+            <?php endif; ?>
           </div>
         </div>
 

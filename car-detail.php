@@ -285,6 +285,75 @@ $hasDiscount = $discount > 0;
         </div>
       </div>
 
+      <!-- Insurance Plans Section -->
+      <div class="bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-10">
+        <h2 class="text-3xl font-bold text-gold mb-8 text-center">Insurance Plans</h2>
+        <div class="space-y-6">
+          <!-- Basic Insurance -->
+          <div class="p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
+            <h3 class="text-2xl font-bold text-gold mb-4">Basic Insurance</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
+              <div class="flex items-center gap-3">
+                <i class="bi bi-calendar-check w-6 h-6 text-gold"></i>
+                <div>
+                  <span class="text-muted">Daily:</span>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_basic_price'] ?? 0)) ?></strong>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="bi bi-shield-check w-6 h-6 text-gold"></i>
+                <div>
+                  <span class="text-muted">Deposit:</span>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_basic_deposit'] ?? 0)) ?></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart Insurance -->
+          <div class="p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
+            <h3 class="text-2xl font-bold text-gold mb-4">Smart Insurance</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
+              <div class="flex items-center gap-3">
+                <i class="bi bi-calendar-check w-6 h-6 text-gold"></i>
+                <div>
+                  <span class="text-muted">Daily:</span>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_smart_price'] ?? 0)) ?></strong>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="bi bi-shield-check w-6 h-6 text-gold"></i>
+                <div>
+                  <span class="text-muted">Deposit:</span>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_smart_deposit'] ?? 0)) ?></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Premium Insurance -->
+          <div class="p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
+            <h3 class="text-2xl font-bold text-gold mb-4">Premium Insurance</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
+              <div class="flex items-center gap-3">
+                <i class="bi bi-calendar-check w-6 h-6 text-gold"></i>
+                <div>
+                  <span class="text-muted">Daily:</span>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_premium_price'] ?? 0)) ?></strong>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="bi bi-shield-check w-6 h-6 text-gold"></i>
+                <div>
+                  <span class="text-muted">Deposit:</span>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_premium_deposit'] ?? 0)) ?></strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <a href="https://wa.me/212772331080?text=Hi!%20I'm%20interested%20in%20the%20<?= urlencode($car['name']) ?>%20-%20<?= $hasDiscount ? formatNumber($discountedPrice) : formatNumber($originalPrice) ?>%20MAD/day%20(<?= $hasDiscount ? "-{$discount}%" : '' ?>)" 
          class="block text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl py-6 rounded-2xl shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-4">
         <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">

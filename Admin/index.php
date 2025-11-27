@@ -68,6 +68,11 @@ if (!empty($where)) {
 }
 $sql .= " ORDER BY $order";
 
+// Get all cars for dropdown list
+$allCarsStmt = $pdo->prepare("SELECT id, name FROM cars ORDER BY name ASC");
+$allCarsStmt->execute();
+$allCars = $allCarsStmt->fetchAll(PDO::FETCH_ASSOC);
+
 /* -------------------------------------------------
    6. RENDER CAR CARD (Same as public site)
    ------------------------------------------------- */
@@ -238,23 +243,29 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <!-- Filters -->
   <div data-aos="fade-up" class="bg-[#2C3A44] p-6 rounded-2xl shadow-2xl border border-[#4A5A66] mb-8">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-      <input type="text" id="search" placeholder="Search car name..." value="<?= htmlspecialchars($search) ?>"
-             class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500">
-      <select id="gear" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl">
+      <select id="search" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 cursor-pointer" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 12px; padding-right: 2.5rem;">
+        <option value="">All Cars</option>
+        <?php foreach ($allCars as $carOption): ?>
+          <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?>>
+            <?= htmlspecialchars($carOption['name']) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+      <select id="gear" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500">
         <option value="">All Transmission</option>
         <option value="Manual" <?= $gear==='Manual'?'selected':'' ?>>Manual</option>
         <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?>>Automatic</option>
       </select>
-      <select id="fuel" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl">
+      <select id="fuel" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500">
         <option value="">All Fuel</option>
         <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?>>Diesel</option>
         <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?>>Petrol</option>
       </select>
-      <select id="sort" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl">
+      <select id="sort" class="p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500">
         <option value="low" <?= $sort==='low'?'selected':'' ?>>Price: Low → High</option>
         <option value="high" <?= $sort==='high'?'selected':'' ?>>Price: High → Low</option>
       </select>
-      <a href="?" class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 font-bold py-4 rounded-xl text-center">Clear All</a>
+      <a href="?" class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 font-bold py-4 rounded-xl text-center transition-colors">Clear All</a>
     </div>
   </div>
 
@@ -329,7 +340,7 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }, 400);
   };
 
-  els.search.addEventListener('input', fetchCars);
+  els.search.addEventListener('change', fetchCars);
   els.gear.addEventListener('change', fetchCars);
   els.fuel.addEventListener('change', fetchCars);
   els.sort.addEventListener('change', fetchCars);
