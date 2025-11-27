@@ -93,32 +93,107 @@ function carImageUrl($image)
     border-color: rgba(217, 119, 6, 0.2);
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   }
+  
+  /* Animated background indicator for active tab */
+  .tab-bar::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: calc(50% - 8px);
+    height: calc(100% - 16px);
+    background: linear-gradient(135deg, rgba(255, 178, 44, 0.15), rgba(255, 165, 0, 0.1));
+    border-radius: 12px;
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+    transform: translateX(calc(100% + 8px));
+    z-index: 1;
+    box-shadow: inset 0 2px 10px rgba(255, 215, 0, 0.2);
+  }
+  .tab-bar.active-details::after {
+    transform: translateX(0%);
+  }
+  .tab-bar.active-booking::after {
+    transform: translateX(calc(100% + 8px));
+  }
+  
+  /* Animated underline */
   .tab-bar::before {
     content: '';
     position: absolute;
-    bottom: 0; left: 0;
+    bottom: 0;
+    left: 0;
     width: 50%;
-    height: 5px;
-    background: linear-gradient(90deg, #FFB22C, #FFA500);
+    height: 4px;
+    background: linear-gradient(90deg, #FFB22C, #FFA500, #FFB22C);
+    background-size: 200% 100%;
     border-radius: 3px;
     transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
     transform: translateX(100%);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+    z-index: 2;
+    animation: shimmer 3s ease-in-out infinite;
   }
-  .tab-bar.active-details::before { transform: translateX(0%); }
-  .tab-bar.active-booking::before { transform: translateX(100%); }
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .tab-bar.active-details::before { 
+    transform: translateX(0%); 
+  }
+  .tab-bar.active-booking::before { 
+    transform: translateX(100%); 
+  }
 
   .tab-item {
-    flex: 1; padding: 18px 12px; text-align: center; font-weight: 700; font-size: 1.15rem;
-    border-radius: 12px; transition: all 0.4s ease; position: relative; z-index: 10;
+    flex: 1; 
+    padding: 18px 12px; 
+    text-align: center; 
+    font-weight: 700; 
+    font-size: 1.15rem;
+    border-radius: 12px; 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    position: relative; 
+    z-index: 10;
+    cursor: pointer;
   }
-  .tab-item svg { width: 26px; height: 26px; margin-right: 10px; }
+  .tab-item svg { 
+    width: 26px; 
+    height: 26px; 
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+  }
   html[dir="rtl"] .tab-item svg { margin-right: 0; margin-left: 10px; }
-  .tab-item.active { color: #000; }
-  .tab-item:not(.active) { color: rgba(255,255,255,0.75); }
-  .light .tab-item:not(.active) { color: rgba(30, 41, 59, 0.75); }
-  .tab-item:hover:not(.active) { color: #FFB22C; }
-  .light .tab-item:hover:not(.active) { color: #d97706; }
+  
+  .tab-item.active { 
+    color: #000;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  .tab-item.active svg {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+  
+  .tab-item:not(.active) { 
+    color: rgba(255,255,255,0.75);
+  }
+  .light .tab-item:not(.active) { 
+    color: rgba(30, 41, 59, 0.75); 
+  }
+  
+  .tab-item:hover:not(.active) { 
+    color: #FFB22C;
+    transform: translateY(-2px);
+  }
+  .tab-item:hover:not(.active) svg {
+    transform: scale(1.05);
+  }
+  .light .tab-item:hover:not(.active) { 
+    color: #d97706; 
+  }
+  
+  .tab-item:active {
+    transform: scale(0.98);
+  }
 
   @media (max-width: 640px) {
     .tab-item { padding: 14px 8px; font-size: 1rem; }

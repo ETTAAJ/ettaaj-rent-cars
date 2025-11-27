@@ -279,6 +279,15 @@ require_once 'config.php';
     html[dir="rtl"] [class*="car-card"] .text-center {
       direction: rtl;
     }
+    
+    /* Logo Spin Animation on Hover */
+    .logo-spin {
+      transition: transform 0.6s ease-in-out;
+      transform-origin: center center;
+    }
+    .logo-spin:hover {
+      transform: rotate(360deg);
+    }
   </style>
 </head>
 <body class="min-h-screen" dir="<?= getDir() ?>">
@@ -310,7 +319,7 @@ require_once 'config.php';
     <div class="p-6">
       <div class="flex justify-between items-center mb-8">
         <a href="index.php" class="flex items-center space-x-2">
-          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30">
+          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30 logo-spin">
           <span class="text-xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
         </a>
         <button id="close-sidebar" class="text-current hover:text-[var(--gold-dark)] transition">
@@ -357,8 +366,8 @@ require_once 'config.php';
       <!-- Currency Switcher Mobile -->
       <div class="mt-4 pt-4 border-t border-border">
         <div class="currency-switcher w-full">
-          <div class="currency-current text-sm text-[var(--muted)]">
-            <span><?= $currencySymbols[$currencyInfo['code']] ?> <?= $currencyInfo['code'] ?></span>
+            <div class="currency-current text-sm text-[var(--muted)]">
+              <span><?= $currencyInfo['code'] === 'MAD' ? $currencyInfo['code'] : $currencySymbols[$currencyInfo['code']] . ' ' . $currencyInfo['code'] ?></span>
             <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
@@ -407,21 +416,23 @@ require_once 'config.php';
   <!-- Desktop Header -->
   <header class="bg-[var(--bg-dark)]/90 backdrop-blur-md shadow-lg sticky top-0 z-30 border-b border-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between lg:hidden">
-        <a href="index.php" class="flex items-center space-x-2">
-          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30">
-          <span class="text-xl sm:text-2xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
-        </a>
-        <button id="open-sidebar" class="text-current hover:text-[var(--gold-dark)] transition">
+      <div class="flex items-center justify-center relative lg:hidden">
+        <!-- Menu Button - Positioned based on language direction -->
+        <button id="open-sidebar" class="absolute <?= $lang === 'ar' ? 'right-0' : 'left-0' ?> text-current hover:text-[var(--gold-dark)] transition">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
+        <!-- Logo and Name - Centered -->
+        <a href="index.php" class="flex items-center space-x-2">
+          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30 logo-spin">
+          <span class="text-xl sm:text-2xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
+        </a>
       </div>
 
       <div class="hidden lg:flex items-center justify-between">
         <a href="index.php" class="flex items-center space-x-2">
-          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30">
+          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30 logo-spin">
           <span class="text-xl sm:text-2xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
         </a>
 
@@ -454,7 +465,7 @@ require_once 'config.php';
           <!-- Currency Switcher Desktop -->
           <div class="currency-switcher">
             <div class="currency-current">
-              <span class="text-sm"><?= $currencySymbols[$currencyInfo['code']] ?> <?= $currencyInfo['code'] ?></span>
+              <span class="text-sm"><?= $currencyInfo['code'] === 'MAD' ? $currencyInfo['code'] : $currencySymbols[$currencyInfo['code']] . ' ' . $currencyInfo['code'] ?></span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>

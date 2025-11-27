@@ -231,6 +231,9 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <a href="currencies.php" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2">
           <i class="bi bi-currency-exchange"></i> Currencies
         </a>
+        <a href="visitors.php" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2">
+          <i class="bi bi-people-fill"></i> Visitors
+        </a>
         <a href="change_password.php" class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-6 rounded-xl">
           <i class="bi bi-shield-lock"></i> Password
         </a>
