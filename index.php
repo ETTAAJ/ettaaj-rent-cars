@@ -569,15 +569,15 @@
 
 <!-- CARS SECTION -->
 <section id="cars" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <div data-aos="fade-up" class="bg-card-dark p-4 sm:p-6 rounded-xl shadow-lg mb-8 border border-border">
+  <div data-aos="fade-up" class="bg-[#353333] p-4 sm:p-6 rounded-xl shadow-lg mb-8 border border-[#4A5A66]">
     <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
       <!-- Car Dropdown - Full width on mobile, spans 2 columns on md -->
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 sm:col-span-2 lg:col-span-1">
         <label for="search" class="text-muted text-sm font-medium whitespace-nowrap sm:min-w-[50px]">Car:</label>
-        <select id="search" class="w-full flex-1 p-3 bg-white border border-gray-300 text-gray-900 rounded-md focus:ring-2 focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] text-sm cursor-pointer" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 12px; padding-right: 2.5rem;">
-          <option value="">All</option>
+        <select id="search" class="w-full flex-1 p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 12px; padding-right: 2.5rem;">
+          <option value="" class="bg-[#353333] text-white">All</option>
           <?php foreach ($allCars as $carOption): ?>
-            <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?>>
+            <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?> class="bg-[#353333] text-white">
               <?= htmlspecialchars($carOption['name']) ?>
             </option>
           <?php endforeach; ?>
@@ -585,23 +585,23 @@
       </div>
       
       <!-- Gear Select -->
-      <select id="gear" class="w-full p-3 sm:p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
-        <option value=""><?= $text['all_transmission'] ?> (<?= formatNumber($totalCount) ?>)</option>
-        <option value="Manual" <?= $gear==='Manual'?'selected':'' ?>><?= $text['manual'] ?> (<?= formatNumber($gearCounts['Manual'] ?? 0) ?>)</option>
-        <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?>><?= $text['automatic'] ?> (<?= formatNumber($gearCounts['Automatic'] ?? 0) ?>)</option>
+      <select id="gear" class="w-full p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer">
+        <option value="" class="bg-[#353333] text-white"><?= $text['all_transmission'] ?> (<?= formatNumber($totalCount) ?>)</option>
+        <option value="Manual" <?= $gear==='Manual'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['manual'] ?> (<?= formatNumber($gearCounts['Manual'] ?? 0) ?>)</option>
+        <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['automatic'] ?> (<?= formatNumber($gearCounts['Automatic'] ?? 0) ?>)</option>
       </select>
       
       <!-- Fuel Select -->
-      <select id="fuel" class="w-full p-3 sm:p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
-        <option value=""><?= $text['all_fuel'] ?> (<?= formatNumber($totalCount) ?>)</option>
-        <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?>><?= $text['diesel'] ?> (<?= formatNumber($fuelCounts['Diesel'] ?? 0) ?>)</option>
-        <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?>><?= $text['petrol'] ?> (<?= formatNumber($fuelCounts['Petrol'] ?? 0) ?>)</option>
+      <select id="fuel" class="w-full p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer">
+        <option value="" class="bg-[#353333] text-white"><?= $text['all_fuel'] ?> (<?= formatNumber($totalCount) ?>)</option>
+        <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['diesel'] ?> (<?= formatNumber($fuelCounts['Diesel'] ?? 0) ?>)</option>
+        <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['petrol'] ?> (<?= formatNumber($fuelCounts['Petrol'] ?? 0) ?>)</option>
       </select>
       
       <!-- Sort Select -->
-      <select id="sort" class="w-full p-3 sm:p-4 bg-card border border-border text-primary rounded-lg focus:ring-2 focus:ring-gold text-sm">
-        <option value="low" <?= $sort==='low'?'selected':'' ?>><?= $text['low_to_high'] ?></option>
-        <option value="high" <?= $sort==='high'?'selected':'' ?>><?= $text['high_to_low'] ?></option>
+      <select id="sort" class="w-full p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer">
+        <option value="low" <?= $sort==='low'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['low_to_high'] ?></option>
+        <option value="high" <?= $sort==='high'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['high_to_low'] ?></option>
       </select>
       
       <!-- Clear Button -->
