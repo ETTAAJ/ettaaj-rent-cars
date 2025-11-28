@@ -334,11 +334,349 @@ function carImageUrl($image)
     }
   }
 
-  /* Responsive */
+  /* Enhanced Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+  @keyframes priceUpdate {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Form animations */
+  .form-section {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  .form-section:nth-child(1) { animation-delay: 0.1s; }
+  .form-section:nth-child(2) { animation-delay: 0.2s; }
+  .form-section:nth-child(3) { animation-delay: 0.3s; }
+  .form-section:nth-child(4) { animation-delay: 0.4s; }
+  .form-section:nth-child(5) { animation-delay: 0.5s; }
+  .form-section:nth-child(6) { animation-delay: 0.6s; }
+
+  /* Input focus animations */
+  input:focus, select:focus {
+    animation: scaleIn 0.3s ease-out;
+    transform: scale(1.02);
+  }
+
+  /* Price update animation */
+  #total-price {
+    transition: all 0.3s ease;
+  }
+  #total-price.updating {
+    animation: priceUpdate 0.5s ease;
+  }
+
+  /* Button animations */
+  button, .whatsapp-btn, a[class*="btn"] {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  button:active, .whatsapp-btn:active {
+    transform: scale(0.98);
+  }
+  button::before, .whatsapp-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  button:active::before, .whatsapp-btn:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Card hover effects */
+  .insurance-option label, .extra-item {
+    position: relative;
+    overflow: hidden;
+  }
+  .insurance-option label::before, .extra-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    transition: left 0.5s;
+  }
+  .insurance-option:hover label::before, .extra-item:hover::before {
+    left: 100%;
+  }
+
+  /* Loading state */
+  .loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--gold);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Responsive Improvements */
+  @media (max-width: 1024px) {
+    main { padding: 1.5rem 1rem; }
+    .tab-bar { margin-bottom: 2rem; }
+  }
+
   @media (max-width: 768px) {
-    .extra-item { flex-direction: column; align-items: flex-start; }
-    .extra-item label { min-width: 0; }
-    .extra-item .toggle-switch { margin-left: auto; }
+    main { padding: 1rem 0.75rem; }
+    
+    /* Tab bar mobile */
+    .tab-bar {
+      padding: 6px;
+      border-radius: 12px;
+    }
+    .tab-item {
+      padding: 12px 8px;
+      font-size: 0.9rem;
+    }
+    .tab-item svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+    }
+
+    /* Car name section */
+    h2.text-3xl {
+      font-size: 1.75rem;
+    }
+    .flex.items-center.justify-center.gap-4 {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .flex.items-center.justify-center.gap-4 span {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+
+    /* Form improvements */
+    form {
+      padding: 1.5rem !important;
+    }
+    .form-section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    input, select {
+      padding: 0.875rem !important;
+      font-size: 1rem;
+      min-height: 48px; /* Touch-friendly */
+    }
+    label {
+      font-size: 0.75rem;
+    }
+
+    /* Insurance cards mobile */
+    .insurance-option label {
+      padding: 1rem !important;
+    }
+    .insurance-option h4 {
+      font-size: 1.125rem;
+    }
+    .insurance-option span.text-2xl {
+      font-size: 1.5rem;
+    }
+
+    /* Travel essentials mobile */
+    .extra-item {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0.875rem;
+    }
+    .extra-item label {
+      min-width: 0;
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .extra-item .toggle-switch {
+      margin-left: auto;
+      margin-right: 0;
+    }
+    .extra-price {
+      font-size: 0.875rem;
+    }
+
+    /* Total price mobile */
+    #total-price {
+      font-size: 2.5rem !important;
+    }
+    .bg-gradient-to-r.from-gold {
+      padding: 1.25rem !important;
+    }
+
+    /* Button mobile */
+    button, .whatsapp-btn {
+      padding: 1rem !important;
+      font-size: 1rem;
+      min-height: 48px;
+    }
+
+    /* Car image mobile */
+    .max-w-4xl {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    main { padding: 0.75rem 0.5rem; }
+    
+    /* Tab bar small mobile */
+    .tab-item {
+      padding: 10px 6px;
+      font-size: 0.8rem;
+    }
+    .tab-item svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+    }
+    .tab-item span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.7rem;
+    }
+
+    /* Car name small mobile */
+    h2.text-3xl {
+      font-size: 1.5rem;
+      line-height: 1.3;
+    }
+    .text-2xl {
+      font-size: 1.25rem;
+    }
+
+    /* Form small mobile */
+    form {
+      padding: 1rem !important;
+      border-radius: 1.5rem !important;
+    }
+    .grid.grid-cols-1.sm\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    /* Insurance cards small mobile */
+    .insurance-option label {
+      padding: 0.875rem !important;
+    }
+    .insurance-option .flex.justify-between {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* Total price small mobile */
+    #total-price {
+      font-size: 2rem !important;
+    }
+    #days-count, #insurance-info {
+      font-size: 0.875rem;
+    }
+
+    /* Button small mobile */
+    button, .whatsapp-btn {
+      padding: 0.875rem !important;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* Extra small devices */
+    .tab-item {
+      padding: 8px 4px;
+      font-size: 0.75rem;
+    }
+    form {
+      padding: 0.875rem !important;
+    }
+    #total-price {
+      font-size: 1.75rem !important;
+    }
+  }
+
+  /* Touch device optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    button, a, .tab-item, .insurance-option label, .extra-item {
+      -webkit-tap-highlight-color: rgba(255, 215, 0, 0.2);
+    }
+    .insurance-option:hover {
+      transform: none;
+    }
+    .insurance-option:active {
+      transform: scale(0.98);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 </style>
 
@@ -364,66 +702,12 @@ function carImageUrl($image)
     </div>
   </div>
 
-  <!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
-  <section class="relative overflow-hidden py-8 lg:py-12 mb-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Logo -->
-      <div class="text-center mb-12" data-aos="fade-down">
-        <img src="pub_img/ettaaj-rent-cars.jpeg" 
-             alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
-             class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
-      </div>
-      
-      <!-- SEO Keywords (Hidden but accessible to search engines) -->
-      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
-        <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
-        <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
-      </div>
-      
-      <!-- Infinite Car Images Slider -->
-      <?php
-        $sliderStmt = $pdo->prepare("SELECT * FROM cars WHERE id != ? ORDER BY RAND() LIMIT 10");
-        $sliderStmt->execute([$car['id']]);
-        $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
-      ?>
-      <?php if (!empty($sliderCars)): ?>
-      <div class="relative mt-8" data-aos="fade-up">
-        <div class="car-slider-container overflow-hidden py-8">
-          <div class="car-slider-track">
-            <?php 
-            // Duplicate cars multiple times for seamless infinite loop
-            $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
-            foreach ($sliderCarsDuplicated as $sliderCar): 
-              $carImg = !empty($sliderCar['image']) 
-                ? 'uploads/' . basename($sliderCar['image']) 
-                : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($sliderCar['name']);
-            ?>
-              <div class="car-slide-item">
-                <div class="relative group">
-                  <img src="<?= htmlspecialchars($carImg) ?>" 
-                       alt="<?= htmlspecialchars($sliderCar['name']) ?> - Rental Cars in Morocco"
-                       class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
-                       loading="lazy"
-                       onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($sliderCar['name']) ?>'">
-                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
-                    <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($sliderCar['name']) ?></p>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-      <?php endif; ?>
-    </div>
-  </section>
-
   <!-- CAR NAME -->
-  <div class="text-center mb-8" data-aos="fade-up">
-    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gold mb-2">
+  <div class="text-center mb-6 sm:mb-8" data-aos="fade-up">
+    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gold mb-2 px-4">
       <?= htmlspecialchars($car['name']) ?>
     </h2>
-    <div class="flex items-center justify-center gap-4 text-sm text-muted">
+    <div class="flex items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted flex-wrap px-4">
       <span class="flex items-center gap-2">
         <i class="bi bi-person-fill text-gold"></i>
         <span class="text-white" dir="ltr"><?= formatNumber($car['seats']) ?></span> <span class="text-white"><?= $text['seats'] ?></span>
@@ -435,11 +719,11 @@ function carImageUrl($image)
       <span class="px-3 py-1 bg-card-dark rounded-full border border-border"><?= $car['gear'] === 'Manual' ? $text['manual'] : ($car['gear'] === 'Automatic' ? $text['automatic'] : htmlspecialchars($car['gear'])) ?></span>
       <span class="px-3 py-1 bg-card-dark rounded-full border border-border"><?= $car['fuel'] === 'Diesel' ? $text['diesel'] : ($car['fuel'] === 'Petrol' ? $text['petrol'] : htmlspecialchars($car['fuel'])) ?></span>
     </div>
-    <div class="mt-4">
-      <span class="text-2xl font-black text-gold" dir="ltr">
+    <div class="mt-3 sm:mt-4 px-4">
+      <span class="text-xl sm:text-2xl font-black text-gold" dir="ltr">
         MAD <?= formatNumber($discountedPricePerDay) ?>
       </span>
-      <span class="text-lg text-muted">/<?= $text['day'] ?></span>
+      <span class="text-base sm:text-lg text-muted">/<?= $text['day'] ?></span>
       <?php if ($hasDiscount): ?>
         <span class="ml-2 text-lg text-green-400 line-through opacity-70" dir="ltr">
           MAD <?= formatNumber($originalPricePerDay) ?>
@@ -449,11 +733,11 @@ function carImageUrl($image)
         </span>
       <?php endif; ?>
       <!-- Weekly and Monthly Prices -->
-      <div class="flex justify-center gap-3 mt-3 text-sm font-medium">
-        <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
+      <div class="flex justify-center gap-2 sm:gap-3 mt-3 text-xs sm:text-sm font-medium flex-wrap">
+        <span class="px-2 sm:px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
           <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_week']) ?></strong>
         </span>
-        <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
+        <span class="px-2 sm:px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
           <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_month']) ?></strong>
         </span>
       </div>
@@ -462,7 +746,7 @@ function carImageUrl($image)
         
   <!-- CAR IMAGE -->
   <div class="max-w-4xl mx-auto mb-8" data-aos="fade-up">
-    <div class="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-border group">
+    <div class="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-border group" style="box-shadow: 0 10px 30px rgba(255, 178, 44, 0.3);">
       <div class="relative w-full pt-[56.25%] car-card-bg overflow-hidden">
           <?php
           $imgUrl = !empty($car['image'])
@@ -485,12 +769,12 @@ function carImageUrl($image)
   <div class="max-w-4xl mx-auto">
     <!-- BOOKING FORM -->
     <div data-aos="fade-up" class="space-y-8">
-      <form id="booking-form" class="bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-10 space-y-8">
+      <form id="booking-form" class="bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-6 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
         <input type="hidden" name="car_id" value="<?= $car['id'] ?>">
 
         <!-- DATES -->
-        <div>
-          <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['trip_dates'] ?></h2>
+        <div class="form-section">
+          <h2 class="text-xl sm:text-2xl font-bold text-gold mb-4"><?= $text['trip_dates'] ?></h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="relative">
               <input type="date" name="pickup" id="pickup" required 
@@ -507,8 +791,8 @@ function carImageUrl($image)
         </div>
 
         <!-- PICKUP LOCATION -->
-        <div>
-          <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['pickup_location'] ?></h2>
+        <div class="form-section">
+          <h2 class="text-xl sm:text-2xl font-bold text-gold mb-4"><?= $text['pickup_location'] ?></h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="relative">
               <select name="pickup_location" id="pickup_location" required 
@@ -528,8 +812,8 @@ function carImageUrl($image)
         </div>
 
         <!-- PROTECTION PLAN -->
-        <div>
-          <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['protection_plan'] ?></h2>
+        <div class="form-section">
+          <h2 class="text-xl sm:text-2xl font-bold text-gold mb-4"><?= $text['protection_plan'] ?></h2>
         <div class="space-y-4">
 
             <div class="insurance-option">
@@ -610,8 +894,8 @@ function carImageUrl($image)
         </div>
 
         <!-- TRAVEL ESSENTIALS -->
-        <div>
-          <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['travel_essentials'] ?></h2>
+        <div class="form-section">
+          <h2 class="text-xl sm:text-2xl font-bold text-gold mb-4"><?= $text['travel_essentials'] ?></h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <?php if (empty($travelEssentials)): ?>
               <div class="col-span-2 text-center text-muted py-8">
@@ -663,9 +947,9 @@ function carImageUrl($image)
         </div>
 
         <!-- TOTAL PRICE -->
-        <div class="bg-gradient-to-r from-gold/10 to-yellow-500/10 p-7 rounded-2xl border border-gold/30 text-center">
-          <p class="text-gold font-bold mb-3 text-lg"><?= $text['total_estimated_price'] ?></p>
-          <p id="total-price" class="text-5xl font-black text-primary" role="status" aria-live="polite" dir="ltr">MAD0</p>
+        <div class="form-section bg-gradient-to-r from-gold/10 to-yellow-500/10 p-5 sm:p-7 rounded-2xl border border-gold/30 text-center">
+          <p class="text-gold font-bold mb-3 text-base sm:text-lg"><?= $text['total_estimated_price'] ?></p>
+          <p id="total-price" class="text-3xl sm:text-4xl md:text-5xl font-black text-primary transition-all duration-300" role="status" aria-live="polite" dir="ltr">MAD0</p>
           <p id="days-count" class="text-muted mt-2 text-lg" aria-live="polite"></p>
           <p id="insurance-info" class="text-sm text-gold mt-3 font-medium"><?= $text['basic_insurance_included'] ?></p>
           <p id="extras-info" class="text-sm text-amber-300 mt-2"></p>
@@ -675,8 +959,8 @@ function carImageUrl($image)
         </div>
 
         <!-- PERSONAL INFO -->
-        <div>
-          <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['personal_details'] ?></h2>
+        <div class="form-section">
+          <h2 class="text-xl sm:text-2xl font-bold text-gold mb-4"><?= $text['personal_details'] ?></h2>
           <div class="space-y-4">
             <input type="text" name="name" required placeholder="<?= $text['full_name'] ?>" 
                    class="w-full p-4 bg-white/10 border border-border rounded-2xl focus:ring-2 focus:ring-gold text-primary">
@@ -812,8 +1096,13 @@ function carImageUrl($image)
     const insuranceTotal = days * insuranceCostPerDay;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
 
-    totalEl.textContent = 'MAD' + grandTotal.toLocaleString('en-US');
-    totalEl.setAttribute('dir', 'ltr');
+    // Add animation class for price update
+    totalEl.classList.add('updating');
+    setTimeout(() => {
+      totalEl.textContent = 'MAD' + grandTotal.toLocaleString('en-US');
+      totalEl.setAttribute('dir', 'ltr');
+      totalEl.classList.remove('updating');
+    }, 150);
     
     // Show pricing tier info
     let pricingInfo = days + ' <?= $text['day'] ?>' + (days > 1 ? 's' : '');

@@ -166,6 +166,107 @@ $hasDiscount = $discount > 0;
     }
   }
 
+  /* Enhanced Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Card entrance animations */
+  .car-detail-card {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  .spec-card {
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+  .insurance-card {
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+  }
+
+  /* Button animations */
+  button, a[class*="btn"], .new-book-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  button:active, a[class*="btn"]:active, .new-book-btn:active {
+    transform: scale(0.98);
+  }
+  button::before, a[class*="btn"]::before, .new-book-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  button:active::before, a[class*="btn"]:active::before, .new-book-btn:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  /* Card hover effects */
+  .insurance-card-item, .spec-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .insurance-card-item::before, .spec-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    transition: left 0.5s;
+  }
+  .insurance-card-item:hover::before, .spec-card:hover::before {
+    left: 100%;
+  }
+
   /* Discount Badge */
   .discount-badge {
     position: absolute;
@@ -185,6 +286,236 @@ $hasDiscount = $discount > 0;
   html[dir="rtl"] .discount-badge {
     right: auto;
     left: 16px;
+  }
+
+  /* Responsive Improvements */
+  @media (max-width: 1024px) {
+    main { padding: 1.5rem 1rem; }
+    .tab-bar { margin-bottom: 2rem; }
+    .grid.lg\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    main { padding: 1rem 0.75rem; }
+    
+    /* Tab bar mobile */
+    .tab-bar {
+      padding: 6px;
+      border-radius: 12px;
+    }
+    .tab-item {
+      padding: 12px 8px;
+      font-size: 0.9rem;
+    }
+    .tab-item svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+    }
+
+    /* Car card mobile */
+    .car-detail-card {
+      padding: 1rem !important;
+    }
+    .car-detail-card h3 {
+      font-size: 1.5rem;
+    }
+    .text-4xl {
+      font-size: 2rem;
+    }
+    .text-5xl {
+      font-size: 2.5rem;
+    }
+
+    /* Specs card mobile */
+    .spec-card {
+      padding: 1.5rem !important;
+    }
+    .spec-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .grid.grid-cols-2 {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .grid.grid-cols-2 .flex {
+      font-size: 0.9rem;
+    }
+
+    /* Insurance cards mobile */
+    .insurance-card {
+      padding: 1.5rem !important;
+    }
+    .insurance-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .insurance-card-item {
+      padding: 1rem !important;
+    }
+    .insurance-card-item h3 {
+      font-size: 1.25rem;
+    }
+    .grid.grid-cols-1.sm\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+
+    /* Buttons mobile */
+    .new-book-btn, a[class*="btn"] {
+      padding: 0.875rem !important;
+      font-size: 1rem;
+      min-height: 48px;
+    }
+
+    /* Similar cars mobile */
+    .similar-cars-slider {
+      padding: 0.5rem 0;
+    }
+    section.mt-32 {
+      margin-top: 3rem;
+    }
+    section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    main { padding: 0.75rem 0.5rem; }
+    
+    /* Tab bar small mobile */
+    .tab-item {
+      padding: 10px 6px;
+      font-size: 0.8rem;
+    }
+    .tab-item svg {
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+    }
+    .tab-item span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.7rem;
+    }
+
+    /* Car card small mobile */
+    .car-detail-card {
+      padding: 0.875rem !important;
+      border-radius: 1.5rem !important;
+    }
+    .car-detail-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .flex.justify-center.gap-8 {
+      gap: 1rem;
+      font-size: 0.75rem;
+    }
+    .flex.justify-center.gap-4 {
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .text-4xl, .text-5xl {
+      font-size: 1.75rem;
+    }
+    .text-2xl {
+      font-size: 1.125rem;
+    }
+
+    /* Specs card small mobile */
+    .spec-card {
+      padding: 1rem !important;
+      border-radius: 1.5rem !important;
+    }
+    .spec-card h2 {
+      font-size: 1.25rem;
+    }
+    .grid.grid-cols-2 .flex {
+      font-size: 0.875rem;
+      gap: 0.5rem;
+    }
+    .grid.grid-cols-2 .flex i {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    /* Insurance cards small mobile */
+    .insurance-card {
+      padding: 1rem !important;
+      border-radius: 1.5rem !important;
+    }
+    .insurance-card h2 {
+      font-size: 1.25rem;
+    }
+    .insurance-card-item {
+      padding: 0.875rem !important;
+    }
+    .insurance-card-item h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Buttons small mobile */
+    .new-book-btn, a[class*="btn"] {
+      padding: 0.75rem !important;
+      font-size: 0.9rem;
+    }
+    .mt-6.space-y-4 {
+      margin-top: 1rem;
+      gap: 0.75rem;
+    }
+
+    /* Similar cars small mobile */
+    section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .similar-cars-nav {
+      width: 35px;
+      height: 35px;
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* Extra small devices */
+    .tab-item {
+      padding: 8px 4px;
+      font-size: 0.75rem;
+    }
+    .car-detail-card, .spec-card, .insurance-card {
+      padding: 0.75rem !important;
+    }
+    .text-4xl, .text-5xl {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Touch device optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    button, a, .tab-item, .insurance-card-item, .spec-card {
+      -webkit-tap-highlight-color: rgba(255, 215, 0, 0.2);
+    }
+    .group:hover {
+      transform: none;
+    }
+    .group:active {
+      transform: scale(0.98);
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 </style>
 
@@ -221,65 +552,11 @@ $hasDiscount = $discount > 0;
     </div>
   </div>
 
-  <!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
-  <section class="relative overflow-hidden py-8 lg:py-12 mb-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Logo -->
-      <div class="text-center mb-12" data-aos="fade-down">
-        <img src="pub_img/ettaaj-rent-cars.jpeg" 
-             alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
-             class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
-      </div>
-      
-      <!-- SEO Keywords (Hidden but accessible to search engines) -->
-      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
-        <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
-        <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
-      </div>
-      
-      <!-- Infinite Car Images Slider -->
-      <?php
-        $sliderStmt = $pdo->prepare("SELECT * FROM cars WHERE id != ? ORDER BY RAND() LIMIT 10");
-        $sliderStmt->execute([$car['id']]);
-        $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
-      ?>
-      <?php if (!empty($sliderCars)): ?>
-      <div class="relative mt-8" data-aos="fade-up">
-        <div class="car-slider-container overflow-hidden py-8">
-          <div class="car-slider-track">
-            <?php 
-            // Duplicate cars multiple times for seamless infinite loop
-            $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
-            foreach ($sliderCarsDuplicated as $sliderCar): 
-              $carImg = !empty($sliderCar['image']) 
-                ? 'uploads/' . basename($sliderCar['image']) 
-                : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($sliderCar['name']);
-            ?>
-              <div class="car-slide-item">
-                <div class="relative group">
-                  <img src="<?= htmlspecialchars($carImg) ?>" 
-                       alt="<?= htmlspecialchars($sliderCar['name']) ?> - Rental Cars in Morocco"
-                       class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
-                       loading="lazy"
-                       onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($sliderCar['name']) ?>'">
-                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
-                    <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($sliderCar['name']) ?></p>
-                  </div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-      <?php endif; ?>
-    </div>
-  </section>
-
   <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
 
     <!-- LEFT: LUXURY CARD -->
     <div data-aos="fade-right" class="h-full">
-      <div class="group relative car-card-bg backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-gold/20 transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border border-border flex flex-col h-full">
+      <div class="car-detail-card group relative car-card-bg backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_20px_50px_rgba(255,178,44,0.4)] transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border border-border flex flex-col h-full" style="box-shadow: 0 10px 30px rgba(255, 178, 44, 0.3);">
 
         <div class="relative w-full pt-[56.25%] car-card-bg overflow-hidden border-b border-border">
           <?php
@@ -371,8 +648,8 @@ $hasDiscount = $discount > 0;
 
     <!-- RIGHT SIDE – UNCHANGED -->
     <div data-aos="fade-left" class="space-y-8">
-      <div class="bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-10">
-        <h2 class="text-3xl font-bold text-gold mb-8 text-center"><?= $text['vehicle_specifications'] ?></h2>
+      <div class="spec-card bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-6 sm:p-8 md:p-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gold mb-6 sm:mb-8 text-center"><?= $text['vehicle_specifications'] ?></h2>
         <div class="grid grid-cols-2 gap-6 text-lg">
           <div class="flex items-center gap-4"><i class="bi bi-person-fill w-8 h-8 text-gold"></i><div><strong><?= $text['seats'] ?>:</strong> <span dir="ltr"><?= formatNumber($car['seats']) ?></span></div></div>
           <div class="flex items-center gap-4"><i class="bi bi-briefcase-fill w-8 h-8 text-gold"></i><div><strong><?= $text['bags'] ?>:</strong> <span dir="ltr"><?= formatNumber($car['bags']) ?></span></div></div>
@@ -384,11 +661,11 @@ $hasDiscount = $discount > 0;
       </div>
 
       <!-- Insurance Plans Section -->
-      <div class="bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-10">
-        <h2 class="text-3xl font-bold text-gold mb-8 text-center">Insurance Plans</h2>
-        <div class="space-y-6">
+      <div class="insurance-card bg-card/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-border p-6 sm:p-8 md:p-10">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gold mb-6 sm:mb-8 text-center">Insurance Plans</h2>
+        <div class="space-y-4 sm:space-y-6">
           <!-- Basic Insurance -->
-          <div class="p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
+          <div class="insurance-card-item p-4 sm:p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
             <h3 class="text-2xl font-bold text-gold mb-4">Basic Insurance</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
               <div class="flex items-center gap-3">
@@ -409,7 +686,7 @@ $hasDiscount = $discount > 0;
           </div>
 
           <!-- Smart Insurance -->
-          <div class="p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
+          <div class="insurance-card-item p-4 sm:p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
             <h3 class="text-2xl font-bold text-gold mb-4">Smart Insurance</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
               <div class="flex items-center gap-3">
@@ -430,7 +707,7 @@ $hasDiscount = $discount > 0;
           </div>
 
           <!-- Premium Insurance -->
-          <div class="p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
+          <div class="insurance-card-item p-4 sm:p-6 rounded-2xl border border-border bg-card-dark/50 hover:border-gold/50 transition-all">
             <h3 class="text-2xl font-bold text-gold mb-4">Premium Insurance</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
               <div class="flex items-center gap-3">
@@ -453,7 +730,7 @@ $hasDiscount = $discount > 0;
       </div>
 
       <a href="https://wa.me/212772331080?text=Hi!%20I'm%20interested%20in%20the%20<?= urlencode($car['name']) ?>%20-%20<?= $hasDiscount ? formatNumber($discountedPrice) : formatNumber($originalPrice) ?>%20MAD/day%20(<?= $hasDiscount ? "-{$discount}%" : '' ?>)" 
-         class="block text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-xl py-6 rounded-2xl shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-4">
+         class="block text-center bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold text-lg sm:text-xl py-4 sm:py-6 rounded-2xl shadow-2xl transition transform hover:scale-105 flex items-center justify-center gap-3 sm:gap-4">
         <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.134.297-.347.446-.52.149-.174.198-.297.297-.446.099-.148.05-.273-.024-.385-.074-.112-.67-1.62-.92-2.22-.246-.594-.495-.59-.67-.599-.174-.008-.371-.008-.569-.008-.197 0-.52.074-.792.372-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.558 5.745 8.623 3.05.297.149.595.223.893.298.297.074.595.05.893-.025.297-.074 1.255-.52 1.43-.966.173-.446.173-.82.124-.966-.05-.148-.198-.297-.446-.446zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
         </svg>
@@ -561,7 +838,7 @@ $hasDiscount = $discount > 0;
           $s_hasDiscount = $s_discount > 0;
         ?>
           <div class="similar-car-card">
-            <div class="group relative car-card-bg backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-gold/20 transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border border-border flex flex-col h-full" style="direction: ltr;">
+            <div class="group relative car-card-bg backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_20px_50px_rgba(255,178,44,0.4)] transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02] border border-border flex flex-col h-full" style="direction: ltr; box-shadow: 0 10px 30px rgba(255, 178, 44, 0.3);">
               <div class="relative w-full pt-[56.25%] car-card-bg overflow-hidden border-b border-border">
                 <img src="<?= htmlspecialchars(carImageUrl($similar['image']) ?: 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($similar['name'])) ?>" 
                      alt="<?= htmlspecialchars($similar['name']) ?> - ETTAAJ Rent Cars Marrakech" 

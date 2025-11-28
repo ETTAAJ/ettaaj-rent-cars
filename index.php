@@ -65,9 +65,9 @@
 
       ob_start(); ?>
       <div data-aos="fade-up" data-aos-delay="<?= $delay ?>" data-aos-duration="700"
-           class="group relative car-card-bg backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-gold/20
+           class="group relative car-card-bg backdrop-blur-md rounded-3xl overflow-hidden shadow-2xl hover:shadow-[0_20px_50px_rgba(255,178,44,0.4)]
                   transition-all duration-500 transform hover:-translate-y-2 hover:scale-[1.02]
-                  border border-border flex flex-col h-full opacity-100" style="direction: ltr; visibility: visible;">
+                  border border-border flex flex-col h-full opacity-100" style="direction: ltr; visibility: visible; box-shadow: 0 10px 30px rgba(255, 178, 44, 0.3);">
 
           <!-- Car Image -->
           <div class="relative w-full pt-[56.25%] car-card-bg overflow-hidden border-b border-border">
