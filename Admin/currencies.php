@@ -74,18 +74,19 @@ $currencies = $stmt->fetchAll(PDO::FETCH_ASSOC);
             color: #fff;
             font-family: 'Inter', sans-serif;
         }
+        
     </style>
 </head>
 <body class="min-h-screen bg-gray-900 text-white">
+<?php include 'header.php'; ?>
+
+<main class="min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
-        <!-- Header -->
+        <!-- Page Header -->
         <div class="flex justify-between items-center mb-8">
             <h1 class="text-3xl font-bold text-yellow-400">
                 <i class="bi bi-currency-exchange"></i> Currency Management
             </h1>
-            <a href="index.php" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                <i class="bi bi-arrow-left"></i> Back to Cars
-            </a>
         </div>
 
         <!-- Alert -->
@@ -188,6 +189,10 @@ $currencies = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
+</main>
+
+<script>
+</script>
 </body>
 </html>
 

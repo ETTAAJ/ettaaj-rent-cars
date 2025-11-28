@@ -74,6 +74,9 @@ return [
     'return_date' => 'تاريخ الإرجاع',
     'return_date_error' => 'يجب أن يكون تاريخ الإرجاع على الأقل',
     'after_pickup' => 'أيام بعد الاستلام.',
+    'pickup_location' => 'موقع الاستلام',
+    'marrakech_airport' => 'مطار مراكش منارة (RAK)',
+    'casablanca_airport' => 'مطار الدار البيضاء محمد الخامس (CMN)',
     
     // Protection Plan
     'protection_plan' => 'خطة الحماية',

@@ -1,4 +1,5 @@
 <?php
+require_once 'init.php';
 require_once 'config.php';
 
 $id = intval($_GET['id'] ?? 0);
@@ -28,6 +29,10 @@ $insurance_premium_price = (float)($car['insurance_premium_price'] ?? 0);
 $insurance_basic_deposit = (float)($car['insurance_basic_deposit'] ?? 0);
 $insurance_smart_deposit = (float)($car['insurance_smart_deposit'] ?? 0);
 $insurance_premium_deposit = (float)($car['insurance_premium_deposit'] ?? 0);
+
+// === TRAVEL ESSENTIALS ===
+$stmt_essentials = $pdo->query("SELECT * FROM travel_essentials WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+$travelEssentials = $stmt_essentials->fetchAll(PDO::FETCH_ASSOC);
 
 function carImageUrl($image)
 {
@@ -93,107 +98,32 @@ function carImageUrl($image)
     border-color: rgba(217, 119, 6, 0.2);
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   }
-  
-  /* Animated background indicator for active tab */
-  .tab-bar::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    width: calc(50% - 8px);
-    height: calc(100% - 16px);
-    background: linear-gradient(135deg, rgba(255, 178, 44, 0.15), rgba(255, 165, 0, 0.1));
-    border-radius: 12px;
-    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
-    transform: translateX(calc(100% + 8px));
-    z-index: 1;
-    box-shadow: inset 0 2px 10px rgba(255, 215, 0, 0.2);
-  }
-  .tab-bar.active-details::after {
-    transform: translateX(0%);
-  }
-  .tab-bar.active-booking::after {
-    transform: translateX(calc(100% + 8px));
-  }
-  
-  /* Animated underline */
   .tab-bar::before {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 0; left: 0;
     width: 50%;
-    height: 4px;
-    background: linear-gradient(90deg, #FFB22C, #FFA500, #FFB22C);
-    background-size: 200% 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #FFB22C, #FFA500);
     border-radius: 3px;
     transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
     transform: translateX(100%);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
-    z-index: 2;
-    animation: shimmer 3s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
   }
-  @keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  .tab-bar.active-details::before { 
-    transform: translateX(0%); 
-  }
-  .tab-bar.active-booking::before { 
-    transform: translateX(100%); 
-  }
+  .tab-bar.active-details::before { transform: translateX(0%); }
+  .tab-bar.active-booking::before { transform: translateX(100%); }
 
   .tab-item {
-    flex: 1; 
-    padding: 18px 12px; 
-    text-align: center; 
-    font-weight: 700; 
-    font-size: 1.15rem;
-    border-radius: 12px; 
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-    position: relative; 
-    z-index: 10;
-    cursor: pointer;
+    flex: 1; padding: 18px 12px; text-align: center; font-weight: 700; font-size: 1.15rem;
+    border-radius: 12px; transition: all 0.4s ease; position: relative; z-index: 10;
   }
-  .tab-item svg { 
-    width: 26px; 
-    height: 26px; 
-    margin-right: 10px;
-    transition: transform 0.3s ease;
-  }
+  .tab-item svg { width: 26px; height: 26px; margin-right: 10px; }
   html[dir="rtl"] .tab-item svg { margin-right: 0; margin-left: 10px; }
-  
-  .tab-item.active { 
-    color: #000;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  .tab-item.active svg {
-    transform: scale(1.1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-  }
-  
-  .tab-item:not(.active) { 
-    color: rgba(255,255,255,0.75);
-  }
-  .light .tab-item:not(.active) { 
-    color: rgba(30, 41, 59, 0.75); 
-  }
-  
-  .tab-item:hover:not(.active) { 
-    color: #FFB22C;
-    transform: translateY(-2px);
-  }
-  .tab-item:hover:not(.active) svg {
-    transform: scale(1.05);
-  }
-  .light .tab-item:hover:not(.active) { 
-    color: #d97706; 
-  }
-  
-  .tab-item:active {
-    transform: scale(0.98);
-  }
+  .tab-item.active { color: #000; }
+  .tab-item:not(.active) { color: rgba(255,255,255,0.75); }
+  .light .tab-item:not(.active) { color: rgba(30, 41, 59, 0.75); }
+  .tab-item:hover:not(.active) { color: #FFB22C; }
+  .light .tab-item:hover:not(.active) { color: #d97706; }
 
   @media (max-width: 640px) {
     .tab-item { padding: 14px 8px; font-size: 1rem; }
@@ -224,6 +154,22 @@ function carImageUrl($image)
   /* Input Styling */
   input { color: var(--primary) !important; -webkit-text-fill-color: var(--primary) !important; }
   input::placeholder { color: var(--muted) !important; opacity: 0.7; }
+  
+  /* Select Styling */
+  select { 
+    color: var(--primary) !important; 
+    -webkit-text-fill-color: var(--primary) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  select option {
+    background-color: var(--card-dark);
+    color: var(--primary);
+    padding: 0.5rem;
+  }
+  select:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
 
   /* Insurance Cards */
   .insurance-option {
@@ -346,6 +292,48 @@ function carImageUrl($image)
     transform: none; 
   }
 
+  /* Infinite Car Slider Styles */
+  .car-slider-container {
+    position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .car-slider-track {
+    display: flex;
+    gap: 1.5rem;
+    animation: slideCars 40s linear infinite;
+    width: fit-content;
+    will-change: transform;
+  }
+  .car-slider-track:hover {
+    animation-play-state: paused;
+  }
+  .car-slide-item {
+    flex: 0 0 280px;
+    min-width: 280px;
+  }
+  @keyframes slideCars {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  @media (max-width: 768px) {
+    .car-slide-item {
+      flex: 0 0 240px;
+      min-width: 240px;
+    }
+  }
+  @media (max-width: 640px) {
+    .car-slide-item {
+      flex: 0 0 200px;
+      min-width: 200px;
+    }
+  }
+
   /* Responsive */
   @media (max-width: 768px) {
     .extra-item { flex-direction: column; align-items: flex-start; }
@@ -376,16 +364,59 @@ function carImageUrl($image)
     </div>
   </div>
 
-  <!-- HERO TITLE -->
-  <div class="text-center mb-16" data-aos="fade-up">
-    <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-transparent bg-clip-text 
-               bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 drop-shadow-2xl leading-tight">
-      <?= t('complete_booking') ?>
-    </h1>
-    <p class="mt-6 text-xl sm:text-2xl font-medium text-amber-400 drop-shadow-lg tracking-wider">
-      <?= $text['premium_service'] ?>
-    </p>
-  </div>
+  <!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
+  <section class="relative overflow-hidden py-8 lg:py-12 mb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Logo -->
+      <div class="text-center mb-12" data-aos="fade-down">
+        <img src="pub_img/ettaaj-rent-cars.jpeg" 
+             alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
+             class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
+      </div>
+      
+      <!-- SEO Keywords (Hidden but accessible to search engines) -->
+      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
+        <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
+        <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
+      </div>
+      
+      <!-- Infinite Car Images Slider -->
+      <?php
+        $sliderStmt = $pdo->prepare("SELECT * FROM cars WHERE id != ? ORDER BY RAND() LIMIT 10");
+        $sliderStmt->execute([$car['id']]);
+        $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+      ?>
+      <?php if (!empty($sliderCars)): ?>
+      <div class="relative mt-8" data-aos="fade-up">
+        <div class="car-slider-container overflow-hidden py-8">
+          <div class="car-slider-track">
+            <?php 
+            // Duplicate cars multiple times for seamless infinite loop
+            $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
+            foreach ($sliderCarsDuplicated as $sliderCar): 
+              $carImg = !empty($sliderCar['image']) 
+                ? 'uploads/' . basename($sliderCar['image']) 
+                : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($sliderCar['name']);
+            ?>
+              <div class="car-slide-item">
+                <div class="relative group">
+                  <img src="<?= htmlspecialchars($carImg) ?>" 
+                       alt="<?= htmlspecialchars($sliderCar['name']) ?> - Rental Cars in Morocco"
+                       class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                       loading="lazy"
+                       onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($sliderCar['name']) ?>'">
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
+                    <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($sliderCar['name']) ?></p>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+    </div>
+  </section>
 
   <!-- CAR NAME -->
   <div class="text-center mb-8" data-aos="fade-up">
@@ -406,17 +437,26 @@ function carImageUrl($image)
     </div>
     <div class="mt-4">
       <span class="text-2xl font-black text-gold" dir="ltr">
-        <?= formatPrice($discountedPricePerDay) ?>
+        MAD <?= formatNumber($discountedPricePerDay) ?>
       </span>
       <span class="text-lg text-muted">/<?= $text['day'] ?></span>
       <?php if ($hasDiscount): ?>
         <span class="ml-2 text-lg text-green-400 line-through opacity-70" dir="ltr">
-          <?= formatPrice($originalPricePerDay) ?>
+          MAD <?= formatNumber($originalPricePerDay) ?>
         </span>
         <span class="ml-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-bold" dir="ltr">
           -<?= formatNumber($discountPercent) ?>% OFF
         </span>
       <?php endif; ?>
+      <!-- Weekly and Monthly Prices -->
+      <div class="flex justify-center gap-3 mt-3 text-sm font-medium">
+        <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
+          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_week']) ?></strong>
+        </span>
+        <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
+          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_month']) ?></strong>
+        </span>
+      </div>
     </div>
   </div>
         
@@ -466,13 +506,34 @@ function carImageUrl($image)
           <p id="date-error" class="text-red-400 text-sm mt-2 hidden"><?= $text['return_date_error'] ?> <span dir="ltr"><?= formatNumber($minDays) ?></span> <?= $text['after_pickup'] ?></p>
         </div>
 
+        <!-- PICKUP LOCATION -->
+        <div>
+          <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['pickup_location'] ?></h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="relative">
+              <select name="pickup_location" id="pickup_location" required 
+                      class="w-full p-4 bg-white/10 border border-border rounded-2xl focus:ring-2 focus:ring-gold focus:border-gold transition appearance-none cursor-pointer text-primary pr-10">
+                <option value="" class="bg-[var(--card-dark)] text-primary"><?= $text['pickup_location'] ?>...</option>
+                <option value="<?= htmlspecialchars($text['marrakech_airport']) ?>" class="bg-[var(--card-dark)] text-primary"><?= $text['marrakech_airport'] ?></option>
+                <option value="<?= htmlspecialchars($text['casablanca_airport']) ?>" class="bg-[var(--card-dark)] text-primary"><?= $text['casablanca_airport'] ?></option>
+              </select>
+              <label class="absolute <?= $lang === 'ar' ? 'right-4' : 'left-4' ?> -top-2.5 bg-[var(--card)] px-3 text-xs font-bold text-gold pointer-events-none"><?= $text['pickup_location'] ?></label>
+              <div class="absolute <?= $lang === 'ar' ? 'left-4' : 'right-4' ?> top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- PROTECTION PLAN -->
         <div>
           <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['protection_plan'] ?></h2>
         <div class="space-y-4">
 
             <div class="insurance-option">
-              <input type="radio" name="insurance" id="basic" value="<?= $text['basic_insurance'] ?><?= $insurance_basic_price > 0 ? ' - ' . formatPrice($insurance_basic_price) . '/' . $text['day'] : ' - ' . $text['free'] ?>" checked>
+              <input type="radio" name="insurance" id="basic" value="<?= $text['basic_insurance'] ?><?= $insurance_basic_price > 0 ? ' - MAD' . formatNumber($insurance_basic_price) . '/' . $text['day'] : ' - ' . $text['free'] ?>" checked>
               <label for="basic" class="block p-6 bg-card-dark/80 rounded-2xl border border-border hover:border-gold/50 transition-all">
                 <div class="flex justify-between items-start mb-3">
                   <div>
@@ -481,14 +542,14 @@ function carImageUrl($image)
                   </div>
                   <span class="text-2xl font-black text-gold" dir="ltr">
                     <?php if ($insurance_basic_price > 0): ?>
-                      <?= formatPrice($insurance_basic_price) ?>/<?= $text['day'] ?>
+                      MAD<?= formatNumber($insurance_basic_price) ?>/<?= $text['day'] ?>
                     <?php else: ?>
                       <?= $text['free'] ?>
                     <?php endif; ?>
                   </span>
                 </div>
                 <?php if ($insurance_basic_deposit > 0): ?>
-                  <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong dir="ltr"><?= formatPrice($insurance_basic_deposit) ?></strong></p>
+                  <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong dir="ltr">MAD<?= formatNumber($insurance_basic_deposit) ?></strong></p>
                 <?php endif; ?>
                 <ul class="text-sm space-y-1 text-muted">
                   <li>• <?= $text['third_party_liability'] ?></li>
@@ -499,17 +560,17 @@ function carImageUrl($image)
             </div>
 
             <div class="insurance-option">
-              <input type="radio" name="insurance" id="smart" value="<?= $text['smart_insurance'] ?> - <?= formatPrice($insurance_smart_price) ?>/<?= $text['day'] ?>">
+              <input type="radio" name="insurance" id="smart" value="<?= $text['smart_insurance'] ?> - MAD<?= formatNumber($insurance_smart_price) ?>/<?= $text['day'] ?>">
               <label for="smart" class="block p-6 bg-card-dark/80 rounded-2xl border border-border hover:border-gold/50 transition-all">
                 <div class="flex justify-between items-start mb-3">
                   <div>
                     <h4 class="text-xl font-bold"><?= $text['smart_insurance'] ?></h4>
                     <p class="text-sm text-amber-400"><?= $text['citadine_rate'] ?></p>
                   </div>
-                  <span class="text-2xl font-black text-gold" dir="ltr"><?= formatPrice($insurance_smart_price) ?>/<?= $text['day'] ?></span>
+                  <span class="text-2xl font-black text-gold" dir="ltr">MAD<?= formatNumber($insurance_smart_price) ?>/<?= $text['day'] ?></span>
                 </div>
                 <?php if ($insurance_smart_deposit > 0): ?>
-                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr"><?= formatPrice($insurance_smart_deposit) ?></strong></p>
+                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr">MAD<?= formatNumber($insurance_smart_deposit) ?></strong></p>
                 <?php endif; ?>
                 <ul class="text-sm space-y-1 text-[var(--text-muted)]">
                   <li>• <?= $text['all_basic_coverage'] ?></li>
@@ -521,17 +582,17 @@ function carImageUrl($image)
             </div>
 
             <div class="insurance-option">
-              <input type="radio" name="insurance" id="premium" value="<?= $text['premium_insurance'] ?> - <?= formatPrice($insurance_premium_price) ?>/<?= $text['day'] ?>">
+              <input type="radio" name="insurance" id="premium" value="<?= $text['premium_insurance'] ?> - MAD<?= formatNumber($insurance_premium_price) ?>/<?= $text['day'] ?>">
               <label for="premium" class="block p-6 bg-card-dark/80 rounded-2xl border border-border hover:border-gold/50 transition-all">
                 <div class="flex justify-between items-start mb-3">
                   <div>
                     <h4 class="text-xl font-bold"><?= $text['premium_insurance'] ?></h4>
                     <p class="text-sm text-amber-400"><?= $text['citadine_rate'] ?></p>
                   </div>
-                  <span class="text-2xl font-black text-gold" dir="ltr"><?= formatPrice($insurance_premium_price) ?>/<?= $text['day'] ?></span>
+                  <span class="text-2xl font-black text-gold" dir="ltr">MAD<?= formatNumber($insurance_premium_price) ?>/<?= $text['day'] ?></span>
                 </div>
                 <?php if ($insurance_premium_deposit > 0): ?>
-                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr"><?= formatPrice($insurance_premium_deposit) ?></strong></p>
+                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr">MAD<?= formatNumber($insurance_premium_deposit) ?></strong></p>
                 <?php endif; ?>
                 <ul class="text-sm space-y-1 text-[var(--text-muted)]">
                   <li>• <?= $text['all_basic_coverage'] ?></li>
@@ -552,87 +613,64 @@ function carImageUrl($image)
         <div>
           <h2 class="text-2xl font-bold text-gold mb-4"><?= $text['travel_essentials'] ?></h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            <div class="extra-item">
-              <label for="fuel" class="flex-1 flex items-center gap-3">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h1m4-4v12m4-8h6m-3-3v6"/></svg>
-                <div>
-                  <div class="font-semibold"><?= $text['premium_fuel_service'] ?></div>
-                  <div class="text-xs text-muted"><?= $text['prepaid_full_tank'] ?></div>
-                </div>
-              </label>
-              <div class="flex items-center gap-3">
-                <span class="extra-price" dir="ltr">$110.00/rental</span>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="fuel" name="extras[]" value="<?= $text['premium_fuel_service'] ?> - $110.00/rental">
-                  <span class="slider"></span>
-                </div>
+            <?php if (empty($travelEssentials)): ?>
+              <div class="col-span-2 text-center text-muted py-8">
+                No travel essentials available at the moment.
               </div>
-            </div>
-
-            <div class="extra-item">
-              <label for="unlimitedkm" class="flex-1 flex items-center gap-3">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                <div>
-                  <div class="font-semibold"><?= $text['unlimited_kilometers'] ?></div>
-                  <div class="text-xs text-[var(--text-muted)]"><?= $text['drive_without_restrictions'] ?></div>
+            <?php else: ?>
+              <?php foreach ($travelEssentials as $essential): 
+                $essentialId = 'essential_' . $essential['id'];
+                $priceText = number_format($essential['price'], 2);
+                $unitText = $essential['per_day'] ? '/' . $text['day'] : '/rental';
+                
+                // Get language-specific name and description
+                $nameKey = 'name_' . $lang;
+                $descKey = 'description_' . $lang;
+                $essentialName = !empty($essential[$nameKey]) ? $essential[$nameKey] : ($essential['name_en'] ?? $essential['name'] ?? '');
+                $essentialDesc = !empty($essential[$descKey]) ? $essential[$descKey] : ($essential['description_en'] ?? $essential['description'] ?? '');
+                
+                $valueText = htmlspecialchars($essentialName) . ' - MAD ' . $priceText . $unitText;
+              ?>
+                <div class="extra-item">
+                  <label for="<?= $essentialId ?>" class="flex-1 flex items-center gap-3">
+                    <?php if ($essential['icon']): ?>
+                      <i class="bi <?= htmlspecialchars($essential['icon']) ?> text-2xl text-gold"></i>
+                    <?php else: ?>
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <?php endif; ?>
+                    <div>
+                      <div class="font-semibold"><?= htmlspecialchars($essentialName) ?></div>
+                      <?php if ($essentialDesc): ?>
+                        <div class="text-xs text-[var(--text-muted)]"><?= htmlspecialchars($essentialDesc) ?></div>
+                      <?php endif; ?>
+                    </div>
+                  </label>
+                  <div class="flex items-center gap-3">
+                    <span class="extra-price" dir="ltr">MAD <?= $priceText ?><?= $unitText ?></span>
+                    <div class="toggle-switch">
+                      <input type="checkbox" id="<?= $essentialId ?>" name="extras[]" 
+                             value="<?= htmlspecialchars($valueText) ?>"
+                             data-essential-id="<?= $essential['id'] ?>"
+                             data-price="<?= $essential['price'] ?>"
+                             data-per-day="<?= $essential['per_day'] ?>">
+                      <span class="slider"></span>
+                    </div>
+                  </div>
                 </div>
-              </label>
-              <div class="flex items-center gap-3">
-                <span class="extra-price" dir="ltr">$10.50/<?= $text['day'] ?></span>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="unlimitedkm" name="extras[]" value="<?= $text['unlimited_kilometers'] ?> - $10.50/<?= $text['day'] ?>">
-                  <span class="slider"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="extra-item">
-              <label for="flexcancel" class="flex-1 flex items-center gap-3">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <div>
-                  <div class="font-semibold"><?= $text['flexible_cancellation'] ?></div>
-                  <div class="text-xs text-[var(--text-muted)]"><?= $text['free_cancellation_until'] ?></div>
-                </div>
-              </label>
-              <div class="flex items-center gap-3">
-                <span class="extra-price" dir="ltr">$9.50/rental</span>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="flexcancel" name="extras[]" value="<?= $text['flexible_cancellation'] ?> - $9.50/rental">
-                  <span class="slider"></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="extra-item">
-              <label for="extradriver" class="flex-1 flex items-center gap-3">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H9v-1c-4 0-6-4-6-4v-3h12v3c0 0-2 4-6 4z"/></svg>
-                <div>
-                  <div class="font-semibold"><?= $text['additional_drivers'] ?></div>
-                  <div class="text-xs text-[var(--text-muted)]"><?= $text['add_up_to_2'] ?></div>
-                </div>
-              </label>
-              <div class="flex items-center gap-3">
-                <span class="extra-price" dir="ltr">$2.50/<?= $text['day'] ?></span>
-                <div class="toggle-switch">
-                  <input type="checkbox" id="extradriver" name="extras[]" value="<?= $text['additional_drivers'] ?> - $2.50/<?= $text['day'] ?>">
-                  <span class="slider"></span>
-                </div>
-              </div>
-            </div>
-
+              <?php endforeach; ?>
+            <?php endif; ?>
           </div>
         </div>
 
         <!-- TOTAL PRICE -->
         <div class="bg-gradient-to-r from-gold/10 to-yellow-500/10 p-7 rounded-2xl border border-gold/30 text-center">
           <p class="text-gold font-bold mb-3 text-lg"><?= $text['total_estimated_price'] ?></p>
-          <p id="total-price" class="text-5xl font-black text-primary" role="status" aria-live="polite" dir="ltr"><?= formatPrice(0) ?></p>
+          <p id="total-price" class="text-5xl font-black text-primary" role="status" aria-live="polite" dir="ltr">MAD0</p>
           <p id="days-count" class="text-muted mt-2 text-lg" aria-live="polite"></p>
           <p id="insurance-info" class="text-sm text-gold mt-3 font-medium"><?= $text['basic_insurance_included'] ?></p>
           <p id="extras-info" class="text-sm text-amber-300 mt-2"></p>
           <?php if ($hasDiscount): ?>
-            <p class="text-green-400 text-sm mt-2 font-bold"><?= $text['you_save'] ?> <span dir="ltr"><?= formatPrice(($originalPricePerDay - $discountedPricePerDay) * $minDays) ?></span> <?= $text['on_minimum_rental'] ?></p>
+            <p class="text-green-400 text-sm mt-2 font-bold"><?= $text['you_save'] ?> <span dir="ltr">MAD<?= formatNumber(($originalPricePerDay - $discountedPricePerDay) * $minDays) ?></span> <?= $text['on_minimum_rental'] ?></p>
           <?php endif; ?>
         </div>
 
@@ -681,6 +719,9 @@ function carImageUrl($image)
   const form = document.getElementById('booking-form');
 
   const pricePerDay = <?= json_encode($discountedPricePerDay) ?>;
+  const pricePerWeek = <?= json_encode((float)$car['price_week']) ?>;
+  const pricePerMonth = <?= json_encode((float)$car['price_month']) ?>;
+  const originalPricePerDay = <?= json_encode($originalPricePerDay) ?>;
   const hasDiscount = <?= $hasDiscount ? 'true' : 'false' ?>;
   const discountPercent = <?= $discountPercent ?>;
   const minDays = <?= $minDays ?>;
@@ -694,24 +735,33 @@ function carImageUrl($image)
     'smart': <?= json_encode($insurance_smart_deposit) ?>,
     'premium': <?= json_encode($insurance_premium_deposit) ?>
   };
-  
-  // Currency conversion
-  const currencyInfo = <?= json_encode(getCurrency()) ?>;
-  const formatPriceJS = (amountMAD) => {
-    const converted = amountMAD / currencyInfo.rate;
-    const formatted = converted.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-    if (currencyInfo.code === 'USD' || currencyInfo.code === 'EUR') {
-      return currencyInfo.symbol + formatted;
-    }
-    return formatted + ' ' + currencyInfo.symbol;
-  };
 
-  const extrasPrices = {
-    fuel: { price: 110.00, perDay: false },
-    unlimitedkm: { price: 10.50, perDay: true },
-    flexcancel: { price: 9.50, perDay: false },
-    extradriver: { price: 2.50, perDay: true }
-  };
+  // Build extrasPrices from database data
+  const extrasPrices = {};
+  <?php foreach ($travelEssentials as $essential): ?>
+    extrasPrices['essential_<?= $essential['id'] ?>'] = { 
+      price: <?= $essential['price'] ?>, 
+      perDay: <?= $essential['per_day'] ? 'true' : 'false' ?> 
+    };
+  <?php endforeach; ?>
+
+  // Calculate car rental price based on duration (smart pricing)
+  function calculateCarPrice(days) {
+    if (days >= 30) {
+      // Use monthly pricing
+      const months = Math.floor(days / 30);
+      const remainingDays = days % 30;
+      return (months * pricePerMonth) + (remainingDays * pricePerDay);
+    } else if (days >= 7) {
+      // Use weekly pricing
+      const weeks = Math.floor(days / 7);
+      const remainingDays = days % 7;
+      return (weeks * pricePerWeek) + (remainingDays * pricePerDay);
+    } else {
+      // Use daily pricing
+      return days * pricePerDay;
+    }
+  }
 
   let updateFrame = null;
   const scheduleUpdate = () => {
@@ -735,7 +785,7 @@ function carImageUrl($image)
     if (days < minDays || days <= 0) {
       error.classList.remove('hidden');
       btn.disabled = true;
-      totalEl.textContent = formatPriceJS(0);
+      totalEl.textContent = 'MAD0';
       daysEl.textContent = '';
       return;
     }
@@ -749,23 +799,47 @@ function carImageUrl($image)
     document.querySelectorAll('input[name="extras[]"]:checked').forEach(cb => {
       const id = cb.id;
       const item = extrasPrices[id];
-      const cost = item.perDay ? item.price * days : item.price;
-      extrasTotal += cost;
-      selectedExtras.push(cb.value);
+      if (item) {
+        // Fix: Calculate per day correctly for daily extras
+        const cost = item.perDay ? (item.price * days) : item.price;
+        extrasTotal += cost;
+        selectedExtras.push(cb.value);
+      }
     });
 
-    const carTotal = days * pricePerDay;
+    // Use smart pricing (weekly/monthly when appropriate)
+    const carTotal = calculateCarPrice(days);
     const insuranceTotal = days * insuranceCostPerDay;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
 
-    totalEl.textContent = formatPriceJS(grandTotal);
+    totalEl.textContent = 'MAD' + grandTotal.toLocaleString('en-US');
     totalEl.setAttribute('dir', 'ltr');
-    daysEl.textContent = days + ' <?= $text['day'] ?>' + (days > 1 ? 's' : '');
+    
+    // Show pricing tier info
+    let pricingInfo = days + ' <?= $text['day'] ?>' + (days > 1 ? 's' : '');
+    if (days >= 30) {
+      const months = Math.floor(days / 30);
+      const remainingDays = days % 30;
+      pricingInfo += ` (${months} month${months > 1 ? 's' : ''}`;
+      if (remainingDays > 0) {
+        pricingInfo += ` + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
+      }
+      pricingInfo += ')';
+    } else if (days >= 7) {
+      const weeks = Math.floor(days / 7);
+      const remainingDays = days % 7;
+      pricingInfo += ` (${weeks} week${weeks > 1 ? 's' : ''}`;
+      if (remainingDays > 0) {
+        pricingInfo += ` + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
+      }
+      pricingInfo += ')';
+    }
+    daysEl.textContent = pricingInfo;
     const basicPriceText = insurancePrices.basic > 0 
-      ? formatPriceJS(insurancePrices.basic) + '/<?= $text['day'] ?>' 
+      ? `MAD${insurancePrices.basic.toLocaleString('en-US')}/<?= $text['day'] ?>` 
       : "<?= $text['free'] ?>";
-    const smartPriceText = formatPriceJS(insurancePrices.smart) + '/<?= $text['day'] ?>';
-    const premiumPriceText = formatPriceJS(insurancePrices.premium) + '/<?= $text['day'] ?>';
+    const smartPriceText = `MAD${insurancePrices.smart.toLocaleString('en-US')}/<?= $text['day'] ?>`;
+    const premiumPriceText = `MAD${insurancePrices.premium.toLocaleString('en-US')}/<?= $text['day'] ?>`;
     
     const labels = { 
       basic: "<?= $text['basic_insurance'] ?>: " + basicPriceText, 
@@ -840,12 +914,15 @@ function carImageUrl($image)
     document.querySelectorAll('input[name="extras[]"]:checked').forEach(cb => {
       const id = cb.id;
       const item = extrasPrices[id];
-      const cost = item.perDay ? item.price * days : item.price;
-      extrasTotal += cost;
-      extrasList.push(cb.value);
+      if (item) {
+        const cost = item.perDay ? item.price * days : item.price;
+        extrasTotal += cost;
+        extrasList.push(cb.value);
+      }
     });
 
-    const carTotal = days * pricePerDay;
+    // Use smart pricing (weekly/monthly when appropriate)
+    const carTotal = calculateCarPrice(days);
     const insuranceCostPerDay = insurancePrices[selectedInsurance.id];
     const insuranceTotal = insuranceCostPerDay * days;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
@@ -857,12 +934,35 @@ function carImageUrl($image)
       ? `Insurance: ${insuranceText} (MAD${insuranceTotal.toLocaleString()})\n`
       : `Insurance: ${insuranceText}\n`;
 
+    // Get pricing breakdown
+    let pricingBreakdown = '';
+    if (days >= 30) {
+      const months = Math.floor(days / 30);
+      const remainingDays = days % 30;
+      pricingBreakdown = `${months} month(s) × MAD${pricePerMonth.toLocaleString()} = MAD${(months * pricePerMonth).toLocaleString()}`;
+      if (remainingDays > 0) {
+        pricingBreakdown += `\n${remainingDays} day(s) × MAD${pricePerDay.toLocaleString()} = MAD${(remainingDays * pricePerDay).toLocaleString()}`;
+      }
+    } else if (days >= 7) {
+      const weeks = Math.floor(days / 7);
+      const remainingDays = days % 7;
+      pricingBreakdown = `${weeks} week(s) × MAD${pricePerWeek.toLocaleString()} = MAD${(weeks * pricePerWeek).toLocaleString()}`;
+      if (remainingDays > 0) {
+        pricingBreakdown += `\n${remainingDays} day(s) × MAD${pricePerDay.toLocaleString()} = MAD${(remainingDays * pricePerDay).toLocaleString()}`;
+      }
+    } else {
+      pricingBreakdown = `${days} day(s) × MAD${pricePerDay.toLocaleString()}${discountText} = MAD${carTotal.toLocaleString()}`;
+    }
+
+    const pickupLocation = form.pickup_location.value || 'Not specified';
+    
     const msg = `NEW BOOKING - ET TAAJ RENT CARS\n\n` +
                 `Car: <?= htmlspecialchars($car['name']) ?>\n` +
-                `Pickup: ${pickup.value}\n` +
-                `Return: ${ret.value}\n` +
-                `Duration: ${days} days\n` +
-                `Price per day: MAD<?= number_format($discountedPricePerDay) ?>${discountText}\n` +
+                `Pickup Date: ${pickup.value}\n` +
+                `Return Date: ${ret.value}\n` +
+                `Pickup Location: ${pickupLocation}\n` +
+                `Duration: ${days} days\n\n` +
+                `Car Rental Pricing:\n${pricingBreakdown}\n` +
                 `Car Total: MAD${carTotal.toLocaleString()}\n` +
                 `${insuranceDetail}` +
                 `${extrasText ? extrasText + "\n" : ""}` +
@@ -876,7 +976,7 @@ function carImageUrl($image)
 
     form.reset();
     document.querySelectorAll('.toggle-switch input[type="checkbox"]').forEach(cb => setSliderColor(cb));
-    totalEl.textContent = formatPriceJS(0);
+    totalEl.textContent = 'MAD0';
     daysEl.textContent = '';
     insuranceInfo.textContent = 'Basic Insurance (included)';
     extrasInfo.textContent = '';

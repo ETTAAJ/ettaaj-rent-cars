@@ -3,14 +3,14 @@ require_once 'init.php';
 require_once 'config.php';
 ?>
 <!DOCTYPE html>
-<html lang="<?= $lang ?>" dir="<?= getDir() ?>">
+<html lang="<?= $lang ?>" class="scroll-smooth" dir="<?= getDir() ?>" style="scroll-behavior: smooth;">
 <head>
   <!-- Primary Meta Tags - FULLY OPTIMIZED FOR MARRAKECH -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About ETTAAJ Rent Cars | Best Car Rental Marrakech Airport - No Deposit</title>
   <meta name="description" content="Discover ETTAAJ Rent Cars - Marrakech's most trusted car rental agency. Free airport delivery, no deposit, luxury & cheap cars, 24/7 WhatsApp support. +212 772 331 080" />
-  <meta name="keywords" content="about ettaaj rent cars, car rental in marrakech airport, cheap car rental in marrakech, best car rental in marrakech, car rental marrakech no deposit, luxury car rental in marrakech, car rental marrakech gueliz, car rental companies in marrakech, car rental agency marrakech" />
+  <meta name="keywords" content="rental cars in Morocco, car rental Morocco, rent a car Morocco, car rental Marrakech, car rental Casablanca, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, car rental Marrakech airport, Morocco vehicle rental, about ettaaj rent cars, car rental in marrakech airport, cheap car rental in marrakech, best car rental in marrakech, car rental marrakech no deposit, luxury car rental in marrakech, car rental marrakech gueliz, car rental companies in marrakech, car rental agency marrakech" />
   <meta name="author" content="ETTAAJ Rent Cars" />
   <meta name="robots" content="index, follow" />
   <meta name="language" content="en" />
@@ -23,7 +23,7 @@ require_once 'config.php';
   <link rel="canonical" href="https://www.ettaajrentcars.ma/about.php" />
 
   <!-- Favicon -->
-  <link rel="icon" href="pub_img/ETTAAJ-RENT-CARS.jpg" type="image/png" sizes="512x512">
+  <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg" type="image/jpeg" sizes="512x512">
   <link rel="icon" href="pub_img/favicon.ico" type="image/x-icon">
 
   <!-- Open Graph -->
@@ -32,7 +32,7 @@ require_once 'config.php';
   <meta property="og:description" content="No deposit car rental at Marrakech Airport. Free delivery, luxury & economy cars, 24/7 service. Trusted by thousands of travelers." />
   <meta property="og:url" content="https://www.ettaajrentcars.com/about.php" />
   <meta property="og:site_name" content="ETTAAJ Rent Cars" />
-  <meta property="og:image" content="https://www.ettaajrentcars.com/pub_img/ETTAAJ-RENT-CARS.jpg" />
+  <meta property="og:image" content="https://www.ettaajrentcars.com/pub_img/ettaaj-rent-cars.jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
 
@@ -40,7 +40,7 @@ require_once 'config.php';
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="About ETTAAJ Rent Cars - Top Car Rental Marrakech Airport" />
   <meta name="twitter:description" content="Free airport delivery • No deposit • Luxury & cheap cars • WhatsApp +212 772 331 080" />
-  <meta name="twitter:image" content="https://www.ettaajrentcars.com/pub_img/ETTAAJ-RENT-CARS.jpg" />
+  <meta name="twitter:image" content="https://www.ettaajrentcars.com/pub_img/ettaaj-rent-cars.jpeg" />
 
   <!-- Updated Schema - Marrakech Airport Focused -->
   <script type="application/ld+json">
@@ -48,7 +48,7 @@ require_once 'config.php';
     "@context": "https://schema.org",
     "@type": "CarRentalService",
     "name": "ETTAAJ Rent Cars Marrakech",
-    "image": "https://www.ettaajrentcars.ma/pub_img/ETTAAJ-RENT-CARS.jpg",
+    "image": "https://www.ettaajrentcars.ma/pub_img/ettaaj-rent-cars.jpeg",
     "url": "https://www.ettaajrentcars.ma",
     "telephone": "+212772331080",
     "email": "contact@ettaajrentcars.ma",
@@ -132,19 +132,36 @@ require_once 'config.php';
     .car-slider-track {
       display: flex;
       gap: 1.5rem;
-      animation: slideCars 25s linear infinite;
+      animation: slideCars 40s linear infinite;
       width: fit-content;
+      will-change: transform;
     }
     .car-slider-track:hover {
       animation-play-state: paused;
     }
     .car-slide-item {
-      flex: 0 0 240px;
-      min-width: 240px;
+      flex: 0 0 280px;
+      min-width: 280px;
     }
     @keyframes slideCars {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(-240px * 8 - 1.5rem * 8)); }
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    @media (max-width: 768px) {
+      .car-slide-item {
+        flex: 0 0 240px;
+        min-width: 240px;
+      }
+    }
+    @media (max-width: 640px) {
+      .car-slide-item {
+        flex: 0 0 200px;
+        min-width: 200px;
+      }
     }
   </style>
 </head>
@@ -153,83 +170,59 @@ require_once 'config.php';
 <?php include 'header.php'; ?>
 
 <main class="max-w-7xl mx-auto px-4 py-16 text-center">
-  <!-- Hero Section - Now Marrakech Optimized -->
-  <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden rounded-3xl mb-16 bg-gradient-to-br from-card-dark via-[var(--bg)] to-card-dark shadow-2xl"
-           style="background-image: url('https://images.unsplash.com/photo-1582719201252-0f1f7d041212?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;"
-           data-aos="fade" data-aos-duration="1500">
-    <div class="absolute inset-0 bg-black/60"></div>
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="particle"></div>
-      <div class="particle delay-1"></div>
-      <div class="particle delay-2"></div>
-      <div class="particle delay-3"></div>
-      <div class="particle delay-4"></div>
-    </div>
-
-    <div class="relative z-10 max-w-5xl mx-auto px-4">
-      <div data-aos="fade-down" data-aos-delay="400" class="mb-8">
-        <div class="flex flex-col items-center gap-4">
-          <div class="flex items-center gap-3">
-            <img src="pub_img/ETTAAJ-RENT-CARS.jpg" alt="ETTAAJ Rent Cars Marrakech Logo" class="w-16 h-16 rounded-full ring-4 ring-gold/60 shadow-2xl">
-            <h1 class="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-gold via-yellow-400 to-gold bg-clip-text text-transparent drop-shadow-2xl">
-              ETTAAJ RENT CARS
-            </h1>
+  <!-- Hero Section with Logo and Car Slider -->
+  <section class="relative overflow-hidden py-16 lg:py-24 mb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Logo -->
+      <div class="text-center mb-12" data-aos="fade-down">
+        <img src="pub_img/ettaaj-rent-cars.jpeg" 
+             alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
+             class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
+      </div>
+      
+      <!-- SEO Keywords (Hidden but accessible to search engines) -->
+      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
+        <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
+        <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
+      </div>
+      
+      <!-- Infinite Car Images Slider -->
+      <?php
+        $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 10");
+        $sliderStmt->execute();
+        $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+      ?>
+      <?php if (!empty($sliderCars)): ?>
+      <div class="relative mt-8" data-aos="fade-up">
+        <div class="car-slider-container overflow-hidden py-8">
+          <div class="car-slider-track">
+            <?php 
+            // Duplicate cars multiple times for seamless infinite loop
+            $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
+            foreach ($sliderCarsDuplicated as $car): 
+              $carImg = !empty($car['image']) 
+                ? 'uploads/' . basename($car['image']) 
+                : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
+            ?>
+              <div class="car-slide-item">
+                <div class="relative group">
+                  <img src="<?= htmlspecialchars($carImg) ?>" 
+                       alt="<?= htmlspecialchars($car['name']) ?> - Rental Cars in Morocco"
+                       class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                       loading="lazy"
+                       onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
+                    <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($car['name']) ?></p>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
           </div>
-          <a href="https://wa.me/212772331080?text=Hi%20ETTAAJ%2C%20I%20arrived%20at%20Marrakech%20Airport!" 
-             class="flex items-center gap-2 text-gold font-semibold text-lg hover:text-yellow-400 transition">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
-            <span class="phone-number" dir="ltr">+212 772 331 080</span> (<?= $text['support_24_7'] ?>)
-          </a>
         </div>
       </div>
-
-      <h2 data-aos="zoom-in" data-aos-delay="700" class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-        <?= $text['about_title'] ?>
-      </h2>
-
-      <p data-aos="fade-up" data-aos-delay="1000" class="text-lg md:text-xl text-gray-200 mb-10 max-w-3xl mx-auto leading-relaxed">
-        <?= $text['about_subtitle'] ?>
-      </p>
-
-      <div data-aos="fade-up" data-aos-delay="1300">
-        <a href="https://wa.me/212772331080?text=Hello%20ETTAAJ%2C%20I%20need%20a%20car%20at%20Marrakech%20Airport!" 
-           target="_blank"
-           class="group inline-flex items-center gap-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg px-10 py-5 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300">
-          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-1.174-2.294-.174-.338-.434-.327-.672-.327-.227 0-.482.074-.735.174-.67.267-1.25.85-1.25 2.076 0 1.226.89 2.407 1.013 2.567.124.16 1.772 2.708 4.293 3.796 1.52.654 2.158.75 2.92.625.76-.124 2.03-.83 2.317-1.632.287-.802.287-1.49.2-1.632-.087-.15-.346-.25-.644-.3z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.132.547 4.135 1.507 5.987L0 24l6.2-1.625C8.002 23.227 9.973 23.773 12 23.773c6.627 0 12-5.373 12-12 0-6.627-5.373-12-12-12z"/></svg>
-          <?= $text['book_on_whatsapp'] ?>
-        </a>
-      </div>
+      <?php endif; ?>
     </div>
   </section>
-
-  <!-- Car Images Slider -->
-  <?php
-    $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 8");
-    $sliderStmt->execute();
-    $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
-  ?>
-  <?php if (!empty($sliderCars)): ?>
-  <section class="mb-16 py-8 bg-[var(--light-bg)] rounded-3xl">
-    <div class="car-slider-container overflow-hidden py-6">
-      <div class="car-slider-track">
-        <?php 
-        $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars);
-        foreach ($sliderCarsDuplicated as $car): 
-          $carImg = !empty($car['image']) 
-            ? 'uploads/' . basename($car['image']) 
-            : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
-        ?>
-          <div class="car-slide-item">
-            <img src="<?= htmlspecialchars($carImg) ?>" 
-                 alt="<?= htmlspecialchars($car['name']) ?>"
-                 class="w-full h-40 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 hover:border-[var(--primary-color)] transition-all duration-300"
-                 onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-  </section>
-  <?php endif; ?>
 
   <!-- Mission & Vision -->
   <section id="mission" class="grid md:grid-cols-2 gap-8 mb-16">

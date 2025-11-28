@@ -11,14 +11,14 @@ require_once 'config.php';
   <!-- FULLY OPTIMIZED FOR MARRAKECH -->
   <title>Contact ETTAAJ Rent Cars | Car Rental Marrakech Airport - WhatsApp +212 772 331 080</title>
   <meta name="description" content="Contact ETTAAJ Rent Cars - Best car rental in Marrakech Airport. Instant WhatsApp reply 24/7, free airport delivery, no deposit. Call or message +212 772 331 080 now!" />
-  <meta name="keywords" content="contact ettaaj rent cars, car rental marrakech airport contact, car rental marrakech whatsapp, car rental in marrakech airport phone number, best car rental marrakech contact, car rental marrakech gueliz office" />
+  <meta name="keywords" content="rental cars in Morocco, car rental Morocco, rent a car Morocco, car rental Marrakech, car rental Casablanca, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, car rental Marrakech airport, Morocco vehicle rental, contact ettaaj rent cars, car rental marrakech airport contact, car rental marrakech whatsapp, car rental in marrakech airport phone number, best car rental marrakech contact, car rental marrakech gueliz office" />
   <meta name="author" content="ETTAAJ Rent Cars" />
   <meta name="robots" content="index, follow" />
   <meta name="geo.region" content="MA" />
   <meta name="geo.placename" content="Marrakech" />
   <meta name="geo.position" content="31.6069;-8.0363" />
   <meta name="ICBM" content="31.6069, -8.0363" />
-  <link rel="icon" href="pub_img/ETTAAJ-RENT-CARS.jpg">
+  <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg">
 
   <link rel="canonical" href="https://www.ettaajrentcars.ma/contact.php" />
 
@@ -39,7 +39,7 @@ require_once 'config.php';
     "name": "ETTAAJ Rent Cars Marrakech",
     "url": "https://www.ettaajrentcars.ma",
     "telephone": "+212772331080",
-    "image": "https://www.ettaajrentcars.ma/pub_img/ETTAAJ-RENT-CARS.jpg",
+    "image": "https://www.ettaajrentcars.ma/pub_img/ettaaj-rent-cars.jpeg",
     "description": "Contact the best car rental in Marrakech Airport. 24/7 WhatsApp support, free delivery, no deposit rentals.",
     "address": {
       "@type": "PostalAddress",
@@ -96,6 +96,48 @@ require_once 'config.php';
     .text-gold { color: var(--gold); }
     /* Phone number always LTR */
     .phone-number { direction: ltr; display: inline-block; }
+    
+    /* Infinite Car Slider Styles */
+    .car-slider-container {
+      position: relative;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+    .car-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      animation: slideCars 40s linear infinite;
+      width: fit-content;
+      will-change: transform;
+    }
+    .car-slider-track:hover {
+      animation-play-state: paused;
+    }
+    .car-slide-item {
+      flex: 0 0 280px;
+      min-width: 280px;
+    }
+    @keyframes slideCars {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    @media (max-width: 768px) {
+      .car-slide-item {
+        flex: 0 0 240px;
+        min-width: 240px;
+      }
+    }
+    @media (max-width: 640px) {
+      .car-slide-item {
+        flex: 0 0 200px;
+        min-width: 200px;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -104,14 +146,59 @@ require_once 'config.php';
 
 <main class="max-w-7xl mx-auto px-6 py-16 lg:py-24">
 
-  <div data-aos="fade-up" class="text-center mb-16">
-    <h1 class="text-5xl md:text-6xl font-bold mb-4 text-primary">
-      <?= $text['contact'] ?> <span class="text-gold">ETTAAJ Rent Cars</span> Marrakech
-    </h1>
-    <p class="text-xl text-muted max-w-3xl mx-auto">
-      <?= $text['contact_subtitle'] ?>
-    </p>
-  </div>
+  <!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
+  <section class="relative overflow-hidden py-8 lg:py-12 mb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Logo -->
+      <div class="text-center mb-12" data-aos="fade-down">
+        <img src="pub_img/ettaaj-rent-cars.jpeg" 
+             alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
+             class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
+      </div>
+      
+      <!-- SEO Keywords (Hidden but accessible to search engines) -->
+      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
+        <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
+        <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
+      </div>
+      
+      <!-- Infinite Car Images Slider -->
+      <?php
+        $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 10");
+        $sliderStmt->execute();
+        $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+      ?>
+      <?php if (!empty($sliderCars)): ?>
+      <div class="relative mt-8" data-aos="fade-up">
+        <div class="car-slider-container overflow-hidden py-8">
+          <div class="car-slider-track">
+            <?php 
+            // Duplicate cars multiple times for seamless infinite loop
+            $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
+            foreach ($sliderCarsDuplicated as $car): 
+              $carImg = !empty($car['image']) 
+                ? 'uploads/' . basename($car['image']) 
+                : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
+            ?>
+              <div class="car-slide-item">
+                <div class="relative group">
+                  <img src="<?= htmlspecialchars($carImg) ?>" 
+                       alt="<?= htmlspecialchars($car['name']) ?> - Rental Cars in Morocco"
+                       class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                       loading="lazy"
+                       onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
+                    <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($car['name']) ?></p>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+    </div>
+  </section>
 
   <div class="grid lg:grid-cols-2 gap-12 xl:gap-20">
 

@@ -82,249 +82,101 @@ try {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Change Password – Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Change Password - Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-        --dark-bg: #36454F;
-        --darker-bg: #2C3A44;
-        --border: #4A5A66;
-        --text: #FFFFFF;
-        --text-muted: #D1D5DB;
-        --gold: #FFD700;
-        --gold-dark: #e6c200;
-        --danger: #ef4444;
-        --success: #10b981;
-    }
-    * { font-family: 'Inter', sans-serif; }
-    body {
-        background: var(--dark-bg);
-        color: var(--text);
-        min-height: 100vh;
-    }
-    .page-header {
-        background: var(--darker-bg);
-        padding: 1.5rem 0;
-        border-bottom: 1px solid var(--border);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .container { max-width: 500px; }
-    .card {
-        background: var(--darker-bg);
-        border: 1px solid var(--border);
-        border-radius: 1rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-    .card-header {
-        background: var(--gold);
-        color: #000;
-        font-weight: 600;
-        border-bottom: 1px solid var(--border);
-        border-radius: 1rem 1rem 0 0;
-        padding: 1.25rem 1.5rem;
-    }
-    .form-control {
-        background: var(--darker-bg);
-        border: 1px solid var(--border);
-        color: var(--text);
-        border-radius: .5rem;
-    }
-    .form-control:focus {
-        background: var(--darker-bg);
-        border-color: var(--gold);
-        box-shadow: 0 0 0 0.2rem rgba(255,215,0,.25);
-        color: var(--text);
-    }
-    .form-control::placeholder { color: #9CA3AF; }
-    .form-label { color: var(--text-muted); font-weight: 500; }
-    .btn-primary {
-        background: var(--gold);
-        border-color: var(--gold);
-        color: #000;
-        font-weight: 600;
-    }
-    .btn-primary:hover {
-        background: var(--gold-dark);
-        border-color: var(--gold-dark);
-    }
-    .btn-secondary {
-        background: #4A5A66;
-        border-color: #4A5A66;
-        color: var(--text);
-    }
-    .btn-secondary:hover {
-        background: #5A6B77;
-        border-color: #5A6B77;
-    }
-    .alert-success {
-        background: rgba(16,185,129,.15);
-        border: 1px solid var(--success);
-        color: #a7f3d0;
-        border-radius: .75rem;
-    }
-    .alert-danger {
-        background: rgba(239,68,68,.15);
-        border: 1px solid var(--danger);
-        color: #fca5a5;
-        border-radius: .75rem;
-    }
-    .text-gold { color: var(--gold); }
-    .small-muted { color: var(--text-muted); font-size: .875rem; }
-
-    /* ---------- DAY MODE OVERRIDES ---------- */
-    body.day-mode {
-        --dark-bg: #f8fafc;
-        --darker-bg: #ffffff;
-        --border: #e2e8f0;
-        --text: #1e293b;
-        --text-muted: #64748b;
-    }
-    body.day-mode .page-header,
-    body.day-mode .card {
-        background: var(--darker-bg);
-        border-color: var(--border);
-    }
-    body.day-mode .form-control {
-        background: #f8fafc;
-        color: #1e293b;
-    }
-    body.day-mode .form-label,
-    body.day-mode .small-muted { color: #64748b; }
-    body.day-mode .btn-secondary { background: #e2e8f0; color: #1e293b; }
-    body.day-mode .alert-success { background: rgba(16,185,129,.1); color: #10b981; border-color: #10b981; }
-    body.day-mode .alert-danger { background: rgba(239,68,68,.1); color: #ef4444; border-color: #ef4444; }
-
-    /* ---------- TOGGLE BUTTON ---------- */
-    .day-mode-toggle {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 1000;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: var(--gold);
-        color: #000;
-        border: none;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 8px 20px rgba(255,215,0,.4);
-        cursor: pointer;
-        transition: all .3s ease;
-    }
-    .day-mode-toggle:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(255,215,0,.5); }
-    .day-mode-toggle i { transition: transform .3s; }
-    .day-mode-toggle.active i { transform: rotate(180deg); }
+    :root { --gold: #FFD700; }
+    body { background: #36454F; color: white; font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body>
+<body class="min-h-screen">
+<?php include 'header.php'; ?>
 
-<!-- DAY MODE TOGGLE -->
-<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
-    <i class="bi bi-sun-fill"></i>
-</button>
-
+<main class="min-h-screen">
 <!-- Header -->
-<div class="page-header">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-      <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
-        <i class="bi bi-shield-lock text-gold"></i>
-        Change Password
+<div class="bg-[#2C3A44] border-b border-[#4A5A66] shadow-xl">
+  <div class="container mx-auto px-6 py-6">
+    <div class="flex justify-between items-center flex-wrap gap-4">
+      <h2 class="text-2xl font-bold flex items-center gap-3">
+        <i class="bi bi-shield-lock text-yellow-500"></i> Change Password
       </h2>
-      <a href="index.php" class="btn btn-secondary">
+      <a href="index.php" class="bg-[#36454F] hover:bg-[#4A5A66] text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2 border border-[#4A5A66] transition">
         <i class="bi bi-arrow-left"></i> Back to Dashboard
       </a>
     </div>
   </div>
 </div>
 
-<div class="container mt-5 pb-5">
-  <div class="card p-4">
-    <div class="card-header text-center">
-      <h4 class="mb-0">Change Admin Password</h4>
-    </div>
-    <div class="card-body">
-      <p class="small-muted text-center mb-4">
-        Logged in as: <strong><?= htmlspecialchars($admin['username']) ?></strong>
+<div class="container mx-auto px-6 py-10 max-w-2xl">
+  <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] p-8">
+    <div class="text-center mb-6">
+      <h3 class="text-2xl font-bold text-white mb-2">Change Admin Password</h3>
+      <p class="text-gray-400">
+        Logged in as: <strong class="text-yellow-500"><?= htmlspecialchars($admin['username']) ?></strong>
       </p>
-
-      <?php if ($success): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-      <?php endif; ?>
-
-      <?php if (!empty($errors)): ?>
-        <div class="alert alert-danger">
-          <ul class="mb-0">
-            <?php foreach ($errors as $e): ?>
-              <li><?= htmlspecialchars($e) ?></li>
-            <?php endforeach; ?>
-          </ul>
-        </div>
-      <?php endif; ?>
-
-      <form method="POST">
-        <input type="hidden" name="csrf" value="<?= $csrf ?>">
-
-        <div class="mb-3">
-          <label class="form-label">Current Password</label>
-          <input type="password" name="current_password" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">New Password</label>
-          <input type="password" name="new_password" class="form-control" required minlength="8">
-          <small class="small-muted">Minimum 8 characters</small>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label">Confirm New Password</label>
-          <input type="password" name="confirm_password" class="form-control" required>
-        </div>
-
-        <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-primary btn-lg">
-            <i class="bi bi-check-circle"></i> Change Password
-          </button>
-          <a href="index.php" class="btn btn-secondary">
-            Cancel
-          </a>
-        </div>
-      </form>
     </div>
+
+    <?php if ($success): ?>
+      <div class="mb-6 p-4 bg-green-600/20 border border-green-500 rounded-xl text-green-400">
+        <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($success) ?>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($errors)): ?>
+      <div class="mb-6 p-4 bg-red-600/20 border border-red-500 rounded-xl text-red-400">
+        <ul class="list-disc list-inside space-y-1">
+          <?php foreach ($errors as $e): ?>
+            <li><?= htmlspecialchars($e) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <?php endif; ?>
+
+    <form method="POST" class="space-y-6">
+      <input type="hidden" name="csrf" value="<?= $csrf ?>">
+
+      <div>
+        <label class="block text-gray-300 font-semibold mb-2">
+          <i class="bi bi-lock-fill text-yellow-500"></i> Current Password
+        </label>
+        <input type="password" name="current_password" 
+               class="w-full p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition" 
+               required>
+      </div>
+
+      <div>
+        <label class="block text-gray-300 font-semibold mb-2">
+          <i class="bi bi-key-fill text-yellow-500"></i> New Password
+        </label>
+        <input type="password" name="new_password" 
+               class="w-full p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition" 
+               required minlength="8">
+        <small class="text-gray-400 text-sm mt-1 block">Minimum 8 characters</small>
+      </div>
+
+      <div>
+        <label class="block text-gray-300 font-semibold mb-2">
+          <i class="bi bi-key-fill text-yellow-500"></i> Confirm New Password
+        </label>
+        <input type="password" name="confirm_password" 
+               class="w-full p-4 bg-[#36454F] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none transition" 
+               required>
+      </div>
+
+      <div class="flex gap-4 pt-4">
+        <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition shadow-lg">
+          <i class="bi bi-check-circle"></i> Change Password
+        </button>
+        <a href="index.php" class="bg-[#36454F] hover:bg-[#4A5A66] text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center border border-[#4A5A66] transition">
+          Cancel
+        </a>
+      </div>
+    </form>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // Day/Night Mode Toggle – identical to all other admin pages
-  const toggleBtn = document.getElementById('dayModeToggle');
-  const body = document.body;
-  const icon = toggleBtn.querySelector('i');
-
-  if (localStorage.getItem('dayMode') === 'true') {
-      body.classList.add('day-mode');
-      icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-      toggleBtn.classList.add('active');
-  }
-
-  toggleBtn.addEventListener('click', () => {
-      body.classList.toggle('day-mode');
-      const isDay = body.classList.contains('day-mode');
-
-      if (isDay) {
-          icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-      } else {
-          icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
-      }
-      toggleBtn.classList.toggle('active', isDay);
-      localStorage.setItem('dayMode', isDay);
-  });
-</script>
+</main>
 </body>
 </html>

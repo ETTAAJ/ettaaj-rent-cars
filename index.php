@@ -115,24 +115,24 @@
                   <div class="flex items-center justify-center gap-3 flex-wrap">
                       <?php if ($hasDiscount): ?>
                         <span class="text-2xl text-muted line-through opacity-70" dir="ltr">
-                          <?= formatPrice($originalPrice) ?>
+                          MAD <?= formatNumber($originalPrice) ?>
                         </span>
                       <?php endif; ?>
 
                       <div class="text-4xl sm:text-5xl font-extrabold <?= $hasDiscount ? 'text-green-400' : 'text-white' ?>" dir="ltr">
-                        <?= formatPrice($discountedPrice) ?>
+                        <?= formatNumber($discountedPrice) ?>
                       </div>
                   </div>
                   <span class="inline-block px-4 py-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-sm mt-2">
-                    <span dir="ltr"><?= formatPrice($discountedPrice, 0) ?></span>/<?= $text['day'] ?>
+                    <span dir="ltr">MAD</span>/<?= $text['day'] ?>
                   </span>
 
                   <div class="flex gap-3 mt-3 text-xs font-medium">
                       <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-                          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$car['price_week']) ?></strong>
+                          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_week']) ?></strong>
                       </span>
                       <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-                          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$car['price_month']) ?></strong>
+                          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_month']) ?></strong>
                       </span>
                   </div>
               </div>
@@ -253,14 +253,15 @@
   $totalCount = (int)$totalCountStmt->fetch(PDO::FETCH_ASSOC)['total'];
 ?>
 <!DOCTYPE html>
-<html lang="<?= $lang ?>" class="scroll-smooth" dir="<?= getDir() ?>">
+<html lang="<?= $lang ?>" class="scroll-smooth" dir="<?= getDir() ?>" style="scroll-behavior: smooth;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Car Rental Marrakech Airport | ETTAAJ Rent Cars – No Deposit, From 250 MAD/day</title>
   <meta name="description" content="Best car rental Marrakech Airport. No deposit, free delivery 24/7, luxury & cheap cars. WhatsApp +212 772 331 080">
+  <meta name="keywords" content="rental cars in Morocco, car rental Morocco, rent a car Morocco, car rental Marrakech, car rental Casablanca, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, car rental Marrakech airport, Morocco vehicle rental">
   <link rel="canonical" href="https://www.ettaajrentcars.ma<?php echo $_SERVER['REQUEST_URI']; ?>">
-  <link rel="icon" href="pub_img/ETTAAJ-RENT-CARS.jpg">
+  <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg">
 
   <!-- Tailwind + Fonts + AOS + Bootstrap Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -444,8 +445,9 @@
     .car-slider-track {
       display: flex;
       gap: 1.5rem;
-      animation: slideCars 30s linear infinite;
+      animation: slideCars 40s linear infinite;
       width: fit-content;
+      will-change: transform;
     }
     .car-slider-track:hover {
       animation-play-state: paused;
@@ -459,7 +461,7 @@
         transform: translateX(0);
       }
       100% {
-        transform: translateX(calc(-280px * 10 - 1.5rem * 10));
+        transform: translateX(-50%);
       }
     }
     @media (max-width: 768px) {
@@ -467,19 +469,11 @@
         flex: 0 0 240px;
         min-width: 240px;
       }
-      @keyframes slideCars {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(calc(-240px * 10 - 1.5rem * 10)); }
-      }
     }
     @media (max-width: 640px) {
       .car-slide-item {
         flex: 0 0 200px;
         min-width: 200px;
-      }
-      @keyframes slideCars {
-        0% { transform: translateX(0); }
-        100% { transform: translateX(calc(-200px * 10 - 1.5rem * 10)); }
       }
     }
 
@@ -529,32 +523,26 @@
 <!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
 <section class="relative overflow-hidden py-16 lg:py-24">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-card-dark rounded-xl shadow-lg border border-border p-6 sm:p-8 lg:p-12">
-    <!-- Logo Section -->
+    <!-- Logo -->
     <div class="text-center mb-12" data-aos="fade-down">
-      <div class="logo-3d-container mb-8">
-        <div class="logo-3d">
-          <img src="pub_img/ETTAAJ-RENT-CARS.jpg" 
-               alt="ETTAAJ Rent Cars Logo" 
-               class="max-w-xs sm:max-w-sm md:max-w-md mx-auto rounded-2xl shadow-2xl border-4 border-[var(--primary-color)]"
-               style="box-shadow: var(--shadow);">
-        </div>
-      </div>
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-color)] via-yellow-400 to-[var(--primary-color)] mb-4">
-        <?= $text['hero_title'] ?? 'Premium Car Rental' ?>
-      </h1>
-      <p class="text-xl sm:text-2xl text-[var(--text-color)]/80 max-w-3xl mx-auto">
-        <?= $text['hero_subtitle'] ?? 'Your trusted partner for luxury car rental in Marrakech' ?>
-      </p>
+      <img src="pub_img/ettaaj-rent-cars.jpeg" 
+           alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
+           class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
     </div>
-
+    
+    <!-- SEO Keywords (Hidden but accessible to search engines) -->
+    <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
+      <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
+      <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
+    </div>
+    
     <!-- Infinite Car Images Slider -->
-    <div class="relative" data-aos="fade-up">
+    <div class="relative mt-8" data-aos="fade-up">
       <div class="car-slider-container overflow-hidden py-8">
         <div class="car-slider-track">
           <?php 
-          // Duplicate cars for seamless loop
-          $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars);
+          // Duplicate cars multiple times for seamless infinite loop
+          $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
           foreach ($sliderCarsDuplicated as $car): 
             $carImg = !empty($car['image']) 
               ? 'uploads/' . basename($car['image']) 
@@ -563,8 +551,9 @@
             <div class="car-slide-item">
               <div class="relative group">
                 <img src="<?= htmlspecialchars($carImg) ?>" 
-                     alt="<?= htmlspecialchars($car['name']) ?>"
+                     alt="<?= htmlspecialchars($car['name']) ?> - Rental Cars in Morocco"
                      class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                     loading="lazy"
                      onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
                   <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($car['name']) ?></p>
@@ -574,7 +563,6 @@
           <?php endforeach; ?>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </section>
@@ -647,16 +635,11 @@
     if (isLoading) return;
     isLoading = true;
 
-    // Get current currency from URL or default to MAD
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentCurrency = urlParams.get('currency') || 'MAD';
-
     const params = new URLSearchParams({
       search: els.search.value || '',
       gear: els.gear.value,
       fuel: els.fuel.value,
       sort: els.sort.value,
-      currency: currentCurrency,
       ajax: 1
     });
 
@@ -707,26 +690,6 @@
   els.gear.addEventListener('change', fetchCars);
   els.fuel.addEventListener('change', fetchCars);
   els.sort.addEventListener('change', fetchCars);
-
-  // Reload page when currency changes (currency switcher uses links, so this ensures refresh)
-  // Also refresh cards if currency parameter changes in URL
-  let lastCurrency = new URLSearchParams(window.location.search).get('currency') || 'MAD';
-  const checkCurrencyChange = () => {
-    const currentCurrency = new URLSearchParams(window.location.search).get('currency') || 'MAD';
-    if (currentCurrency !== lastCurrency) {
-      lastCurrency = currentCurrency;
-      // Currency changed, reload cards to update prices
-      fetchCars();
-    }
-  };
-  
-  // Check for currency changes periodically (in case URL changes without page reload)
-  setInterval(checkCurrencyChange, 500);
-  
-  // Also check on popstate (back/forward button)
-  window.addEventListener('popstate', () => {
-    setTimeout(checkCurrencyChange, 100);
-  });
 </script>
 </body>
 </html>

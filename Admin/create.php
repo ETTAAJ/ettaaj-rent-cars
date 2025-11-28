@@ -122,11 +122,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     .page-header {
         background: var(--darker-bg);
-        padding: 1.5rem 0;
+        padding: 1rem 0;
         border-bottom: 1px solid var(--border);
         box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        margin-top: 64px; /* Account for sticky header */
     }
-    .container { max-width: 1000px; }
+    @media (min-width: 768px) {
+        .page-header {
+            padding: 1.5rem 0;
+        }
+    }
+    .container { 
+        max-width: 1000px; 
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    @media (min-width: 576px) {
+        .container {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
     .card {
         background: var(--darker-bg);
         border: 1px solid var(--border);
@@ -195,24 +211,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         --border: #e2e8f0;
         --text: #1e293b;
         --text-muted: #64748b;
+        background: var(--dark-bg) !important;
     }
     body.day-mode .page-header,
     body.day-mode .card,
     body.day-mode .image-preview {
-        background: var(--darker-bg);
-        border-color: var(--border);
+        background: var(--darker-bg) !important;
+        border-color: var(--border) !important;
     }
     body.day-mode .form-control,
     body.day-mode .form-select {
-        background: #f8fafc;
-        color: #1e293b;
+        background: #ffffff !important;
+        color: #1e293b !important;
+        border-color: var(--border) !important;
+    }
+    body.day-mode .form-control:focus,
+    body.day-mode .form-select:focus {
+        background: #ffffff !important;
+        border-color: var(--gold) !important;
+        color: #1e293b !important;
     }
     body.day-mode .form-label,
     body.day-mode .small-muted,
-    body.day-mode .image-preview .placeholder { color: #64748b; }
-    body.day-mode .btn-secondary { background: #e2e8f0; color: #1e293b; }
-    body.day-mode .alert-danger { background: rgba(239,68,68,.1); color: #ef4444; }
-    body.day-mode .text-danger { color: #ef4444; }
+    body.day-mode .image-preview .placeholder { 
+        color: #64748b !important; 
+    }
+    body.day-mode .btn-secondary { 
+        background: #e2e8f0 !important; 
+        color: #1e293b !important;
+        border-color: #cbd5e1 !important;
+    }
+    body.day-mode .btn-secondary:hover {
+        background: #cbd5e1 !important;
+        border-color: #94a3b8 !important;
+    }
+    body.day-mode .alert-danger { 
+        background: rgba(239,68,68,.1) !important; 
+        color: #ef4444 !important;
+        border-color: #ef4444 !important;
+    }
+    body.day-mode .text-danger { 
+        color: #ef4444 !important; 
+    }
+    body.day-mode hr {
+        border-color: var(--border) !important;
+    }
 
     /* TOGGLE BUTTON */
     .day-mode-toggle {
@@ -240,21 +283,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
+<?php include 'header.php'; ?>
 
 <!-- DAY MODE TOGGLE -->
 <button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
     <i class="bi bi-sun-fill"></i>
 </button>
 
-<!-- Header -->
+<!-- Page Header -->
 <div class="page-header">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
       <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
-        Add New Car
+        <i class="bi bi-plus-circle text-warning"></i> Add New Car
       </h2>
       <a href="index.php" class="btn btn-secondary">
-        Back to List
+        <i class="bi bi-arrow-left"></i> Back to List
       </a>
     </div>
   </div>

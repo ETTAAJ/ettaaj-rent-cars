@@ -208,15 +208,13 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </style>
 </head>
 <body class="min-h-screen">
+<?php include 'header.php'; ?>
 
 <!-- Toast -->
 <div class="toast-container fixed top-4 right-4 z-50" id="toastContainer"></div>
 
-<!-- Day Mode Toggle -->
-<button class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-yellow-500 text-black text-2xl shadow-2xl z-50 hover:scale-110 transition" id="dayModeToggle">
-  <i class="bi bi-sun-fill"></i>
-</button>
 
+<main class="min-h-screen">
 <!-- Header -->
 <div class="bg-[#2C3A44] border-b border-[#4A5A66] shadow-xl">
   <div class="container mx-auto px-6 py-6">
@@ -227,18 +225,6 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="flex gap-3">
         <a href="create.php" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2">
           <i class="bi bi-plus-circle"></i> Add New Car
-        </a>
-        <a href="currencies.php" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2">
-          <i class="bi bi-currency-exchange"></i> Currencies
-        </a>
-        <a href="visitors.php" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2">
-          <i class="bi bi-people-fill"></i> Visitors
-        </a>
-        <a href="change_password.php" class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-3 px-6 rounded-xl">
-          <i class="bi bi-shield-lock"></i> Password
-        </a>
-        <a href="logout.php" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl">
-          <i class="bi bi-box-arrow-right"></i> Logout
         </a>
       </div>
     </div>
@@ -366,15 +352,7 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
   })();
   <?php endif; ?>
 
-  // Day/Night Toggle
-  const toggle = document.getElementById('dayModeToggle');
-  if (localStorage.getItem('dayMode') === 'true') document.body.classList.add('day-mode');
-  toggle.addEventListener('click', () => {
-    document.body.classList.toggle('day-mode');
-    localStorage.setItem('dayMode', document.body.classList.contains('day-mode'));
-    toggle.querySelector('i').classList.toggle('bi-sun-fill');
-    toggle.querySelector('i').classList.toggle('bi-moon-fill');
-  });
 </script>
+</main>
 </body>
 </html>

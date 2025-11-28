@@ -8,7 +8,8 @@ require_once 'config.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rental Guide – ET TAAJ RENT CARS</title>
-  <link rel="icon" href="pub_img/ETTAAJ-RENT-CARS.jpg">
+  <meta name="keywords" content="rental cars in Morocco, car rental Morocco, rent a car Morocco, car rental Marrakech, car rental Casablanca, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, car rental Marrakech airport, Morocco vehicle rental" />
+  <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg">
 
   <!-- Tailwind + Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -38,25 +39,105 @@ require_once 'config.php';
     .text-primary { color: var(--primary); }
     .text-muted { color: var(--muted); }
     .text-gold { color: var(--gold); }
+    
+    /* Infinite Car Slider Styles */
+    .car-slider-container {
+      position: relative;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+    .car-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      animation: slideCars 40s linear infinite;
+      width: fit-content;
+      will-change: transform;
+    }
+    .car-slider-track:hover {
+      animation-play-state: paused;
+    }
+    .car-slide-item {
+      flex: 0 0 280px;
+      min-width: 280px;
+    }
+    @keyframes slideCars {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    @media (max-width: 768px) {
+      .car-slide-item {
+        flex: 0 0 240px;
+        min-width: 240px;
+      }
+    }
+    @media (max-width: 640px) {
+      .car-slide-item {
+        flex: 0 0 200px;
+        min-width: 200px;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen">
 
 <?php include 'header.php'; ?>
 
-<!-- HERO SECTION -->
-<section class="relative overflow-hidden bg-[var(--bg)] isolate py-16 sm:py-24 lg:py-32">
-  <div class="absolute inset-0 -z-10">
-    <div class="absolute inset-0 bg-gradient-to-br from-gold/10 via-[var(--bg)] to-yellow-600/5"></div>
-    <div class="absolute inset-0 bg-gradient-to-tl from-[var(--bg-dark)]/80 via-transparent to-gold/5"></div>
-  </div>
-
-  <div class="relative max-w-6xl mx-auto px-6 lg:px-16 text-center">
-    <div data-aos="fade-up">
-      <p class="text-sm uppercase tracking-[0.35em] text-gold/80 mb-4">ETTAAJ RENT CARS</p>
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-primary mb-4">Rental Guide – ETTAAJ RENT CARS</h1>
-      <p class="text-lg sm:text-xl text-muted max-w-3xl mx-auto">Everything you need to know for a smooth and premium rental experience in Marrakech.</p>
+<!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
+<section class="relative overflow-hidden py-16 lg:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Logo -->
+    <div class="text-center mb-12" data-aos="fade-down">
+      <img src="pub_img/ettaaj-rent-cars.jpeg" 
+           alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
+           class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
     </div>
+    
+    <!-- SEO Keywords (Hidden but accessible to search engines) -->
+    <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
+      <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
+      <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
+    </div>
+    
+    <!-- Infinite Car Images Slider -->
+    <?php
+      $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 10");
+      $sliderStmt->execute();
+      $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+    <?php if (!empty($sliderCars)): ?>
+    <div class="relative mt-8" data-aos="fade-up">
+      <div class="car-slider-container overflow-hidden py-8">
+        <div class="car-slider-track">
+          <?php 
+          // Duplicate cars multiple times for seamless infinite loop
+          $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
+          foreach ($sliderCarsDuplicated as $car): 
+            $carImg = !empty($car['image']) 
+              ? 'uploads/' . basename($car['image']) 
+              : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
+          ?>
+            <div class="car-slide-item">
+              <div class="relative group">
+                <img src="<?= htmlspecialchars($carImg) ?>" 
+                     alt="<?= htmlspecialchars($car['name']) ?> - Rental Cars in Morocco"
+                     class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
+                  <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($car['name']) ?></p>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
   </div>
 </section>
 

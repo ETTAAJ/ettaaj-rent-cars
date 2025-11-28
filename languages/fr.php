@@ -74,6 +74,9 @@ return [
     'return_date' => 'Date de retour',
     'return_date_error' => 'La date de retour doit être au moins',
     'after_pickup' => 'jours après la prise en charge.',
+    'pickup_location' => 'Lieu de prise en charge',
+    'marrakech_airport' => 'Aéroport de Marrakech Menara (RAK)',
+    'casablanca_airport' => 'Aéroport de Casablanca Mohammed V (CMN)',
     
     // Protection Plan
     'protection_plan' => 'Plan de protection',

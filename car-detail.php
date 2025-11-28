@@ -91,109 +91,79 @@ $hasDiscount = $discount > 0;
     border-color: rgba(217, 119, 6, 0.2);
     box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   }
-  
-  /* Animated background indicator for active tab */
-  .tab-bar::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    width: calc(50% - 8px);
-    height: calc(100% - 16px);
-    background: linear-gradient(135deg, rgba(255, 178, 44, 0.15), rgba(255, 165, 0, 0.1));
-    border-radius: 12px;
-    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
-    transform: translateX(0%);
-    z-index: 1;
-    box-shadow: inset 0 2px 10px rgba(255, 215, 0, 0.2);
-  }
-  .tab-bar.active-booking::after {
-    transform: translateX(calc(100% + 8px));
-  }
-  
-  /* Animated underline */
   .tab-bar::before {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 0; left: 0;
     width: 50%;
-    height: 4px;
-    background: linear-gradient(90deg, #FFB22C, #FFA500, #FFB22C);
-    background-size: 200% 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #FFB22C, #FFA500);
     border-radius: 3px;
     transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
     transform: translateX(0%);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
-    z-index: 2;
-    animation: shimmer 3s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
   }
-  @keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-  }
-  .tab-bar.active-details::before { 
-    transform: translateX(0%); 
-  }
-  .tab-bar.active-booking::before { 
-    transform: translateX(100%); 
-  }
+  .tab-bar.active-details::before { transform: translateX(0%); }
+  .tab-bar.active-booking::before { transform: translateX(100%); }
 
   .tab-item {
-    flex: 1; 
-    padding: 18px 12px; 
-    text-align: center; 
-    font-weight: 700; 
-    font-size: 1.15rem;
-    border-radius: 12px; 
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-    position: relative; 
-    z-index: 10;
-    cursor: pointer;
+    flex: 1; padding: 18px 12px; text-align: center; font-weight: 700; font-size: 1.15rem;
+    border-radius: 12px; transition: all 0.4s ease; position: relative; z-index: 10;
   }
-  .tab-item svg { 
-    width: 26px; 
-    height: 26px; 
-    margin-right: 10px;
-    transition: transform 0.3s ease;
-  }
+  .tab-item svg { width: 26px; height: 26px; margin-right: 10px; }
   html[dir="rtl"] .tab-item svg { margin-right: 0; margin-left: 10px; }
-  
-  .tab-item.active { 
-    color: #000;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  .tab-item.active svg {
-    transform: scale(1.1);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-  }
-  
-  .tab-item:not(.active) { 
-    color: rgba(255,255,255,0.75);
-  }
-  .light .tab-item:not(.active) { 
-    color: rgba(30, 41, 59, 0.75); 
-  }
-  
-  .tab-item:hover:not(.active) { 
-    color: #FFB22C;
-    transform: translateY(-2px);
-  }
-  .tab-item:hover:not(.active) svg {
-    transform: scale(1.05);
-  }
-  .light .tab-item:hover:not(.active) { 
-    color: #d97706; 
-  }
-  
-  .tab-item:active {
-    transform: scale(0.98);
-  }
+  .tab-item.active { color: #000; }
+  .tab-item:not(.active) { color: rgba(255,255,255,0.75); }
+  .light .tab-item:not(.active) { color: rgba(30, 41, 59, 0.75); }
+  .tab-item:hover:not(.active) { color: #FFB22C; }
+  .light .tab-item:hover:not(.active) { color: #d97706; }
 
   @media (max-width: 640px) {
     .tab-item { padding: 14px 8px; font-size: 1rem; }
     .tab-item svg { width: 22px; height: 22px; }
     .tab-item span { display: block; margin-top: 6px; font-size: 0.8rem; }
+  }
+
+  /* Infinite Car Slider Styles */
+  .car-slider-container {
+    position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+  .car-slider-track {
+    display: flex;
+    gap: 1.5rem;
+    animation: slideCars 40s linear infinite;
+    width: fit-content;
+    will-change: transform;
+  }
+  .car-slider-track:hover {
+    animation-play-state: paused;
+  }
+  .car-slide-item {
+    flex: 0 0 280px;
+    min-width: 280px;
+  }
+  @keyframes slideCars {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  @media (max-width: 768px) {
+    .car-slide-item {
+      flex: 0 0 240px;
+      min-width: 240px;
+    }
+  }
+  @media (max-width: 640px) {
+    .car-slide-item {
+      flex: 0 0 200px;
+      min-width: 200px;
+    }
   }
 
   /* Discount Badge */
@@ -251,16 +221,59 @@ $hasDiscount = $discount > 0;
     </div>
   </div>
 
-  <!-- HERO TITLE -->
-  <div class="text-center mb-16" data-aos="fade-up">
-    <h1 class="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight text-transparent bg-clip-text 
-               bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 drop-shadow-2xl leading-tight">
-      <?= htmlspecialchars($car['name']) ?>
-    </h1>
-    <p class="mt-6 text-xl sm:text-2xl font-medium text-amber-400 drop-shadow-lg tracking-wider">
-      <?= $text['luxury_performance'] ?>
-    </p>
-  </div>
+  <!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
+  <section class="relative overflow-hidden py-8 lg:py-12 mb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Logo -->
+      <div class="text-center mb-12" data-aos="fade-down">
+        <img src="pub_img/ettaaj-rent-cars.jpeg" 
+             alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
+             class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
+      </div>
+      
+      <!-- SEO Keywords (Hidden but accessible to search engines) -->
+      <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
+        <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
+        <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
+      </div>
+      
+      <!-- Infinite Car Images Slider -->
+      <?php
+        $sliderStmt = $pdo->prepare("SELECT * FROM cars WHERE id != ? ORDER BY RAND() LIMIT 10");
+        $sliderStmt->execute([$car['id']]);
+        $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
+      ?>
+      <?php if (!empty($sliderCars)): ?>
+      <div class="relative mt-8" data-aos="fade-up">
+        <div class="car-slider-container overflow-hidden py-8">
+          <div class="car-slider-track">
+            <?php 
+            // Duplicate cars multiple times for seamless infinite loop
+            $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
+            foreach ($sliderCarsDuplicated as $sliderCar): 
+              $carImg = !empty($sliderCar['image']) 
+                ? 'uploads/' . basename($sliderCar['image']) 
+                : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($sliderCar['name']);
+            ?>
+              <div class="car-slide-item">
+                <div class="relative group">
+                  <img src="<?= htmlspecialchars($carImg) ?>" 
+                       alt="<?= htmlspecialchars($sliderCar['name']) ?> - Rental Cars in Morocco"
+                       class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
+                       loading="lazy"
+                       onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($sliderCar['name']) ?>'">
+                  <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
+                    <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($sliderCar['name']) ?></p>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+    </div>
+  </section>
 
   <div class="grid lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
 
@@ -313,13 +326,26 @@ $hasDiscount = $discount > 0;
             <div class="flex items-center justify-center gap-3 flex-wrap">
               <?php if ($hasDiscount): ?>
                 <span class="text-2xl text-muted line-through opacity-70" dir="ltr">
-                  <?= formatPrice($originalPrice) ?>
+                  MAD <?= formatNumber($originalPrice) ?>
                 </span>
               <?php endif; ?>
 
               <div class="text-4xl sm:text-5xl font-extrabold <?= $hasDiscount ? 'text-green-400' : 'text-white' ?>" dir="ltr">
-                <?= formatPrice($discountedPrice) ?>
+                <?= formatNumber($discountedPrice) ?>
               </div>
+            </div>
+            <span class="inline-block px-4 py-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-sm mt-2">
+              <span dir="ltr">MAD</span>/<?= $text['day'] ?>
+            </span>
+            
+            <!-- Weekly and Monthly Prices -->
+            <div class="flex gap-3 mt-3 text-xs font-medium">
+              <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
+                <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_week']) ?></strong>
+              </span>
+              <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
+                <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_month']) ?></strong>
+              </span>
             </div>
           </div>
 
@@ -369,14 +395,14 @@ $hasDiscount = $discount > 0;
                 <i class="bi bi-calendar-check w-6 h-6 text-gold"></i>
                 <div>
                   <span class="text-muted">Daily:</span>
-                  <strong class="text-primary ml-2" dir="ltr"><?= formatPrice((float)($car['insurance_basic_price'] ?? 0)) ?></strong>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_basic_price'] ?? 0)) ?></strong>
                 </div>
               </div>
               <div class="flex items-center gap-3">
                 <i class="bi bi-shield-check w-6 h-6 text-gold"></i>
                 <div>
                   <span class="text-muted">Deposit:</span>
-                  <strong class="text-primary ml-2" dir="ltr"><?= formatPrice((float)($car['insurance_basic_deposit'] ?? 0)) ?></strong>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_basic_deposit'] ?? 0)) ?></strong>
                 </div>
               </div>
             </div>
@@ -390,14 +416,14 @@ $hasDiscount = $discount > 0;
                 <i class="bi bi-calendar-check w-6 h-6 text-gold"></i>
                 <div>
                   <span class="text-muted">Daily:</span>
-                  <strong class="text-primary ml-2" dir="ltr"><?= formatPrice((float)($car['insurance_smart_price'] ?? 0)) ?></strong>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_smart_price'] ?? 0)) ?></strong>
                 </div>
               </div>
               <div class="flex items-center gap-3">
                 <i class="bi bi-shield-check w-6 h-6 text-gold"></i>
                 <div>
                   <span class="text-muted">Deposit:</span>
-                  <strong class="text-primary ml-2" dir="ltr"><?= formatPrice((float)($car['insurance_smart_deposit'] ?? 0)) ?></strong>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_smart_deposit'] ?? 0)) ?></strong>
                 </div>
               </div>
             </div>
@@ -411,14 +437,14 @@ $hasDiscount = $discount > 0;
                 <i class="bi bi-calendar-check w-6 h-6 text-gold"></i>
                 <div>
                   <span class="text-muted">Daily:</span>
-                  <strong class="text-primary ml-2" dir="ltr"><?= formatPrice((float)($car['insurance_premium_price'] ?? 0)) ?></strong>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_premium_price'] ?? 0)) ?></strong>
                 </div>
               </div>
               <div class="flex items-center gap-3">
                 <i class="bi bi-shield-check w-6 h-6 text-gold"></i>
                 <div>
                   <span class="text-muted">Deposit:</span>
-                  <strong class="text-primary ml-2" dir="ltr"><?= formatPrice((float)($car['insurance_premium_deposit'] ?? 0)) ?></strong>
+                  <strong class="text-primary ml-2" dir="ltr">MAD <?= formatNumber((float)($car['insurance_premium_deposit'] ?? 0)) ?></strong>
                 </div>
               </div>
             </div>
@@ -577,24 +603,24 @@ $hasDiscount = $discount > 0;
                   <div class="flex items-center justify-center gap-3 flex-wrap">
                     <?php if ($s_hasDiscount): ?>
                       <span class="text-2xl text-muted line-through opacity-70" dir="ltr">
-                        <?= formatPrice($s_original) ?>
+                        MAD <?= formatNumber($s_original) ?>
                       </span>
                     <?php endif; ?>
 
                     <div class="text-4xl sm:text-5xl font-extrabold <?= $s_hasDiscount ? 'text-green-400' : 'text-white' ?>" dir="ltr">
-                      <?= formatPrice($s_discounted) ?>
+                      <?= formatNumber($s_discounted) ?>
                     </div>
                   </div>
                   <span class="inline-block px-4 py-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-sm mt-2">
-                    <span dir="ltr"><?= formatPrice($s_discounted, 0) ?></span>/<?= $text['day'] ?>
+                    <span dir="ltr">MAD</span>/<?= $text['day'] ?>
                   </span>
 
                   <div class="flex gap-3 mt-3 text-xs font-medium">
                     <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-                      <?= $text['week'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$similar['price_week']) ?></strong>
+                      <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$similar['price_week']) ?></strong>
                     </span>
                     <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-                      <?= $text['month'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$similar['price_month']) ?></strong>
+                      <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$similar['price_month']) ?></strong>
                     </span>
                   </div>
                 </div>
