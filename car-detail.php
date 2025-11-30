@@ -17,7 +17,7 @@ if (!$car) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM cars WHERE id != ? ORDER BY RAND() LIMIT 4");
+$stmt = $pdo->prepare("SELECT * FROM cars WHERE id != ? ORDER BY RAND() LIMIT 10");
 $stmt->execute([$id]);
 $similarCars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -753,7 +753,14 @@ $hasDiscount = $discount > 0;
       .similar-cars-track {
         display: flex;
         gap: 2rem;
-        transition: transform 0.5s ease;
+        transition: transform 0.3s ease;
+        touch-action: pan-y;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+      .similar-cars-track:active {
+        cursor: grabbing;
       }
       .similar-car-card {
         flex: 0 0 calc(25% - 1.5rem);
@@ -921,6 +928,10 @@ $hasDiscount = $discount > 0;
 
     <script>
       let similarCarsCurrentIndex = 0;
+      let touchStartX = 0;
+      let touchEndX = 0;
+      let isDragging = false;
+      
       const similarCarsPerView = () => {
         if (window.innerWidth >= 1024) return 4;
         if (window.innerWidth >= 768) return 3;
@@ -943,23 +954,133 @@ $hasDiscount = $discount > 0;
         const cardWidth = cards[0]?.offsetWidth || 0;
         const gap = 32; // 2rem = 32px
         const translateX = -(similarCarsCurrentIndex * (cardWidth + gap));
+        track.style.transition = 'transform 0.3s ease';
         track.style.transform = `translateX(${translateX}px)`;
 
         // Update button states
-        document.querySelector('.similar-cars-nav.prev').disabled = similarCarsCurrentIndex === 0;
-        document.querySelector('.similar-cars-nav.next').disabled = similarCarsCurrentIndex >= maxIndex;
+        const prevBtn = document.querySelector('.similar-cars-nav.prev');
+        const nextBtn = document.querySelector('.similar-cars-nav.next');
+        if (prevBtn) prevBtn.disabled = similarCarsCurrentIndex === 0;
+        if (nextBtn) nextBtn.disabled = similarCarsCurrentIndex >= maxIndex;
+      }
+
+      // Touch/Swipe functionality
+      const track = document.getElementById('similar-cars-track');
+      if (track) {
+        // Touch events
+        track.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+          isDragging = true;
+          track.style.transition = 'none';
+        }, { passive: true });
+
+        track.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+          touchEndX = e.touches[0].clientX;
+          const diff = touchStartX - touchEndX;
+          const cards = track.querySelectorAll('.similar-car-card');
+          const cardWidth = cards[0]?.offsetWidth || 0;
+          const gap = 32;
+          const currentTranslate = -(similarCarsCurrentIndex * (cardWidth + gap));
+          const newTranslate = currentTranslate - diff;
+          track.style.transform = `translateX(${newTranslate}px)`;
+        }, { passive: true });
+
+        track.addEventListener('touchend', () => {
+          if (!isDragging) return;
+          isDragging = false;
+          track.style.transition = 'transform 0.3s ease';
+          
+          const swipeThreshold = 50;
+          const diff = touchStartX - touchEndX;
+
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              // Swipe left - next
+              slideSimilarCars('next');
+            } else {
+              // Swipe right - previous
+              slideSimilarCars('prev');
+            }
+          } else {
+            // Snap back to current position
+            slideSimilarCars(similarCarsCurrentIndex === 0 ? 'prev' : 'next');
+            slideSimilarCars(similarCarsCurrentIndex === 0 ? 'next' : 'prev');
+          }
+        }, { passive: true });
+
+        // Mouse drag events for desktop
+        let mouseStartX = 0;
+        let mouseDown = false;
+
+        track.addEventListener('mousedown', (e) => {
+          mouseDown = true;
+          mouseStartX = e.clientX;
+          track.style.transition = 'none';
+          track.style.cursor = 'grabbing';
+        });
+
+        track.addEventListener('mousemove', (e) => {
+          if (!mouseDown) return;
+          e.preventDefault();
+          const diff = mouseStartX - e.clientX;
+          const cards = track.querySelectorAll('.similar-car-card');
+          const cardWidth = cards[0]?.offsetWidth || 0;
+          const gap = 32;
+          const currentTranslate = -(similarCarsCurrentIndex * (cardWidth + gap));
+          const newTranslate = currentTranslate - diff;
+          track.style.transform = `translateX(${newTranslate}px)`;
+        });
+
+        track.addEventListener('mouseup', (e) => {
+          if (!mouseDown) return;
+          mouseDown = false;
+          track.style.transition = 'transform 0.3s ease';
+          track.style.cursor = 'grab';
+          
+          const swipeThreshold = 50;
+          const diff = mouseStartX - e.clientX;
+
+          if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+              slideSimilarCars('next');
+            } else {
+              slideSimilarCars('prev');
+            }
+          } else {
+            // Snap back
+            slideSimilarCars(similarCarsCurrentIndex === 0 ? 'prev' : 'next');
+            slideSimilarCars(similarCarsCurrentIndex === 0 ? 'next' : 'prev');
+          }
+        });
+
+        track.addEventListener('mouseleave', () => {
+          if (mouseDown) {
+            mouseDown = false;
+            track.style.transition = 'transform 0.3s ease';
+            track.style.cursor = 'grab';
+            // Snap back
+            slideSimilarCars(similarCarsCurrentIndex === 0 ? 'prev' : 'next');
+            slideSimilarCars(similarCarsCurrentIndex === 0 ? 'next' : 'prev');
+          }
+        });
+
+        // Set initial cursor
+        track.style.cursor = 'grab';
       }
 
       window.addEventListener('resize', () => {
-        slideSimilarCars('prev'); // Reset to start
-        slideSimilarCars('next'); // Recalculate
+        similarCarsCurrentIndex = 0;
+        slideSimilarCars('prev');
       });
 
       // Initialize button states
       document.addEventListener('DOMContentLoaded', () => {
         const maxIndex = Math.max(0, document.querySelectorAll('.similar-car-card').length - similarCarsPerView());
-        document.querySelector('.similar-cars-nav.prev').disabled = true;
-        document.querySelector('.similar-cars-nav.next').disabled = maxIndex === 0;
+        const prevBtn = document.querySelector('.similar-cars-nav.prev');
+        const nextBtn = document.querySelector('.similar-cars-nav.next');
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = maxIndex === 0;
       });
     </script>
 

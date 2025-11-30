@@ -82,6 +82,14 @@ require_once 'config.php';
     .nav-link { @apply text-current hover:text-[var(--gold-dark)] transition; }
     .nav-link:hover { background-color: var(--hover-bg); border-radius: 0.5rem; }
 
+    /* Logo Spin Animation */
+    .logo-spin {
+      transition: transform 0.6s ease-in-out;
+    }
+    .logo-spin:hover {
+      transform: rotate(360deg);
+    }
+
     .text-gold { color: var(--gold) !important; }
     .hover\:text-gold-dark:hover { color: var(--gold-dark) !important; }
     .car-card-bg { background: var(--card-dark-gradient); }
@@ -287,7 +295,7 @@ require_once 'config.php';
     $wa_link           = "https://wa.me/$whatsapp_number";
     
     // Language flags
-    $langFlags = ['en' => '🇬🇧', 'fr' => '🇫🇷', 'ar' => '🇲🇦'];
+    $langFlags = ['en' => 'EN', 'fr' => '🇫🇷', 'ar' => '🇲🇦'];
     $langNames = ['en' => 'EN', 'fr' => 'FR', 'ar' => 'AR'];
     $currentPage = basename($_SERVER['PHP_SELF']);
     
@@ -301,7 +309,7 @@ require_once 'config.php';
     <div class="p-6">
       <div class="flex justify-between items-center mb-8">
         <a href="index.php" class="flex items-center space-x-2">
-          <img src="pub_img/ettaaj-rent-cars.jpeg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30">
+          <img src="pub_img/ettaaj-rent-cars.jpeg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30 logo-spin">
           <span class="text-xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
         </a>
         <button id="close-sidebar" class="text-current hover:text-[var(--gold-dark)] transition">
@@ -323,7 +331,7 @@ require_once 'config.php';
       <div class="mt-6 pt-4 border-t border-border">
         <div class="lang-switcher w-full">
           <div class="lang-current text-sm text-[var(--muted)]">
-            <span><?= $langFlags[$lang] ?> <?= $langNames[$lang] ?></span>
+            <span><?= $langNames[$lang] ?></span>
             <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
@@ -372,12 +380,12 @@ require_once 'config.php';
   <!-- Desktop Header -->
   <header class="bg-[var(--bg-dark)]/90 backdrop-blur-md shadow-lg sticky top-0 z-30 border-b border-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between lg:hidden">
+      <div class="flex items-center justify-center relative lg:hidden">
         <a href="index.php" class="flex items-center space-x-2">
-          <img src="pub_img/ettaaj-rent-cars.jpeg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30">
+          <img src="pub_img/ettaaj-rent-cars.jpeg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30 logo-spin">
           <span class="text-xl sm:text-2xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
         </a>
-        <button id="open-sidebar" class="text-current hover:text-[var(--gold-dark)] transition">
+        <button id="open-sidebar" class="absolute <?= $lang === 'ar' ? 'left-0' : 'right-0' ?> text-current hover:text-[var(--gold-dark)] transition">
           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
@@ -386,7 +394,7 @@ require_once 'config.php';
 
       <div class="hidden lg:flex items-center justify-between">
         <a href="index.php" class="flex items-center space-x-2">
-          <img src="pub_img/ettaaj-rent-cars.jpeg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30">
+          <img src="pub_img/ettaaj-rent-cars.jpeg" alt="Logo" class="w-10 h-10 rounded-full ring-2 ring-[var(--gold)]/30 logo-spin">
           <span class="text-xl sm:text-2xl font-bold bg-gradient-gold">ETTAAJ RENT CARS</span>
         </a>
 
@@ -419,7 +427,7 @@ require_once 'config.php';
           <!-- Language Switcher Desktop -->
           <div class="lang-switcher">
             <div class="lang-current">
-              <span class="text-sm"><?= $langFlags[$lang] ?> <?= $langNames[$lang] ?></span>
+              <span class="text-sm"><?= $langNames[$lang] ?></span>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
