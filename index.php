@@ -589,16 +589,56 @@
       opacity: 1 !important;
     }
 
-    /* Hero Image Desktop Fix */
+    /* Hero Video Background */
     .hero-section {
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
     .hero-image-wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    video.hero-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    /* Hero SEO Text Styling */
+    .hero-section h1 {
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .hero-section p {
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    }
+    @media (max-width: 640px) {
+      .hero-section h1 {
+        font-size: 1.75rem;
+        line-height: 1.3;
+      }
+      .hero-section p {
+        font-size: 0.875rem;
+      }
     }
     @media (min-width: 1024px) {
       .hero-section {
@@ -606,16 +646,11 @@
         min-height: 80vh;
       }
       .hero-image-wrapper {
-        height: auto !important;
+        height: 100% !important;
         min-height: 80vh;
       }
       .hero-image {
-        object-fit: contain !important;
-        width: 100% !important;
-        height: auto !important;
         min-height: 80vh;
-        max-width: 100% !important;
-        max-height: none !important;
       }
     }
     @media (min-width: 1280px) {
@@ -903,20 +938,91 @@
 <!-- HERO SECTION -->
 <section class="relative w-full h-[60vh] sm:h-[70vh] lg:min-h-[80vh] xl:min-h-[85vh] overflow-hidden bg-[#353333] hero-section">
   <div class="hero-image-wrapper w-full h-full flex items-center justify-center">
-    <img src="pub_img/ettaaj-rent-cars.jpeg" 
-         alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
-         class="hero-image w-full h-full object-cover object-center"
-         style="display: block;">
+    <!-- Video Background -->
+    <video 
+      autoplay 
+      loop 
+      muted 
+      playsinline
+      class="hero-image w-full h-full object-cover object-center"
+      style="display: block;">
+      <source src="vidio/vidio-marrakech.mp4" type="video/mp4">
+      <!-- Fallback image if video doesn't load -->
+      <img src="pub_img/ettaaj-rent-cars.jpeg" 
+           alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
+           class="w-full h-full object-cover object-center">
+    </video>
   </div>
   
-  <!-- Gradient Overlay with Logo -->
-  <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 flex items-center justify-center pointer-events-none">
-    <div class="logo-3d-container z-10 pointer-events-auto">
-      <div class="logo-3d">
-        <img src="pub_img/ettaaj-rent-cars.jpeg" 
-             alt="ETTAAJ Rent Cars Logo" 
-             class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-72 xl:h-72 rounded-full ring-4 ring-[var(--gold)]/60 shadow-2xl object-cover backdrop-blur-sm">
+  <!-- SEO Text Overlay -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 flex items-center justify-center pointer-events-none z-20">
+    <div class="text-center px-4 sm:px-6 lg:px-8 max-w-5xl z-30">
+      <!-- Logo Above Text -->
+      <div class="mb-6 sm:mb-8 md:mb-10 flex justify-center">
+        <div class="logo-3d-container">
+          <div class="logo-3d">
+            <img src="pub_img/ettaaj-rent-cars.jpeg" 
+                 alt="ETTAAJ Rent Cars Logo" 
+                 class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56 rounded-full ring-4 ring-[var(--gold)]/60 shadow-2xl object-cover backdrop-blur-sm">
+          </div>
+        </div>
       </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white mb-4 sm:mb-6 drop-shadow-2xl">
+        <?php if ($lang === 'en'): ?>
+          Car Rental Marrakech & Casablanca Airport
+        <?php elseif ($lang === 'fr'): ?>
+          Location de Voiture Aéroport Marrakech & Casablanca
+        <?php else: ?>
+          تأجير السيارات مطار مراكش والدار البيضاء
+        <?php endif; ?>
+      </h1>
+      <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gold font-bold mb-4 sm:mb-6 drop-shadow-lg">
+        <?php if ($lang === 'en'): ?>
+          ETTAAJ Rent Cars - No Deposit • Free Delivery 24/7 • Luxury & Economy Cars
+        <?php elseif ($lang === 'fr'): ?>
+          ETTAAJ Rent Cars - Sans Caution • Livraison Gratuite 24/7 • Voitures de Luxe et Économiques
+        <?php else: ?>
+          ETTAAJ Rent Cars - بدون وديعة • توصيل مجاني 24/7 • سيارات فاخرة واقتصادية
+        <?php endif; ?>
+      </p>
+      <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-sm sm:text-base md:text-lg">
+        <span class="bg-gold/20 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-gold/50 font-semibold">
+          <?php if ($lang === 'en'): ?>
+            Marrakech Menara Airport (RAK)
+          <?php elseif ($lang === 'fr'): ?>
+            Aéroport Marrakech Menara (RAK)
+          <?php else: ?>
+            مطار مراكش منارة (RAK)
+          <?php endif; ?>
+        </span>
+        <span class="bg-gold/20 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-gold/50 font-semibold">
+          <?php if ($lang === 'en'): ?>
+            Casablanca Mohammed V Airport (CMN)
+          <?php elseif ($lang === 'fr'): ?>
+            Aéroport Casablanca Mohammed V (CMN)
+          <?php else: ?>
+            مطار الدار البيضاء محمد الخامس (CMN)
+          <?php endif; ?>
+        </span>
+        <span class="bg-gold/20 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-gold/50 font-semibold">
+          <?php if ($lang === 'en'): ?>
+            From 250 MAD/day
+          <?php elseif ($lang === 'fr'): ?>
+            À partir de 250 MAD/jour
+          <?php else: ?>
+            من 250 درهم/يوم
+          <?php endif; ?>
+        </span>
+      </div>
+      <p class="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-white/90 font-medium drop-shadow-md">
+        <?php if ($lang === 'en'): ?>
+          Best car rental service in Morocco • Instant booking via WhatsApp +212 772 331 080
+        <?php elseif ($lang === 'fr'): ?>
+          Meilleur service de location de voiture au Maroc • Réservation instantanée via WhatsApp +212 772 331 080
+        <?php else: ?>
+          أفضل خدمة تأجير سيارات في المغرب • حجز فوري عبر واتساب +212 772 331 080
+        <?php endif; ?>
+      </p>
     </div>
   </div>
 </section>
