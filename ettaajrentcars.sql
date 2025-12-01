@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2025 at 07:20 PM
+-- Generation Time: Dec 01, 2025 at 08:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -134,6 +134,41 @@ CREATE TABLE `login_attempts` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `travel_essentials`
+--
+
+CREATE TABLE `travel_essentials` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `name_en` varchar(255) DEFAULT NULL,
+  `name_ar` varchar(255) DEFAULT NULL,
+  `name_fr` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `description_en` text DEFAULT NULL,
+  `description_ar` text DEFAULT NULL,
+  `description_fr` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `per_day` tinyint(1) NOT NULL DEFAULT 0 COMMENT '1 = per day, 0 = one-time fee',
+  `icon` varchar(50) DEFAULT NULL COMMENT 'Icon class name (e.g., bi-fuel-pump)',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `travel_essentials`
+--
+
+INSERT INTO `travel_essentials` (`id`, `name`, `name_en`, `name_ar`, `name_fr`, `description`, `description_en`, `description_ar`, `description_fr`, `price`, `per_day`, `icon`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
+(1, 'Premium Fuel Service', 'Premium Fuel Service', 'خدمة الوقود المميزة', 'Service de carburant premium', 'Prepaid full tank', 'Prepaid full tank', 'خزان كامل مسبق الدفع', 'Plein de carburant prépayé', 110.00, 0, 'bi-fuel-pump', 1, 1, '2025-11-28 16:46:54', '2025-11-28 16:54:28'),
+(2, 'Unlimited Kilometers', 'Unlimited Kilometers', 'كيلومترات غير محدودة', 'Kilomètres illimités', 'Drive without mileage restrictions', 'Drive without mileage restrictions', 'القيادة دون قيود على المسافة', 'Conduire sans restrictions de kilométrage', 10.50, 1, 'bi-speedometer2', 1, 2, '2025-11-28 16:46:54', '2025-11-28 16:54:28'),
+(3, 'Flexible Cancellation', 'Flexible Cancellation', 'إلغاء مرن', 'Annulation flexible', 'Free cancellation until scheduled departure', 'Free cancellation until scheduled departure', 'إلغاء مجاني حتى وقت المغادرة المقرر', 'Annulation gratuite jusqu\'au départ prévu', 9.50, 0, 'bi-check-circle', 1, 3, '2025-11-28 16:46:54', '2025-11-28 16:54:28'),
+(4, 'Additional Drivers', 'Additional Drivers', 'سائقون إضافيون', 'Conducteurs supplémentaires', 'Add up to 2 additional drivers', 'Add up to 2 additional drivers', 'أضف حتى سائقين إضافيين', 'Ajouter jusqu\'à 2 conducteurs supplémentaires', 2.50, 1, 'bi-people', 1, 4, '2025-11-28 16:46:54', '2025-11-28 16:54:28');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `visitor_data`
 --
 
@@ -150,6 +185,14 @@ CREATE TABLE `visitor_data` (
   `session_id` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `visitor_data`
+--
+
+INSERT INTO `visitor_data` (`id`, `ip_address`, `user_agent`, `name`, `email`, `phone`, `cookies_data`, `page_url`, `referrer`, `session_id`, `created_at`) VALUES
+(11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'youssef', 'yettaaj@gmail.com', '0653330752', '{\"lang\":\"en\",\"currency\":\"MAD\",\"PHPSESSID\":\"5v48gvlhbd9kgqpl7att640nei\"}', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', '2e4a5adbce7e6f03453967dce4df9d72', '2025-12-01 19:10:41'),
+(12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'fff', 'ff@gmail.con', '065330752', '{\"lang\":\"en\",\"currency\":\"MAD\",\"PHPSESSID\":\"5v48gvlhbd9kgqpl7att640nei\"}', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', '898e4b1244857bd247f614f93b8da221', '2025-12-01 19:15:03');
 
 --
 -- Indexes for dumped tables
@@ -180,6 +223,14 @@ ALTER TABLE `currencies`
 --
 ALTER TABLE `login_attempts`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `travel_essentials`
+--
+ALTER TABLE `travel_essentials`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `is_active` (`is_active`),
+  ADD KEY `sort_order` (`sort_order`);
 
 --
 -- Indexes for table `visitor_data`
@@ -219,10 +270,16 @@ ALTER TABLE `login_attempts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `travel_essentials`
+--
+ALTER TABLE `travel_essentials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `visitor_data`
 --
 ALTER TABLE `visitor_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

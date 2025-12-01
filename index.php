@@ -703,6 +703,15 @@
       .hero-image {
         min-height: 80vh;
       }
+      .hero-section h1 {
+        font-size: 3rem;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+      .hero-section p {
+        font-size: 1.5rem;
+        line-height: 1.5;
+      }
     }
     @media (min-width: 1280px) {
       .hero-section {
@@ -713,6 +722,36 @@
       }
       .hero-image {
         min-height: 85vh;
+      }
+      .hero-section h1 {
+        font-size: 3.75rem;
+        line-height: 1.2;
+      }
+      .hero-section p {
+        font-size: 1.875rem;
+        line-height: 1.5;
+      }
+    }
+    @media (min-width: 1536px) {
+      .hero-section {
+        min-height: 90vh;
+      }
+      .hero-image-wrapper {
+        min-height: 90vh;
+      }
+      .hero-image {
+        min-height: 90vh;
+      }
+      .hero-section h1 {
+        font-size: 4.5rem;
+        line-height: 1.1;
+      }
+      .hero-section p {
+        font-size: 2.25rem;
+        line-height: 1.4;
+      }
+      .logo-3d-container {
+        padding: 4rem 5rem;
       }
     }
 
@@ -1006,19 +1045,19 @@
   </div>
   
   <!-- SEO Text Overlay -->
-  <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 flex items-start sm:items-center justify-center pointer-events-none z-20 pt-4 sm:pt-8 md:pt-12 lg:pt-16 xl:pt-20 pb-4 sm:pb-8">
-    <div class="text-center px-3 sm:px-4 md:px-6 lg:px-8 max-w-5xl z-30 w-full">
+  <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 flex items-start sm:items-center justify-center pointer-events-none z-20 pt-4 sm:pt-8 md:pt-12 lg:pt-16 xl:pt-20 2xl:pt-24 pb-4 sm:pb-8 lg:pb-12">
+    <div class="text-center px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-6xl xl:max-w-7xl 2xl:max-w-7xl z-30 w-full">
       <!-- Logo Above Text -->
-      <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 flex justify-center mt-2 sm:mt-4 md:mt-6">
+      <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 2xl:mb-14 flex justify-center mt-2 sm:mt-4 md:mt-6 lg:mt-8">
         <div class="logo-3d-container">
           <div class="logo-3d">
             <img src="pub_img/ettaaj-rent-cars.jpeg" 
                  alt="ETTAAJ Rent Cars Logo" 
-                 class="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48 rounded-full ring-2 sm:ring-4 ring-[var(--gold)]/60 shadow-xl sm:shadow-2xl object-cover backdrop-blur-sm">
+                 class="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-48 lg:h-48 xl:w-56 xl:h-56 2xl:w-64 2xl:h-64 rounded-full ring-2 sm:ring-4 ring-[var(--gold)]/60 shadow-xl sm:shadow-2xl object-cover backdrop-blur-sm">
           </div>
         </div>
       </div>
-      <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-extrabold text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 drop-shadow-2xl mt-2 sm:mt-4 leading-tight sm:leading-snug">
+      <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 drop-shadow-2xl mt-2 sm:mt-4 leading-tight sm:leading-snug lg:leading-tight">
         <?php if ($lang === 'en'): ?>
           Car Rental Marrakech & Casablanca Airport
         <?php elseif ($lang === 'fr'): ?>
@@ -1027,7 +1066,7 @@
           تأجير السيارات مطار مراكش والدار البيضاء
         <?php endif; ?>
       </h1>
-      <p class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gold font-bold mb-3 sm:mb-4 md:mb-6 lg:mb-8 drop-shadow-lg mt-2 sm:mt-4 leading-relaxed">
+      <p class="text-sm sm:text-base md:text-lg lg:text-2xl xl:text-3xl text-gold font-bold mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 drop-shadow-lg mt-2 sm:mt-4 leading-relaxed lg:leading-relaxed">
         <?php if ($lang === 'en'): ?>
           ETTAAJ Rent Cars - No Deposit • Free Delivery 24/7 • Luxury & Economy Cars
         <?php elseif ($lang === 'fr'): ?>
@@ -1036,8 +1075,8 @@
           ETTAAJ Rent Cars - بدون وديعة • توصيل مجاني 24/7 • سيارات فاخرة واقتصادية
         <?php endif; ?>
       </p>
-      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 text-xs sm:text-sm md:text-base lg:text-lg mb-3 sm:mb-4 md:mb-6 lg:mb-8 mt-2 sm:mt-4">
-        <span class="bg-gold/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full border border-gold/50 font-semibold">
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 mt-2 sm:mt-4">
+        <span class="bg-gold/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-1.5 sm:py-2 lg:py-2.5 xl:py-3 rounded-full border border-gold/50 font-semibold">
           <?php if ($lang === 'en'): ?>
             Marrakech Menara Airport (RAK)
           <?php elseif ($lang === 'fr'): ?>
@@ -1046,7 +1085,7 @@
             مطار مراكش منارة (RAK)
           <?php endif; ?>
         </span>
-        <span class="bg-gold/20 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-gold/50 font-semibold">
+        <span class="bg-gold/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-1.5 sm:py-2 lg:py-2.5 xl:py-3 rounded-full border border-gold/50 font-semibold">
           <?php if ($lang === 'en'): ?>
             Casablanca Mohammed V Airport (CMN)
           <?php elseif ($lang === 'fr'): ?>
@@ -1055,7 +1094,7 @@
             مطار الدار البيضاء محمد الخامس (CMN)
           <?php endif; ?>
         </span>
-        <span class="bg-gold/20 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-gold/50 font-semibold">
+        <span class="bg-gold/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-1.5 sm:py-2 lg:py-2.5 xl:py-3 rounded-full border border-gold/50 font-semibold">
           <?php if ($lang === 'en'): ?>
             From 250 MAD/day
           <?php elseif ($lang === 'fr'): ?>
@@ -1065,7 +1104,7 @@
           <?php endif; ?>
         </span>
       </div>
-      <p class="mt-4 sm:mt-6 md:mt-8 lg:mt-10 mb-2 sm:mb-4 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white/90 font-medium drop-shadow-md px-2 sm:px-3 break-words leading-relaxed">
+      <p class="mt-4 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-12 mb-2 sm:mb-4 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-white/90 font-medium drop-shadow-md px-2 sm:px-3 lg:px-4 break-words leading-relaxed">
         <?php if ($lang === 'en'): ?>
           <span class="block sm:inline">Best car rental service in Morocco</span> • <span class="block sm:inline">Instant booking via WhatsApp</span> 
           <a href="https://wa.me/212772331080" class="inline-block phone-number text-gold hover:text-yellow-400 font-bold transition-colors whitespace-nowrap mt-1 sm:mt-0" style="direction: ltr; display: inline-block; unicode-bidi: embed;">+212 772 331 080</a>
