@@ -257,11 +257,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Rental Marrakech Airport | ETTAAJ Rent Cars – No Deposit, From 250 MAD/day</title>
-  <meta name="description" content="Best car rental Marrakech Airport. No deposit, free delivery 24/7, luxury & cheap cars. WhatsApp +212 772 331 080">
-  <meta name="keywords" content="rental cars in Morocco, car rental Morocco, rent a car Morocco, car rental Marrakech, car rental Casablanca, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, car rental Marrakech airport, Morocco vehicle rental">
-  <link rel="canonical" href="https://www.ettaajrentcars.ma<?php echo $_SERVER['REQUEST_URI']; ?>">
+  
+  <?php
+  // SEO Meta Tags - Language & Location Specific
+  $baseUrl = 'https://www.ettaajrentcars.com';
+  $currentUrl = $baseUrl . $_SERVER['REQUEST_URI'];
+  
+  // Language-specific titles and descriptions
+  $seoData = [
+    'en' => [
+      'title' => 'Car Rental Marrakech & Casablanca Airport | ETTAAJ Rent Cars – No Deposit, From 250 MAD/day',
+      'description' => 'Best car rental in Marrakech & Casablanca airports. No deposit, free delivery 24/7, luxury & economy cars. Instant booking via WhatsApp +212 772 331 080. Rent a car in Morocco today!',
+      'keywords' => 'car rental Marrakech, car rental Casablanca, rent a car Morocco, car rental Marrakech airport, car rental Casablanca airport, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, no deposit car rental Marrakech, no deposit car rental Casablanca, car rental Morocco airport, vehicle rental Marrakech, vehicle rental Casablanca, ETTAAJ rent cars, rent car Marrakech, rent car Casablanca, car rental Marrakech Menara, car rental Casablanca Mohammed V'
+    ],
+    'fr' => [
+      'title' => 'Location de Voiture Aéroport Marrakech & Casablanca | ETTAAJ Rent Cars – Sans Caution, À partir de 250 MAD/jour',
+      'description' => 'Meilleure location de voiture aux aéroports de Marrakech et Casablanca. Sans caution, livraison gratuite 24/7, voitures de luxe et économiques. Réservation instantanée via WhatsApp +212 772 331 080. Louez une voiture au Maroc aujourd\'hui !',
+      'keywords' => 'location voiture Marrakech, location voiture Casablanca, location voiture Maroc, location voiture aéroport Marrakech, location voiture aéroport Casablanca, location voiture Marrakech Menara, location voiture Casablanca Mohammed V, location voiture sans caution Marrakech, location voiture sans caution Casablanca, ETTAAJ rent cars, louer voiture Marrakech, louer voiture Casablanca'
+    ],
+    'ar' => [
+      'title' => 'تأجير السيارات مطار مراكش والدار البيضاء | ETTAAJ Rent Cars – بدون وديعة، من 250 درهم/يوم',
+      'description' => 'أفضل تأجير سيارات في مطارات مراكش والدار البيضاء. بدون وديعة، توصيل مجاني 24/7، سيارات فاخرة واقتصادية. حجز فوري عبر واتساب +212 772 331 080. استأجر سيارة في المغرب اليوم!',
+      'keywords' => 'تأجير سيارات مراكش، تأجير سيارات الدار البيضاء، تأجير سيارات المغرب، تأجير سيارات مطار مراكش، تأجير سيارات مطار الدار البيضاء، تأجير سيارات بدون وديعة مراكش، تأجير سيارات بدون وديعة الدار البيضاء، ETTAAJ rent cars'
+    ]
+  ];
+  
+  $currentSeo = $seoData[$lang] ?? $seoData['en'];
+  ?>
+  
+  <!-- Primary Meta Tags -->
+  <title><?= htmlspecialchars($currentSeo['title']) ?></title>
+  <meta name="description" content="<?= htmlspecialchars($currentSeo['description']) ?>">
+  <meta name="keywords" content="<?= htmlspecialchars($currentSeo['keywords']) ?>">
+  <meta name="author" content="ETTAAJ Rent Cars">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="language" content="<?= $lang ?>">
+  <meta name="geo.region" content="MA">
+  <meta name="geo.placename" content="Marrakech, Casablanca">
+  <meta name="geo.position" content="31.6069;-8.0363, 33.5731;-7.5898">
+  <meta name="ICBM" content="31.6069, -8.0363">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="<?= htmlspecialchars($currentUrl) ?>">
+  
+  <!-- Hreflang Tags for Multi-language SEO -->
+  <link rel="alternate" hreflang="en" href="<?= $baseUrl ?><?= str_replace(['?lang=fr', '?lang=ar', '&lang=fr', '&lang=ar'], '', preg_replace('/\?lang=en(&|$)/', '?', preg_replace('/&lang=en$/', '', $_SERVER['REQUEST_URI']))) ?><?= strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?' ?>lang=en">
+  <link rel="alternate" hreflang="fr" href="<?= $baseUrl ?><?= str_replace(['?lang=en', '?lang=ar', '&lang=en', '&lang=ar'], '', preg_replace('/\?lang=fr(&|$)/', '?', preg_replace('/&lang=fr$/', '', $_SERVER['REQUEST_URI']))) ?><?= strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?' ?>lang=fr">
+  <link rel="alternate" hreflang="ar" href="<?= $baseUrl ?><?= str_replace(['?lang=en', '?lang=fr', '&lang=en', '&lang=fr'], '', preg_replace('/\?lang=ar(&|$)/', '?', preg_replace('/&lang=ar$/', '', $_SERVER['REQUEST_URI']))) ?><?= strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?' ?>lang=ar">
+  <link rel="alternate" hreflang="x-default" href="<?= $baseUrl ?><?= str_replace(['?lang=fr', '?lang=ar', '&lang=fr', '&lang=ar'], '', preg_replace('/\?lang=en(&|$)/', '?', preg_replace('/&lang=en$/', '', $_SERVER['REQUEST_URI']))) ?><?= strpos($_SERVER['REQUEST_URI'], '?') !== false ? '&' : '?' ?>lang=en">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="<?= htmlspecialchars($currentUrl) ?>">
+  <meta property="og:title" content="<?= htmlspecialchars($currentSeo['title']) ?>">
+  <meta property="og:description" content="<?= htmlspecialchars($currentSeo['description']) ?>">
+  <meta property="og:image" content="<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="<?= $lang === 'fr' ? 'fr_FR' : ($lang === 'ar' ? 'ar_MA' : 'en_US') ?>">
+  <meta property="og:site_name" content="ETTAAJ Rent Cars">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="<?= htmlspecialchars($currentUrl) ?>">
+  <meta name="twitter:title" content="<?= htmlspecialchars($currentSeo['title']) ?>">
+  <meta name="twitter:description" content="<?= htmlspecialchars($currentSeo['description']) ?>">
+  <meta name="twitter:image" content="<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg">
+  
+  <!-- Favicon -->
   <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg">
+  <link rel="apple-touch-icon" href="pub_img/ettaaj-rent-cars.jpeg">
+  
+  <!-- Structured Data (JSON-LD) for Car Rental Service - Both Locations -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CarRentalService",
+    "name": "ETTAAJ Rent Cars",
+    "alternateName": "ETTAAJ RENT CARS",
+    "url": "<?= $baseUrl ?>",
+    "logo": "<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg",
+    "image": "<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg",
+    "description": "<?= htmlspecialchars($currentSeo['description']) ?>",
+    "telephone": "+212772331080",
+    "priceRange": "250 MAD - 2000 MAD",
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Marrakech",
+        "addressCountry": "MA"
+      },
+      {
+        "@type": "City",
+        "name": "Casablanca",
+        "addressCountry": "MA"
+      }
+    ],
+    "serviceArea": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": "32.59",
+        "longitude": "-7.81"
+      }
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Car Rental Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Car Rental Marrakech Airport",
+            "description": "Car rental service at Marrakech Menara Airport (RAK)"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Car Rental Casablanca Airport",
+            "description": "Car rental service at Casablanca Mohammed V Airport (CMN)"
+          }
+        }
+      ]
+    },
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "telephone": "+212-772-331-080",
+        "contactType": "customer service",
+        "availableLanguage": ["English", "French", "Arabic"],
+        "areaServed": ["MA"],
+        "hoursAvailable": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      }
+    ],
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Marrakech Menara Airport (RAK) & Gueliz Office",
+        "addressLocality": "Marrakech",
+        "addressRegion": "Marrakech-Safi",
+        "postalCode": "40000",
+        "addressCountry": "MA"
+      },
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Casablanca Mohammed V Airport (CMN)",
+        "addressLocality": "Casablanca",
+        "addressRegion": "Casablanca-Settat",
+        "postalCode": "20000",
+        "addressCountry": "MA"
+      }
+    ],
+    "sameAs": [
+      "https://www.ettaajrentcars.com"
+    ]
+  }
+  </script>
+  
+  <!-- Local Business Schema for Marrakech -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "ETTAAJ Rent Cars Marrakech",
+    "image": "<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg",
+    "telephone": "+212772331080",
+    "priceRange": "250 MAD - 2000 MAD",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Marrakech Menara Airport (RAK) & Gueliz Office",
+      "addressLocality": "Marrakech",
+      "addressRegion": "Marrakech-Safi",
+      "postalCode": "40000",
+      "addressCountry": "MA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "31.6069",
+      "longitude": "-8.0363"
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      "opens": "00:00",
+      "closes": "23:59"
+    }
+  }
+  </script>
+  
+  <!-- Local Business Schema for Casablanca -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "ETTAAJ Rent Cars Casablanca",
+    "image": "<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg",
+    "telephone": "+212772331080",
+    "priceRange": "250 MAD - 2000 MAD",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Casablanca Mohammed V Airport (CMN)",
+      "addressLocality": "Casablanca",
+      "addressRegion": "Casablanca-Settat",
+      "postalCode": "20000",
+      "addressCountry": "MA"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "33.5731",
+      "longitude": "-7.5898"
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      "opens": "00:00",
+      "closes": "23:59"
+    }
+  }
+  </script>
 
   <!-- Tailwind + Fonts + AOS + Bootstrap Icons -->
   <script src="https://cdn.tailwindcss.com"></script>

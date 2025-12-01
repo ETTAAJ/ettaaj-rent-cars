@@ -8,45 +8,106 @@ require_once 'config.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- FULLY OPTIMIZED FOR MARRAKECH -->
-  <title>Contact ETTAAJ Rent Cars | Car Rental Marrakech Airport - WhatsApp +212 772 331 080</title>
-  <meta name="description" content="Contact ETTAAJ Rent Cars - Best car rental in Marrakech Airport. Instant WhatsApp reply 24/7, free airport delivery, no deposit. Call or message +212 772 331 080 now!" />
-  <meta name="keywords" content="rental cars in Morocco, car rental Morocco, rent a car Morocco, car rental Marrakech, car rental Casablanca, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, car rental Marrakech airport, Morocco vehicle rental, contact ettaaj rent cars, car rental marrakech airport contact, car rental marrakech whatsapp, car rental in marrakech airport phone number, best car rental marrakech contact, car rental marrakech gueliz office" />
+  <?php
+  // SEO Meta Tags - Language & Location Specific for Contact Page
+  $baseUrl = 'https://www.ettaajrentcars.com';
+  $currentUrl = $baseUrl . '/contact.php' . (isset($_GET['lang']) ? '?lang=' . $lang : '');
+  
+  // Language-specific titles and descriptions for Contact page
+  $seoData = [
+    'en' => [
+      'title' => 'Contact ETTAAJ Rent Cars | Car Rental Marrakech & Casablanca Airport - WhatsApp +212 772 331 080',
+      'description' => 'Contact ETTAAJ Rent Cars - Best car rental in Marrakech & Casablanca airports. Instant WhatsApp reply 24/7, free airport delivery, no deposit. Call or message +212 772 331 080 now!',
+      'keywords' => 'contact ettaaj rent cars, car rental Marrakech airport contact, car rental Casablanca airport contact, car rental Marrakech whatsapp, car rental Casablanca whatsapp, car rental Marrakech phone number, car rental Casablanca phone number, best car rental Marrakech contact, best car rental Casablanca contact'
+    ],
+    'fr' => [
+      'title' => 'Contact ETTAAJ Rent Cars | Location Voiture Aéroport Marrakech & Casablanca - WhatsApp +212 772 331 080',
+      'description' => 'Contactez ETTAAJ Rent Cars - Meilleure location de voiture aux aéroports de Marrakech et Casablanca. Réponse WhatsApp instantanée 24/7, livraison gratuite à l\'aéroport, sans caution. Appelez ou envoyez un message +212 772 331 080 maintenant !',
+      'keywords' => 'contact ettaaj rent cars, location voiture aéroport Marrakech contact, location voiture aéroport Casablanca contact, location voiture Marrakech whatsapp, location voiture Casablanca whatsapp'
+    ],
+    'ar' => [
+      'title' => 'اتصل بـ ETTAAJ Rent Cars | تأجير السيارات مطار مراكش والدار البيضاء - واتساب +212 772 331 080',
+      'description' => 'اتصل بـ ETTAAJ Rent Cars - أفضل تأجير سيارات في مطارات مراكش والدار البيضاء. رد واتساب فوري 24/7، توصيل مجاني للمطار، بدون وديعة. اتصل أو أرسل رسالة +212 772 331 080 الآن!',
+      'keywords' => 'اتصل ettaaj rent cars، تأجير سيارات مطار مراكش اتصال، تأجير سيارات مطار الدار البيضاء اتصال، تأجير سيارات مراكش واتساب، تأجير سيارات الدار البيضاء واتساب'
+    ]
+  ];
+  
+  $currentSeo = $seoData[$lang] ?? $seoData['en'];
+  ?>
+  
+  <!-- OPTIMIZED FOR MARRAKECH & CASABLANCA -->
+  <title><?= htmlspecialchars($currentSeo['title']) ?></title>
+  <meta name="description" content="<?= htmlspecialchars($currentSeo['description']) ?>" />
+  <meta name="keywords" content="<?= htmlspecialchars($currentSeo['keywords']) ?>" />
   <meta name="author" content="ETTAAJ Rent Cars" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="language" content="<?= $lang ?>" />
   <meta name="geo.region" content="MA" />
-  <meta name="geo.placename" content="Marrakech" />
-  <meta name="geo.position" content="31.6069;-8.0363" />
+  <meta name="geo.placename" content="Marrakech, Casablanca" />
+  <meta name="geo.position" content="31.6069;-8.0363, 33.5731;-7.5898" />
   <meta name="ICBM" content="31.6069, -8.0363" />
   <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg">
 
-  <link rel="canonical" href="https://www.ettaajrentcars.ma/contact.php" />
+  <link rel="canonical" href="<?= htmlspecialchars($currentUrl) ?>" />
+  
+  <!-- Hreflang Tags -->
+  <link rel="alternate" hreflang="en" href="<?= $baseUrl ?>/contact.php?lang=en" />
+  <link rel="alternate" hreflang="fr" href="<?= $baseUrl ?>/contact.php?lang=fr" />
+  <link rel="alternate" hreflang="ar" href="<?= $baseUrl ?>/contact.php?lang=ar" />
+  <link rel="alternate" hreflang="x-default" href="<?= $baseUrl ?>/contact.php?lang=en" />
 
-  <meta property="og:title" content="Contact ETTAAJ Rent Cars | Car Rental Marrakech Airport 24/7" />
-  <meta property="og:description" content="Free airport delivery • No deposit • Instant WhatsApp +212 772 331 080" />
-  <meta property="og:url" content="https://www.ettaajrentcars.com/contact.php" />
-  <meta property="og:image" content="https://www.ettaajrentcars.com/pub_img/contact-og-marrakech.jpg" />
+  <meta property="og:title" content="<?= htmlspecialchars($currentSeo['title']) ?>" />
+  <meta property="og:description" content="<?= htmlspecialchars($currentSeo['description']) ?>" />
+  <meta property="og:url" content="<?= htmlspecialchars($currentUrl) ?>" />
+  <meta property="og:image" content="<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg" />
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content="<?= $lang === 'fr' ? 'fr_FR' : ($lang === 'ar' ? 'ar_MA' : 'en_US') ?>" />
 
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Contact ETTAAJ - Best Car Rental Marrakech Airport" />
-  <meta name="twitter:description" content="WhatsApp +212 772 331 080 • 24/7 Support • Free Delivery at Menara Airport" />
+  <meta name="twitter:title" content="<?= htmlspecialchars($currentSeo['title']) ?>" />
+  <meta name="twitter:description" content="<?= htmlspecialchars($currentSeo['description']) ?>" />
+  <meta name="twitter:image" content="<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg" />
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "CarRentalService",
-    "name": "ETTAAJ Rent Cars Marrakech",
-    "url": "https://www.ettaajrentcars.ma",
+    "name": "ETTAAJ Rent Cars",
+    "alternateName": "ETTAAJ RENT CARS",
+    "url": "<?= $baseUrl ?>",
     "telephone": "+212772331080",
-    "image": "https://www.ettaajrentcars.ma/pub_img/ettaaj-rent-cars.jpeg",
-    "description": "Contact the best car rental in Marrakech Airport. 24/7 WhatsApp support, free delivery, no deposit rentals.",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Marrakech Menara Airport & Gueliz Office",
-      "addressLocality": "Marrakech",
-      "addressCountry": "MA"
-    },
+    "image": "<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg",
+    "description": "<?= htmlspecialchars($currentSeo['description']) ?>",
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Marrakech",
+        "addressCountry": "MA"
+      },
+      {
+        "@type": "City",
+        "name": "Casablanca",
+        "addressCountry": "MA"
+      }
+    ],
+    "address": [
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Marrakech Menara Airport (RAK) & Gueliz Office",
+        "addressLocality": "Marrakech",
+        "addressRegion": "Marrakech-Safi",
+        "postalCode": "40000",
+        "addressCountry": "MA"
+      },
+      {
+        "@type": "PostalAddress",
+        "streetAddress": "Casablanca Mohammed V Airport (CMN)",
+        "addressLocality": "Casablanca",
+        "addressRegion": "Casablanca-Settat",
+        "postalCode": "20000",
+        "addressCountry": "MA"
+      }
+    ],
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+212772331080",

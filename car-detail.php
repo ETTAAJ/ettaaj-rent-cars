@@ -39,6 +39,98 @@ $hasDiscount = $discount > 0;
 
 <?php include 'header.php'; ?>
 
+<!-- SEO Meta Tags for Car Detail Page - Injected into Head -->
+<script>
+(function() {
+  var head = document.getElementsByTagName('head')[0];
+  var baseUrl = 'https://www.ettaajrentcars.com';
+  var carName = <?= json_encode(htmlspecialchars($car['name'])) ?>;
+  var carId = <?= (int)$car['id'] ?>;
+  var lang = <?= json_encode($lang) ?>;
+  
+  // Language-specific SEO data
+  var seoData = {
+    'en': {
+      title: carName + ' Rental Marrakech & Casablanca | ETTAAJ Rent Cars - From ' + <?= (int)$discountedPrice ?> + ' MAD/day',
+      description: 'Rent ' + carName + ' in Marrakech & Casablanca airports. No deposit, free delivery 24/7, instant booking. ETTAAJ Rent Cars - Best car rental in Morocco. WhatsApp +212 772 331 080',
+      keywords: 'rent ' + carName.toLowerCase() + ' Marrakech, rent ' + carName.toLowerCase() + ' Casablanca, ' + carName.toLowerCase() + ' rental Morocco, car rental Marrakech, car rental Casablanca'
+    },
+    'fr': {
+      title: 'Location ' + carName + ' Marrakech & Casablanca | ETTAAJ Rent Cars - À partir de ' + <?= (int)$discountedPrice ?> + ' MAD/jour',
+      description: 'Louez ' + carName + ' aux aéroports de Marrakech et Casablanca. Sans caution, livraison gratuite 24/7, réservation instantanée. ETTAAJ Rent Cars - Meilleure location au Maroc. WhatsApp +212 772 331 080',
+      keywords: 'louer ' + carName.toLowerCase() + ' Marrakech, louer ' + carName.toLowerCase() + ' Casablanca, location ' + carName.toLowerCase() + ' Maroc'
+    },
+    'ar': {
+      title: 'تأجير ' + carName + ' مراكش والدار البيضاء | ETTAAJ Rent Cars - من ' + <?= (int)$discountedPrice ?> + ' درهم/يوم',
+      description: 'استأجر ' + carName + ' في مطارات مراكش والدار البيضاء. بدون وديعة، توصيل مجاني 24/7، حجز فوري. ETTAAJ Rent Cars - أفضل تأجير في المغرب. واتساب +212 772 331 080',
+      keywords: 'تأجير ' + carName + ' مراكش، تأجير ' + carName + ' الدار البيضاء'
+    }
+  };
+  
+  var currentSeo = seoData[lang] || seoData['en'];
+  var currentUrl = baseUrl + '/car-detail.php?id=' + carId + '&lang=' + lang;
+  
+  // Update title
+  var titleEl = document.querySelector('title');
+  if (titleEl) titleEl.textContent = currentSeo.title;
+  
+  // Add or update meta tags
+  function setMeta(name, content, isProperty) {
+    var attr = isProperty ? 'property' : 'name';
+    var selector = 'meta[' + attr + '="' + name + '"]';
+    var meta = document.querySelector(selector);
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute(attr, name);
+      head.appendChild(meta);
+    }
+    meta.setAttribute('content', content);
+  }
+  
+  setMeta('description', currentSeo.description);
+  setMeta('keywords', currentSeo.keywords);
+  setMeta('og:title', currentSeo.title, true);
+  setMeta('og:description', currentSeo.description, true);
+  setMeta('og:url', currentUrl, true);
+  setMeta('og:type', 'website', true);
+  setMeta('og:image', baseUrl + '/uploads/' + <?= json_encode(basename($car['image'] ?? 'ettaaj-rent-cars.jpeg')) ?>, true);
+  setMeta('twitter:title', currentSeo.title);
+  setMeta('twitter:description', currentSeo.description);
+  setMeta('twitter:card', 'summary_large_image');
+  
+  // Add canonical
+  var canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.setAttribute('rel', 'canonical');
+    head.appendChild(canonical);
+  }
+  canonical.setAttribute('href', currentUrl);
+  
+  // Add hreflang
+  ['en', 'fr', 'ar'].forEach(function(l) {
+    var hreflang = document.querySelector('link[hreflang="' + l + '"]');
+    if (!hreflang) {
+      hreflang = document.createElement('link');
+      hreflang.setAttribute('rel', 'alternate');
+      hreflang.setAttribute('hreflang', l);
+      head.appendChild(hreflang);
+    }
+    hreflang.setAttribute('href', baseUrl + '/car-detail.php?id=' + carId + '&lang=' + l);
+  });
+  
+  // Add x-default
+  var xDefault = document.querySelector('link[hreflang="x-default"]');
+  if (!xDefault) {
+    xDefault = document.createElement('link');
+    xDefault.setAttribute('rel', 'alternate');
+    xDefault.setAttribute('hreflang', 'x-default');
+    head.appendChild(xDefault);
+  }
+  xDefault.setAttribute('href', baseUrl + '/car-detail.php?id=' + carId + '&lang=en');
+})();
+</script>
+
 <!-- Bootstrap Icons (for correct bag icon) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
