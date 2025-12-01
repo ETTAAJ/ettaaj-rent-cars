@@ -631,6 +631,16 @@
     .hero-section p {
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
     }
+    /* Phone Number in Hero - Always LTR and Responsive */
+    .hero-section .phone-number {
+      direction: ltr !important;
+      display: inline-block !important;
+      unicode-bidi: embed;
+      word-break: keep-all;
+      white-space: nowrap;
+      font-family: 'Inter', monospace;
+      letter-spacing: 0.05em;
+    }
     @media (max-width: 640px) {
       .hero-section h1 {
         font-size: 1.75rem;
@@ -638,6 +648,22 @@
       }
       .hero-section p {
         font-size: 0.875rem;
+        line-height: 1.5;
+      }
+      .hero-section .phone-number {
+        font-size: 0.875rem;
+        display: inline-block;
+        margin-top: 0.25rem;
+      }
+    }
+    @media (min-width: 641px) and (max-width: 768px) {
+      .hero-section .phone-number {
+        font-size: 1rem;
+      }
+    }
+    @media (min-width: 769px) {
+      .hero-section .phone-number {
+        font-size: inherit;
       }
     }
     @media (min-width: 1024px) {
@@ -1014,13 +1040,16 @@
           <?php endif; ?>
         </span>
       </div>
-      <p class="mt-6 sm:mt-8 text-base sm:text-lg md:text-xl text-white/90 font-medium drop-shadow-md">
+      <p class="mt-6 sm:mt-8 text-sm sm:text-base md:text-lg lg:text-xl text-white/90 font-medium drop-shadow-md px-2 break-words">
         <?php if ($lang === 'en'): ?>
-          Best car rental service in Morocco • Instant booking via WhatsApp +212 772 331 080
+          <span class="block sm:inline">Best car rental service in Morocco</span> • <span class="block sm:inline">Instant booking via WhatsApp</span> 
+          <a href="https://wa.me/212772331080" class="inline-block phone-number text-gold hover:text-yellow-400 font-bold transition-colors whitespace-nowrap mt-1 sm:mt-0" style="direction: ltr; display: inline-block; unicode-bidi: embed;">+212 772 331 080</a>
         <?php elseif ($lang === 'fr'): ?>
-          Meilleur service de location de voiture au Maroc • Réservation instantanée via WhatsApp +212 772 331 080
+          <span class="block sm:inline">Meilleur service de location de voiture au Maroc</span> • <span class="block sm:inline">Réservation instantanée via WhatsApp</span> 
+          <a href="https://wa.me/212772331080" class="inline-block phone-number text-gold hover:text-yellow-400 font-bold transition-colors whitespace-nowrap mt-1 sm:mt-0" style="direction: ltr; display: inline-block; unicode-bidi: embed;">+212 772 331 080</a>
         <?php else: ?>
-          أفضل خدمة تأجير سيارات في المغرب • حجز فوري عبر واتساب +212 772 331 080
+          <span class="block sm:inline">أفضل خدمة تأجير سيارات في المغرب</span> • <span class="block sm:inline">حجز فوري عبر واتساب</span> 
+          <a href="https://wa.me/212772331080" class="inline-block phone-number text-gold hover:text-yellow-400 font-bold transition-colors whitespace-nowrap mt-1 sm:mt-0" style="direction: ltr; display: inline-block; unicode-bidi: embed;">+212 772 331 080</a>
         <?php endif; ?>
       </p>
     </div>
