@@ -694,64 +694,93 @@
     @media (min-width: 1024px) {
       .hero-section {
         height: auto !important;
-        min-height: 80vh;
+        min-height: 90vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        overflow: visible;
+        padding-bottom: 2rem;
       }
       .hero-image-wrapper {
         height: 100% !important;
-        min-height: 80vh;
+        min-height: 90vh;
       }
       .hero-image {
-        min-height: 80vh;
+        min-height: 90vh;
       }
       .hero-section h1 {
-        font-size: 3rem;
+        font-size: 2.25rem;
         line-height: 1.2;
         letter-spacing: -0.02em;
+        margin-bottom: 1.5rem;
       }
       .hero-section p {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         line-height: 1.5;
+        margin-bottom: 1.5rem;
+      }
+      /* Ensure overlay shows all content */
+      .hero-section > div[class*="absolute"] {
+        align-items: flex-start !important;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
       }
     }
     @media (min-width: 1280px) {
       .hero-section {
-        min-height: 85vh;
+        min-height: 95vh;
+        padding-bottom: 3rem;
       }
       .hero-image-wrapper {
-        min-height: 85vh;
+        min-height: 95vh;
       }
       .hero-image {
-        min-height: 85vh;
+        min-height: 95vh;
       }
       .hero-section h1 {
-        font-size: 3.75rem;
+        font-size: 3rem;
         line-height: 1.2;
+        margin-bottom: 2rem;
       }
       .hero-section p {
-        font-size: 1.875rem;
+        font-size: 1.5rem;
         line-height: 1.5;
+        margin-bottom: 2rem;
+      }
+      /* Ensure overlay shows all content */
+      .hero-section > div[class*="absolute"] {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
       }
     }
     @media (min-width: 1536px) {
       .hero-section {
-        min-height: 90vh;
+        min-height: 100vh;
+        padding-bottom: 4rem;
       }
       .hero-image-wrapper {
-        min-height: 90vh;
+        min-height: 100vh;
       }
       .hero-image {
-        min-height: 90vh;
+        min-height: 100vh;
       }
       .hero-section h1 {
-        font-size: 4.5rem;
+        font-size: 3.75rem;
         line-height: 1.1;
+        margin-bottom: 2.5rem;
       }
       .hero-section p {
-        font-size: 2.25rem;
+        font-size: 1.875rem;
         line-height: 1.4;
+        margin-bottom: 2.5rem;
       }
       .logo-3d-container {
         padding: 4rem 5rem;
+      }
+      /* Ensure overlay shows all content */
+      .hero-section > div[class*="absolute"] {
+        padding-top: 6rem;
+        padding-bottom: 6rem;
       }
     }
 
@@ -1026,7 +1055,7 @@
 <?php include 'header.php'; ?>
 
 <!-- HERO SECTION -->
-<section class="relative w-full min-h-[70vh] sm:h-[70vh] lg:min-h-[80vh] xl:min-h-[85vh] overflow-hidden bg-[#353333] hero-section mb-[50px]">
+<section class="relative w-full min-h-[70vh] sm:h-[70vh] lg:min-h-[90vh] xl:min-h-[95vh] 2xl:min-h-[100vh] overflow-visible bg-[#353333] hero-section mb-[50px]">
   <div class="hero-image-wrapper w-full h-full flex items-center justify-center">
     <!-- Video Background -->
     <video 
@@ -1045,19 +1074,19 @@
   </div>
   
   <!-- SEO Text Overlay -->
-  <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 flex items-start sm:items-center justify-center pointer-events-none z-20 pt-4 sm:pt-8 md:pt-12 lg:pt-16 xl:pt-20 2xl:pt-24 pb-4 sm:pb-8 lg:pb-12">
-    <div class="text-center px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-6xl xl:max-w-7xl 2xl:max-w-7xl z-30 w-full">
+  <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 flex items-start sm:items-center justify-center pointer-events-none z-20 pt-8 sm:pt-12 md:pt-16 lg:pt-16 xl:pt-20 2xl:pt-24 pb-8 sm:pb-12 md:pb-16 lg:pb-20 xl:pb-24 2xl:pb-28 overflow-y-auto overflow-x-hidden">
+    <div class="text-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-7xl z-30 w-full mx-auto py-4 lg:py-8">
       <!-- Logo Above Text -->
-      <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 2xl:mb-14 flex justify-center mt-2 sm:mt-4 md:mt-6 lg:mt-8">
+      <div class="mb-4 sm:mb-6 md:mb-8 lg:mb-6 xl:mb-8 2xl:mb-10 flex justify-center">
         <div class="logo-3d-container">
           <div class="logo-3d">
             <img src="pub_img/ettaaj-rent-cars.jpeg" 
                  alt="ETTAAJ Rent Cars Logo" 
-                 class="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-48 lg:h-48 xl:w-56 xl:h-56 2xl:w-64 2xl:h-64 rounded-full ring-2 sm:ring-4 ring-[var(--gold)]/60 shadow-xl sm:shadow-2xl object-cover backdrop-blur-sm">
+                 class="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48 2xl:w-56 2xl:h-56 rounded-full ring-2 sm:ring-4 ring-[var(--gold)]/60 shadow-xl sm:shadow-2xl object-cover backdrop-blur-sm">
           </div>
         </div>
       </div>
-      <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-extrabold text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 drop-shadow-2xl mt-2 sm:mt-4 leading-tight sm:leading-snug lg:leading-tight">
+      <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-extrabold text-white mb-4 sm:mb-5 md:mb-6 lg:mb-6 xl:mb-8 2xl:mb-10 drop-shadow-2xl leading-tight sm:leading-snug lg:leading-tight xl:leading-tight">
         <?php if ($lang === 'en'): ?>
           Car Rental Marrakech & Casablanca Airport
         <?php elseif ($lang === 'fr'): ?>
@@ -1066,7 +1095,7 @@
           تأجير السيارات مطار مراكش والدار البيضاء
         <?php endif; ?>
       </h1>
-      <p class="text-sm sm:text-base md:text-lg lg:text-2xl xl:text-3xl text-gold font-bold mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 drop-shadow-lg mt-2 sm:mt-4 leading-relaxed lg:leading-relaxed">
+      <p class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-gold font-bold mb-4 sm:mb-5 md:mb-6 lg:mb-6 xl:mb-8 2xl:mb-10 drop-shadow-lg leading-relaxed lg:leading-relaxed">
         <?php if ($lang === 'en'): ?>
           ETTAAJ Rent Cars - No Deposit • Free Delivery 24/7 • Luxury & Economy Cars
         <?php elseif ($lang === 'fr'): ?>
@@ -1075,7 +1104,7 @@
           ETTAAJ Rent Cars - بدون وديعة • توصيل مجاني 24/7 • سيارات فاخرة واقتصادية
         <?php endif; ?>
       </p>
-      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-3 sm:mb-4 md:mb-6 lg:mb-8 xl:mb-10 mt-2 sm:mt-4">
+      <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 2xl:gap-10 text-xs sm:text-sm md:text-base lg:text-base xl:text-lg 2xl:text-xl mb-4 sm:mb-5 md:mb-6 lg:mb-6 xl:mb-8 2xl:mb-10">
         <span class="bg-gold/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 lg:px-5 xl:px-6 py-1.5 sm:py-2 lg:py-2.5 xl:py-3 rounded-full border border-gold/50 font-semibold">
           <?php if ($lang === 'en'): ?>
             Marrakech Menara Airport (RAK)
@@ -1104,7 +1133,7 @@
           <?php endif; ?>
         </span>
       </div>
-      <p class="mt-4 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-12 mb-2 sm:mb-4 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl text-white/90 font-medium drop-shadow-md px-2 sm:px-3 lg:px-4 break-words leading-relaxed">
+      <p class="mt-4 sm:mt-6 md:mt-8 lg:mt-8 xl:mt-10 2xl:mt-12 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12 2xl:mb-16 text-xs sm:text-sm md:text-base lg:text-base xl:text-lg 2xl:text-xl text-white/90 font-medium drop-shadow-md px-2 sm:px-3 lg:px-4 break-words leading-relaxed">
         <?php if ($lang === 'en'): ?>
           <span class="block sm:inline">Best car rental service in Morocco</span> • <span class="block sm:inline">Instant booking via WhatsApp</span> 
           <a href="https://wa.me/212772331080" class="inline-block phone-number text-gold hover:text-yellow-400 font-bold transition-colors whitespace-nowrap mt-1 sm:mt-0" style="direction: ltr; display: inline-block; unicode-bidi: embed;">+212 772 331 080</a>
