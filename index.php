@@ -368,6 +368,47 @@
       opacity: 1 !important;
     }
 
+    /* Hero Image Desktop Fix */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-image-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (min-width: 1024px) {
+      .hero-section {
+        height: auto !important;
+        min-height: 80vh;
+      }
+      .hero-image-wrapper {
+        height: auto !important;
+        min-height: 80vh;
+      }
+      .hero-image {
+        object-fit: contain !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 80vh;
+        max-width: 100% !important;
+        max-height: none !important;
+      }
+    }
+    @media (min-width: 1280px) {
+      .hero-section {
+        min-height: 85vh;
+      }
+      .hero-image-wrapper {
+        min-height: 85vh;
+      }
+      .hero-image {
+        min-height: 85vh;
+      }
+    }
+
     /* Brand Logos Slider */
     .brand-slider-container {
       position: relative;
@@ -441,6 +482,22 @@
       perspective-origin: center center;
       display: inline-block;
       position: relative;
+      padding: 2rem;
+    }
+    @media (min-width: 1024px) {
+      .logo-3d-container {
+        padding: 3rem 4rem;
+      }
+    }
+    @media (min-width: 1280px) {
+      .logo-3d-container {
+        padding: 4rem 5rem;
+      }
+    }
+    @media (min-width: 1536px) {
+      .logo-3d-container {
+        padding: 5rem 6rem;
+      }
     }
     .logo-3d {
       transform-style: preserve-3d;
@@ -623,15 +680,17 @@
 <?php include 'header.php'; ?>
 
 <!-- HERO SECTION -->
-<section class="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] xl:h-[85vh] overflow-hidden bg-[#353333]">
-  <img src="pub_img/ettaaj-rent-cars.jpeg" 
-       alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
-       class="w-full h-full object-cover object-center"
-       style="min-height: 100%; width: 100%; display: block;">
+<section class="relative w-full h-[60vh] sm:h-[70vh] lg:min-h-[80vh] xl:min-h-[85vh] overflow-hidden bg-[#353333] hero-section">
+  <div class="hero-image-wrapper w-full h-full flex items-center justify-center">
+    <img src="pub_img/ettaaj-rent-cars.jpeg" 
+         alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
+         class="hero-image w-full h-full object-cover object-center"
+         style="display: block;">
+  </div>
   
   <!-- Gradient Overlay with Logo -->
-  <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 flex items-center justify-center">
-    <div class="logo-3d-container z-10">
+  <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 flex items-center justify-center pointer-events-none">
+    <div class="logo-3d-container z-10 pointer-events-auto">
       <div class="logo-3d">
         <img src="pub_img/ettaaj-rent-cars.jpeg" 
              alt="ETTAAJ Rent Cars Logo" 
