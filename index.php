@@ -115,24 +115,24 @@
                   <div class="flex items-center justify-center gap-3 flex-wrap">
                       <?php if ($hasDiscount): ?>
                         <span class="text-2xl text-muted line-through opacity-70" dir="ltr">
-                          MAD <?= formatNumber($originalPrice) ?>
+                          <?= formatPrice($originalPrice) ?>
                         </span>
                       <?php endif; ?>
 
                       <div class="text-4xl sm:text-5xl font-extrabold <?= $hasDiscount ? 'text-green-400' : 'text-white' ?>" dir="ltr">
-                        <?= formatNumber($discountedPrice) ?>
+                        <?= formatPrice($discountedPrice) ?>
                       </div>
                   </div>
                   <span class="inline-block px-4 py-2 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold rounded-full text-sm mt-2">
-                    <span dir="ltr">MAD</span>/<?= $text['day'] ?>
+                    <span dir="ltr"><?= htmlspecialchars($currentCurrencyData['symbol'] ?? 'MAD') ?></span>/<?= $text['day'] ?>
                   </span>
 
                   <div class="flex gap-3 mt-3 text-xs font-medium">
                       <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-                          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_week']) ?></strong>
+                          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$car['price_week']) ?></strong>
                       </span>
                       <span class="px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-                          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_month']) ?></strong>
+                          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$car['price_month']) ?></strong>
                       </span>
                   </div>
               </div>

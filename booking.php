@@ -721,12 +721,12 @@ function carImageUrl($image)
     </div>
     <div class="mt-3 sm:mt-4 px-4">
       <span class="text-xl sm:text-2xl font-black text-gold" dir="ltr">
-        MAD <?= formatNumber($discountedPricePerDay) ?>
+        <?= formatPrice($discountedPricePerDay) ?>
       </span>
       <span class="text-base sm:text-lg text-muted">/<?= $text['day'] ?></span>
       <?php if ($hasDiscount): ?>
         <span class="ml-2 text-lg text-green-400 line-through opacity-70" dir="ltr">
-          MAD <?= formatNumber($originalPricePerDay) ?>
+          <?= formatPrice($originalPricePerDay) ?>
         </span>
         <span class="ml-2 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-bold" dir="ltr">
           -<?= formatNumber($discountPercent) ?>% OFF
@@ -735,10 +735,10 @@ function carImageUrl($image)
       <!-- Weekly and Monthly Prices -->
       <div class="flex justify-center gap-2 sm:gap-3 mt-3 text-xs sm:text-sm font-medium flex-wrap">
         <span class="px-2 sm:px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_week']) ?></strong>
+          <?= $text['week'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$car['price_week']) ?></strong>
         </span>
         <span class="px-2 sm:px-3 py-1 bg-card-dark rounded-full border border-border text-muted">
-          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr">MAD<?= formatNumber((float)$car['price_month']) ?></strong>
+          <?= $text['month'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice((float)$car['price_month']) ?></strong>
         </span>
       </div>
     </div>
@@ -826,14 +826,14 @@ function carImageUrl($image)
                   </div>
                   <span class="text-2xl font-black text-gold" dir="ltr">
                     <?php if ($insurance_basic_price > 0): ?>
-                      MAD<?= formatNumber($insurance_basic_price) ?>/<?= $text['day'] ?>
+                      <?= formatPrice($insurance_basic_price) ?>/<?= $text['day'] ?>
                     <?php else: ?>
                       <?= $text['free'] ?>
                     <?php endif; ?>
                   </span>
                 </div>
                 <?php if ($insurance_basic_deposit > 0): ?>
-                  <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong dir="ltr">MAD<?= formatNumber($insurance_basic_deposit) ?></strong></p>
+                  <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong dir="ltr"><?= formatPrice($insurance_basic_deposit) ?></strong></p>
                 <?php endif; ?>
                 <ul class="text-sm space-y-1 text-muted">
                   <li>• <?= $text['third_party_liability'] ?></li>
@@ -851,10 +851,10 @@ function carImageUrl($image)
                     <h4 class="text-xl font-bold"><?= $text['smart_insurance'] ?></h4>
                     <p class="text-sm text-amber-400"><?= $text['citadine_rate'] ?></p>
                   </div>
-                  <span class="text-2xl font-black text-gold" dir="ltr">MAD<?= formatNumber($insurance_smart_price) ?>/<?= $text['day'] ?></span>
+                  <span class="text-2xl font-black text-gold" dir="ltr"><?= formatPrice($insurance_smart_price) ?>/<?= $text['day'] ?></span>
                 </div>
                 <?php if ($insurance_smart_deposit > 0): ?>
-                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr">MAD<?= formatNumber($insurance_smart_deposit) ?></strong></p>
+                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr"><?= formatPrice($insurance_smart_deposit) ?></strong></p>
                 <?php endif; ?>
                 <ul class="text-sm space-y-1 text-[var(--text-muted)]">
                   <li>• <?= $text['all_basic_coverage'] ?></li>
@@ -873,10 +873,10 @@ function carImageUrl($image)
                     <h4 class="text-xl font-bold"><?= $text['premium_insurance'] ?></h4>
                     <p class="text-sm text-amber-400"><?= $text['citadine_rate'] ?></p>
                   </div>
-                  <span class="text-2xl font-black text-gold" dir="ltr">MAD<?= formatNumber($insurance_premium_price) ?>/<?= $text['day'] ?></span>
+                  <span class="text-2xl font-black text-gold" dir="ltr"><?= formatPrice($insurance_premium_price) ?>/<?= $text['day'] ?></span>
                 </div>
                 <?php if ($insurance_premium_deposit > 0): ?>
-                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr">MAD<?= formatNumber($insurance_premium_deposit) ?></strong></p>
+                  <p class="text-sm text-[var(--text-muted)] mb-3"><?= $text['deposit'] ?>: <strong dir="ltr"><?= formatPrice($insurance_premium_deposit) ?></strong></p>
                 <?php endif; ?>
                 <ul class="text-sm space-y-1 text-[var(--text-muted)]">
                   <li>• <?= $text['all_basic_coverage'] ?></li>
@@ -914,6 +914,7 @@ function carImageUrl($image)
                 $essentialDesc = !empty($essential[$descKey]) ? $essential[$descKey] : ($essential['description_en'] ?? $essential['description'] ?? '');
                 
                 $valueText = htmlspecialchars($essentialName) . ' - MAD ' . $priceText . $unitText;
+                $displayPrice = formatPrice($essential['price'], 2);
               ?>
                 <div class="extra-item">
                   <label for="<?= $essentialId ?>" class="flex-1 flex items-center gap-3">
@@ -930,7 +931,7 @@ function carImageUrl($image)
                     </div>
                   </label>
                   <div class="flex items-center gap-3">
-                    <span class="extra-price" dir="ltr">MAD <?= $priceText ?><?= $unitText ?></span>
+                    <span class="extra-price" dir="ltr"><?= $displayPrice ?><?= $unitText ?></span>
                     <div class="toggle-switch">
                       <input type="checkbox" id="<?= $essentialId ?>" name="extras[]" 
                              value="<?= htmlspecialchars($valueText) ?>"
@@ -954,7 +955,7 @@ function carImageUrl($image)
           <p id="insurance-info" class="text-sm text-gold mt-3 font-medium"><?= $text['basic_insurance_included'] ?></p>
           <p id="extras-info" class="text-sm text-amber-300 mt-2"></p>
           <?php if ($hasDiscount): ?>
-            <p class="text-green-400 text-sm mt-2 font-bold"><?= $text['you_save'] ?> <span dir="ltr">MAD<?= formatNumber(($originalPricePerDay - $discountedPricePerDay) * $minDays) ?></span> <?= $text['on_minimum_rental'] ?></p>
+            <p class="text-green-400 text-sm mt-2 font-bold"><?= $text['you_save'] ?> <span dir="ltr"><?= formatPrice(($originalPricePerDay - $discountedPricePerDay) * $minDays) ?></span> <?= $text['on_minimum_rental'] ?></p>
           <?php endif; ?>
         </div>
 
@@ -1002,6 +1003,27 @@ function carImageUrl($image)
   const btn = document.getElementById('submit-btn');
   const form = document.getElementById('booking-form');
 
+  // Currency info
+  const currencyInfo = <?= json_encode(getCurrency()) ?>;
+  const currencyRate = currencyInfo.rate || 1.0;
+  const currencySymbol = currencyInfo.symbol || 'MAD';
+  
+  // Convert MAD to selected currency
+  function convertToCurrency(madAmount) {
+    if (currencyRate <= 0) return madAmount;
+    return madAmount / currencyRate;
+  }
+  
+  // Format price with currency symbol
+  function formatPriceJS(amount) {
+    const converted = convertToCurrency(amount);
+    const formatted = converted.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    if (currencyInfo.code === 'USD' || currencyInfo.code === 'EUR') {
+      return currencySymbol + formatted;
+    }
+    return formatted + ' ' + currencySymbol;
+  }
+  
   const pricePerDay = <?= json_encode($discountedPricePerDay) ?>;
   const pricePerWeek = <?= json_encode((float)$car['price_week']) ?>;
   const pricePerMonth = <?= json_encode((float)$car['price_month']) ?>;
@@ -1069,7 +1091,7 @@ function carImageUrl($image)
     if (days < minDays || days <= 0) {
       error.classList.remove('hidden');
       btn.disabled = true;
-      totalEl.textContent = 'MAD0';
+      totalEl.textContent = formatPriceJS(0);
       daysEl.textContent = '';
       return;
     }
@@ -1099,7 +1121,7 @@ function carImageUrl($image)
     // Add animation class for price update
     totalEl.classList.add('updating');
     setTimeout(() => {
-      totalEl.textContent = 'MAD' + grandTotal.toLocaleString('en-US');
+      totalEl.textContent = formatPriceJS(grandTotal);
       totalEl.setAttribute('dir', 'ltr');
       totalEl.classList.remove('updating');
     }, 150);
@@ -1125,10 +1147,10 @@ function carImageUrl($image)
     }
     daysEl.textContent = pricingInfo;
     const basicPriceText = insurancePrices.basic > 0 
-      ? `MAD${insurancePrices.basic.toLocaleString('en-US')}/<?= $text['day'] ?>` 
+      ? formatPriceJS(insurancePrices.basic) + '/<?= $text['day'] ?>' 
       : "<?= $text['free'] ?>";
-    const smartPriceText = `MAD${insurancePrices.smart.toLocaleString('en-US')}/<?= $text['day'] ?>`;
-    const premiumPriceText = `MAD${insurancePrices.premium.toLocaleString('en-US')}/<?= $text['day'] ?>`;
+    const smartPriceText = formatPriceJS(insurancePrices.smart) + '/<?= $text['day'] ?>';
+    const premiumPriceText = formatPriceJS(insurancePrices.premium) + '/<?= $text['day'] ?>';
     
     const labels = { 
       basic: "<?= $text['basic_insurance'] ?>: " + basicPriceText, 
@@ -1265,9 +1287,9 @@ function carImageUrl($image)
 
     form.reset();
     document.querySelectorAll('.toggle-switch input[type="checkbox"]').forEach(cb => setSliderColor(cb));
-    totalEl.textContent = 'MAD0';
+    totalEl.textContent = formatPriceJS(0);
     daysEl.textContent = '';
-    insuranceInfo.textContent = 'Basic Insurance (included)';
+    insuranceInfo.textContent = '<?= $text['basic_insurance_included'] ?>';
     extrasInfo.textContent = '';
     btn.disabled = true;
   });

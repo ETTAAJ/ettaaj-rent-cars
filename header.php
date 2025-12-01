@@ -302,6 +302,34 @@ require_once 'config.php';
     // Preserve current URL parameters (like id, search, etc.)
     $currentParams = $_GET;
     unset($currentParams['lang']); // Remove lang to avoid duplication
+    unset($currentParams['currency']); // Remove currency to avoid duplication
+    
+    // Get active currencies from database
+    $activeCurrencies = [];
+    if (defined('CONFIG_LOADED') && isset($pdo)) {
+      try {
+        $currencyStmt = $pdo->query("SELECT code, name, symbol FROM currencies WHERE is_active = 1 ORDER BY code ASC");
+        $activeCurrencies = $currencyStmt->fetchAll(PDO::FETCH_ASSOC);
+      } catch (PDOException $e) {
+        // Fallback to default currencies
+        $activeCurrencies = [
+          ['code' => 'MAD', 'name' => 'Moroccan Dirham', 'symbol' => 'MAD'],
+          ['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$'],
+          ['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€']
+        ];
+      }
+    } else {
+      // Fallback if database not loaded
+      $activeCurrencies = [
+        ['code' => 'MAD', 'name' => 'Moroccan Dirham', 'symbol' => 'MAD'],
+        ['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$'],
+        ['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€']
+      ];
+    }
+    
+    // Get current currency
+    $currentCurrency = $currency_code ?? 'MAD';
+    $currentCurrencyData = getCurrency();
   ?>
 
   <!-- Mobile Sidebar -->
@@ -337,18 +365,44 @@ require_once 'config.php';
             </svg>
           </div>
           <div class="lang-dropdown">
-            <a href="?lang=en<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?>" class="lang-option <?= $lang === 'en' ? 'active' : '' ?>">
+            <a href="?lang=en<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['currency']) ? '&currency=' . htmlspecialchars($_GET['currency']) : '' ?>" class="lang-option <?= $lang === 'en' ? 'active' : '' ?>">
               <span><?= $langFlags['en'] ?></span>
               <span>English</span>
             </a>
-            <a href="?lang=fr<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?>" class="lang-option <?= $lang === 'fr' ? 'active' : '' ?>">
+            <a href="?lang=fr<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['currency']) ? '&currency=' . htmlspecialchars($_GET['currency']) : '' ?>" class="lang-option <?= $lang === 'fr' ? 'active' : '' ?>">
               <span><?= $langFlags['fr'] ?></span>
               <span>Français</span>
             </a>
-            <a href="?lang=ar<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?>" class="lang-option <?= $lang === 'ar' ? 'active' : '' ?>">
+            <a href="?lang=ar<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['currency']) ? '&currency=' . htmlspecialchars($_GET['currency']) : '' ?>" class="lang-option <?= $lang === 'ar' ? 'active' : '' ?>">
               <span><?= $langFlags['ar'] ?></span>
               <span>العربية</span>
             </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Currency Switcher Mobile -->
+      <div class="mt-4 pt-4 border-t border-border">
+        <div class="lang-switcher w-full">
+          <div class="lang-current text-sm text-[var(--muted)]">
+            <span><?php 
+              $symbol = htmlspecialchars($currentCurrencyData['symbol'] ?? $currentCurrency);
+              $code = htmlspecialchars($currentCurrency);
+              // Only show symbol if it's different from code, otherwise just show code
+              echo ($symbol !== $code) ? $symbol . ' ' . $code : $code;
+            ?></span>
+            <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+          <div class="lang-dropdown">
+            <?php foreach ($activeCurrencies as $curr): ?>
+            <a href="?currency=<?= htmlspecialchars($curr['code']) ?><?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['lang']) ? '&lang=' . htmlspecialchars($_GET['lang']) : '' ?>" 
+               class="lang-option <?= $currentCurrency === $curr['code'] ? 'active' : '' ?>">
+              <span><?= htmlspecialchars($curr['code']) ?></span>
+              <span><?= htmlspecialchars($curr['name']) ?></span>
+            </a>
+            <?php endforeach; ?>
           </div>
         </div>
       </div>
@@ -433,18 +487,42 @@ require_once 'config.php';
               </svg>
             </div>
             <div class="lang-dropdown">
-              <a href="?lang=en<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?>" class="lang-option <?= $lang === 'en' ? 'active' : '' ?>">
+              <a href="?lang=en<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['currency']) ? '&currency=' . htmlspecialchars($_GET['currency']) : '' ?>" class="lang-option <?= $lang === 'en' ? 'active' : '' ?>">
                 <span><?= $langFlags['en'] ?></span>
                 <span>English</span>
               </a>
-              <a href="?lang=fr<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?>" class="lang-option <?= $lang === 'fr' ? 'active' : '' ?>">
+              <a href="?lang=fr<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['currency']) ? '&currency=' . htmlspecialchars($_GET['currency']) : '' ?>" class="lang-option <?= $lang === 'fr' ? 'active' : '' ?>">
                 <span><?= $langFlags['fr'] ?></span>
                 <span>Français</span>
               </a>
-              <a href="?lang=ar<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?>" class="lang-option <?= $lang === 'ar' ? 'active' : '' ?>">
+              <a href="?lang=ar<?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['currency']) ? '&currency=' . htmlspecialchars($_GET['currency']) : '' ?>" class="lang-option <?= $lang === 'ar' ? 'active' : '' ?>">
                 <span><?= $langFlags['ar'] ?></span>
                 <span>العربية</span>
               </a>
+            </div>
+          </div>
+
+          <!-- Currency Switcher Desktop -->
+          <div class="lang-switcher">
+            <div class="lang-current">
+              <span class="text-sm"><?php 
+                $symbol = htmlspecialchars($currentCurrencyData['symbol'] ?? $currentCurrency);
+                $code = htmlspecialchars($currentCurrency);
+                // Only show symbol if it's different from code, otherwise just show code
+                echo ($symbol !== $code) ? $symbol . ' ' . $code : $code;
+              ?></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <div class="lang-dropdown">
+              <?php foreach ($activeCurrencies as $curr): ?>
+              <a href="?currency=<?= htmlspecialchars($curr['code']) ?><?= !empty($currentParams) ? '&' . http_build_query($currentParams) : '' ?><?= isset($_GET['lang']) ? '&lang=' . htmlspecialchars($_GET['lang']) : '' ?>" 
+                 class="lang-option <?= $currentCurrency === $curr['code'] ? 'active' : '' ?>">
+                <span><?= htmlspecialchars($curr['code']) ?></span>
+                <span><?= htmlspecialchars($curr['name']) ?></span>
+              </a>
+              <?php endforeach; ?>
             </div>
           </div>
 

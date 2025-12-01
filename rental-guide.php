@@ -1,6 +1,15 @@
 <?php 
 require_once 'init.php';
 require_once 'config.php';
+
+// Get Travel Essentials from database
+$stmt_essentials = $pdo->query("SELECT * FROM travel_essentials WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+$travelEssentials = $stmt_essentials->fetchAll(PDO::FETCH_ASSOC);
+
+// Get all cars with images for slider
+$sliderCarsStmt = $pdo->prepare("SELECT id, name, image FROM cars WHERE image IS NOT NULL AND image != '' ORDER BY id ASC");
+$sliderCarsStmt->execute();
+$sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>" class="scroll-smooth" <?= $lang === 'ar' ? 'dir="rtl"' : 'dir="ltr"' ?>>
@@ -20,6 +29,7 @@ require_once 'config.php';
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <style>
     :root {
@@ -81,65 +91,296 @@ require_once 'config.php';
         min-width: 200px;
       }
     }
+
+    /* 3D Logo Animation - Professional */
+    .logo-3d-container {
+      perspective: 2000px;
+      perspective-origin: center center;
+      display: inline-block;
+      position: relative;
+      padding: 2rem;
+    }
+    @media (min-width: 1024px) {
+      .logo-3d-container {
+        padding: 3rem 4rem;
+      }
+    }
+    @media (min-width: 1280px) {
+      .logo-3d-container {
+        padding: 4rem 5rem;
+      }
+    }
+    @media (min-width: 1536px) {
+      .logo-3d-container {
+        padding: 5rem 6rem;
+      }
+    }
+    .logo-3d {
+      transform-style: preserve-3d;
+      animation: logo3dFloat 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s ease;
+      position: relative;
+      will-change: transform;
+    }
+    .logo-3d::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 178, 44, 0.3) 0%, transparent 70%);
+      opacity: 0;
+      animation: logoGlow 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      z-index: -1;
+      filter: blur(20px);
+    }
+    .logo-3d:hover {
+      animation-play-state: paused;
+      transform: rotateY(20deg) rotateX(10deg) scale(1.1) translateZ(30px);
+    }
+    .logo-3d:hover::before {
+      opacity: 1;
+      animation-play-state: paused;
+    }
+    @keyframes logo3dFloat {
+      0% {
+        transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) translateZ(0px) scale(1);
+      }
+      12.5% {
+        transform: rotateY(8deg) rotateX(-5deg) rotateZ(2deg) translateZ(15px) scale(1.02);
+      }
+      25% {
+        transform: rotateY(15deg) rotateX(-8deg) rotateZ(-2deg) translateZ(25px) scale(1.03);
+      }
+      37.5% {
+        transform: rotateY(8deg) rotateX(-5deg) rotateZ(2deg) translateZ(20px) scale(1.02);
+      }
+      50% {
+        transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) translateZ(30px) scale(1.05);
+      }
+      62.5% {
+        transform: rotateY(-8deg) rotateX(5deg) rotateZ(-2deg) translateZ(20px) scale(1.02);
+      }
+      75% {
+        transform: rotateY(-15deg) rotateX(8deg) rotateZ(2deg) translateZ(25px) scale(1.03);
+      }
+      87.5% {
+        transform: rotateY(-8deg) rotateX(5deg) rotateZ(-2deg) translateZ(15px) scale(1.02);
+      }
+      100% {
+        transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) translateZ(0px) scale(1);
+      }
+    }
+    @keyframes logoGlow {
+      0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.9);
+      }
+      25% {
+        opacity: 0.5;
+        transform: scale(1.1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+      }
+      75% {
+        opacity: 0.5;
+        transform: scale(1.1);
+      }
+    }
+    .logo-3d img {
+      transform-style: preserve-3d;
+      filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.4)) 
+              drop-shadow(0 5px 15px rgba(255, 178, 44, 0.3))
+              brightness(1.05) contrast(1.05);
+      transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s ease;
+      animation: logoShadowPulse 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      will-change: filter, transform;
+    }
+    .logo-3d:hover img {
+      filter: drop-shadow(0 25px 60px rgba(255, 178, 44, 0.6)) 
+              drop-shadow(0 10px 25px rgba(255, 178, 44, 0.5))
+              brightness(1.15) contrast(1.1);
+      transform: scale(1.05);
+    }
+    @keyframes logoShadowPulse {
+      0%, 100% {
+        filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.4)) 
+                drop-shadow(0 5px 15px rgba(255, 178, 44, 0.3))
+                brightness(1.05) contrast(1.05);
+      }
+      25% {
+        filter: drop-shadow(0 18px 45px rgba(255, 178, 44, 0.5)) 
+                drop-shadow(0 7px 18px rgba(255, 178, 44, 0.4))
+                brightness(1.08) contrast(1.06);
+      }
+      50% {
+        filter: drop-shadow(0 20px 50px rgba(255, 178, 44, 0.6)) 
+                drop-shadow(0 8px 20px rgba(255, 178, 44, 0.5))
+                brightness(1.1) contrast(1.08);
+      }
+      75% {
+        filter: drop-shadow(0 18px 45px rgba(255, 178, 44, 0.5)) 
+                drop-shadow(0 7px 18px rgba(255, 178, 44, 0.4))
+                brightness(1.08) contrast(1.06);
+      }
+    }
+
+    /* Hero Image Desktop Fix */
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-image-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (min-width: 1024px) {
+      .hero-section {
+        height: auto !important;
+        min-height: 80vh;
+      }
+      .hero-image-wrapper {
+        height: auto !important;
+        min-height: 80vh;
+      }
+      .hero-image {
+        object-fit: contain !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 80vh;
+        max-width: 100% !important;
+        max-height: none !important;
+      }
+    }
+    @media (min-width: 1280px) {
+      .hero-section {
+        min-height: 85vh;
+      }
+      .hero-image-wrapper {
+        min-height: 85vh;
+      }
+      .hero-image {
+        min-height: 85vh;
+      }
+    }
+
+    /* Infinite Car Slider */
+    .car-slider-container {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      padding: 2rem 0;
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .car-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      animation: slideCars 30s linear infinite;
+      width: fit-content;
+    }
+    .car-slider-track:hover {
+      animation-play-state: paused;
+    }
+    .car-slide-item {
+      flex: 0 0 280px;
+      min-width: 280px;
+      height: 180px;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .car-slide-item:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 178, 44, 0.4);
+    }
+    .car-slide-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    @media (max-width: 768px) {
+      .car-slide-item {
+        flex: 0 0 220px;
+        min-width: 220px;
+        height: 150px;
+      }
+      .car-slider-container {
+        padding: 1.5rem 0;
+      }
+    }
+    @media (max-width: 640px) {
+      .car-slide-item {
+        flex: 0 0 180px;
+        min-width: 180px;
+        height: 120px;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen">
 
 <?php include 'header.php'; ?>
 
-<!-- HERO SECTION WITH LOGO AND CAR SLIDER -->
-<section class="relative overflow-hidden py-16 lg:py-24">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Logo -->
-    <div class="text-center mb-12" data-aos="fade-down">
-      <img src="pub_img/ettaaj-rent-cars.jpeg" 
-           alt="ETTAAJ Rent Cars - Rental Cars in Morocco" 
-           class="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl mx-auto">
-    </div>
-    
-    <!-- SEO Keywords (Hidden but accessible to search engines) -->
-    <div style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;">
-      <h1>Rental Cars in Morocco - Car Rental Morocco - Rent a Car Morocco</h1>
-      <p>Best car rental in Morocco. Rent a car in Marrakech, Casablanca, and all Morocco. Luxury and economy car rental with no deposit, free delivery 24/7. ETTAAJ Rent Cars offers the best rental cars in Morocco with competitive prices and excellent service.</p>
-    </div>
-    
-    <!-- Infinite Car Images Slider -->
-    <?php
-      $sliderStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 10");
-      $sliderStmt->execute();
-      $sliderCars = $sliderStmt->fetchAll(PDO::FETCH_ASSOC);
-    ?>
-    <?php if (!empty($sliderCars)): ?>
-    <div class="relative mt-8" data-aos="fade-up">
-      <div class="car-slider-container overflow-hidden py-8">
-        <div class="car-slider-track">
-          <?php 
-          // Duplicate cars multiple times for seamless infinite loop
-          $sliderCarsDuplicated = array_merge($sliderCars, $sliderCars, $sliderCars, $sliderCars);
-          foreach ($sliderCarsDuplicated as $car): 
-            $carImg = !empty($car['image']) 
-              ? 'uploads/' . basename($car['image']) 
-              : 'https://via.placeholder.com/300x200/000000/FFFFFF?text=' . urlencode($car['name']);
-          ?>
-            <div class="car-slide-item">
-              <div class="relative group">
-                <img src="<?= htmlspecialchars($carImg) ?>" 
-                     alt="<?= htmlspecialchars($car['name']) ?> - Rental Cars in Morocco"
-                     class="w-full h-48 object-cover rounded-xl border-2 border-[var(--primary-color)]/30 group-hover:border-[var(--primary-color)] transition-all duration-300"
-                     loading="lazy"
-                     onerror="this.src='https://via.placeholder.com/300x200/000000/FFFFFF?text=<?= urlencode($car['name']) ?>'">
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 rounded-b-xl">
-                  <p class="text-white text-sm font-bold text-center"><?= htmlspecialchars($car['name']) ?></p>
-                </div>
-              </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
+<!-- HERO SECTION -->
+<section class="relative w-full h-[60vh] sm:h-[70vh] lg:min-h-[80vh] xl:min-h-[85vh] overflow-hidden bg-[#353333] hero-section">
+  <div class="hero-image-wrapper w-full h-full flex items-center justify-center">
+    <img src="pub_img/ettaaj-rent-cars.jpeg" 
+         alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
+         class="hero-image w-full h-full object-cover object-center"
+         style="display: block;">
+  </div>
+  
+  <!-- Gradient Overlay with Logo -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 flex items-center justify-center pointer-events-none">
+    <div class="logo-3d-container z-10 pointer-events-auto">
+      <div class="logo-3d">
+        <img src="pub_img/ettaaj-rent-cars.jpeg" 
+             alt="ETTAAJ Rent Cars Logo" 
+             class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-72 xl:h-72 rounded-full ring-4 ring-[var(--gold)]/60 shadow-2xl object-cover backdrop-blur-sm">
       </div>
     </div>
-    <?php endif; ?>
   </div>
 </section>
+
+<!-- INFINITE CAR SLIDER -->
+<?php if (!empty($sliderCars)): ?>
+<section class="car-slider-container bg-[#353333] border-y border-[#4A5A66]">
+  <div class="car-slider-track">
+    <?php 
+    // Duplicate cars for seamless infinite loop
+    $duplicatedCars = array_merge($sliderCars, $sliderCars);
+    foreach ($duplicatedCars as $car): 
+      $imgUrl = 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($car['name']);
+      if (!empty($car['image']) && is_string($car['image'])) {
+        $filename = basename($car['image']);
+        $relative = 'uploads/' . $filename;
+        $fullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $relative;
+        if (file_exists($fullPath)) {
+          $imgUrl = $relative . '?v=' . filemtime($fullPath);
+        } else {
+          $imgUrl = $relative;
+        }
+      }
+    ?>
+    <div class="car-slide-item">
+      <a href="<?= langUrl('car-detail.php', ['id' => (int)$car['id']]) ?>">
+        <img src="<?= htmlspecialchars($imgUrl, ENT_QUOTES) ?>" 
+             alt="<?= htmlspecialchars($car['name']) ?> - ETTAAJ Rent Cars"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='https://via.placeholder.com/600x338/36454F/FFFFFF?text=<?= urlencode($car['name']) ?>';">
+      </a>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+<?php endif; ?>
 
     <main class="relative z-10 px-4 sm:px-6 lg:px-8 py-16 space-y-20 max-w-6xl mx-auto">
       <section id="rental-guidelines">
@@ -406,7 +647,7 @@ require_once 'config.php';
               </div>
             </div>
 
-            <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong class="text-primary">$588.00</strong></p>
+            <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice(5880) ?></strong></p>
             <ul class="space-y-2 text-primary text-sm">
               <li>• <?= $text['third_party_liability'] ?></li>
               <li>• <?= $text['basic_collision'] ?></li>
@@ -424,11 +665,11 @@ require_once 'config.php';
               </span>
               <div>
                 <h3 class="text-2xl font-bold text-primary"><?= $text['smart_insurance'] ?></h3>
-                <p class="text-sm text-amber-400 font-semibold">+$8.90/<?= $text['day'] ?></p>
+                <p class="text-sm text-amber-400 font-semibold" dir="ltr">+<?= formatPrice(89) ?>/<?= $text['day'] ?></p>
               </div>
             </div>
 
-            <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong class="text-primary">$294.00</strong></p>
+            <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice(2940) ?></strong></p>
             <ul class="space-y-2 text-primary text-sm">
               <li>• <?= $text['all_basic_coverage'] ?></li>
               <li>• <?= $text['reduced_excess'] ?></li>
@@ -446,11 +687,11 @@ require_once 'config.php';
               </span>
               <div>
                 <h3 class="text-2xl font-bold text-primary"><?= $text['premium_insurance'] ?></h3>
-                <p class="text-sm text-amber-400 font-semibold">+$14.40/<?= $text['day'] ?></p>
+                <p class="text-sm text-amber-400 font-semibold" dir="ltr">+<?= formatPrice(144) ?>/<?= $text['day'] ?></p>
               </div>
             </div>
 
-            <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong class="text-primary">$98.00</strong></p>
+            <p class="text-sm text-muted mb-3"><?= $text['deposit'] ?>: <strong class="text-primary" dir="ltr"><?= formatPrice(980) ?></strong></p>
             <ul class="space-y-2 text-primary text-sm">
               <li>• <?= $text['all_basic_coverage'] ?></li>
               <li>• <?= $text['zero_excess'] ?></li>
@@ -483,61 +724,41 @@ require_once 'config.php';
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
-          <article class="p-6 rounded-3xl bg-card border border-border shadow-lg hover:shadow-gold/30 transition">
-            <div class="flex items-center gap-4 mb-4">
-              <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h1m4-4v12m4-8h6m-3-3v6"/>
-              </svg>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-primary"><?= $text['premium_fuel_service'] ?></h3>
-                <p class="text-sm text-muted"><?= $text['prepaid_full_tank'] ?></p>
-              </div>
-              <span class="text-lg font-bold text-gold">$110.00/<?= $text['day'] ?></span>
+          <?php if (empty($travelEssentials)): ?>
+            <div class="col-span-2 text-center text-muted py-8">
+              <p><?= $text['no_travel_essentials'] ?? 'No travel essentials available at the moment.' ?></p>
             </div>
-            <p class="text-sm text-primary"><?= $text['premium_fuel_desc'] ?></p>
-          </article>
-
-          <article class="p-6 rounded-3xl bg-card border border-border shadow-lg hover:shadow-gold/30 transition">
-            <div class="flex items-center gap-4 mb-4">
-              <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-primary"><?= $text['unlimited_kilometers'] ?></h3>
-                <p class="text-sm text-muted"><?= $text['drive_without_restrictions'] ?></p>
+          <?php else: ?>
+            <?php foreach ($travelEssentials as $essential): 
+              // Get language-specific name and description
+              $nameKey = 'name_' . $lang;
+              $descKey = 'description_' . $lang;
+              $essentialName = !empty($essential[$nameKey]) ? $essential[$nameKey] : ($essential['name_en'] ?? $essential['name'] ?? '');
+              $essentialDesc = !empty($essential[$descKey]) ? $essential[$descKey] : ($essential['description_en'] ?? $essential['description'] ?? '');
+              
+              $priceText = number_format($essential['price'], 2);
+              $unitText = $essential['per_day'] ? '/' . $text['day'] : '/rental';
+            ?>
+            <article class="p-6 rounded-3xl bg-card border border-border shadow-lg hover:shadow-gold/30 transition">
+              <div class="flex items-center gap-4 mb-4">
+                <?php if ($essential['icon']): ?>
+                  <i class="bi <?= htmlspecialchars($essential['icon']) ?> text-3xl text-gold"></i>
+                <?php else: ?>
+                  <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                <?php endif; ?>
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-primary"><?= htmlspecialchars($essentialName) ?></h3>
+                  <?php if ($essentialDesc): ?>
+                    <p class="text-sm text-muted"><?= htmlspecialchars($essentialDesc) ?></p>
+                  <?php endif; ?>
+                </div>
+                <span class="text-lg font-bold text-gold" dir="ltr"><?= formatPrice($essential['price'], 2) ?><?= $unitText ?></span>
               </div>
-              <span class="text-lg font-bold text-gold">$10.50/<?= $text['day'] ?></span>
-            </div>
-            <p class="text-sm text-primary"><?= $text['unlimited_km_desc'] ?></p>
-          </article>
-
-          <article class="p-6 rounded-3xl bg-card border border-border shadow-lg hover:shadow-gold/30 transition">
-            <div class="flex items-center gap-4 mb-4">
-              <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-primary"><?= $text['flexible_cancellation'] ?></h3>
-                <p class="text-sm text-muted"><?= $text['free_cancellation_until'] ?></p>
-              </div>
-              <span class="text-lg font-bold text-gold">$9.50/<?= $text['day'] ?></span>
-            </div>
-            <p class="text-sm text-primary"><?= $text['flexible_cancel_desc'] ?></p>
-          </article>
-
-          <article class="p-6 rounded-3xl bg-card border border-border shadow-lg hover:shadow-gold/30 transition">
-            <div class="flex items-center gap-4 mb-4">
-              <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H9v-1c-4 0-6-4-6-4v-3h12v3c0 0-2 4-6 4z"/>
-              </svg>
-              <div class="flex-1">
-                <h3 class="text-xl font-bold text-primary"><?= $text['additional_drivers'] ?></h3>
-                <p class="text-sm text-muted"><?= $text['add_up_to_2'] ?></p>
-              </div>
-              <span class="text-lg font-bold text-gold">$2.50/<?= $text['day'] ?></span>
-            </div>
-            <p class="text-sm text-primary"><?= $text['additional_drivers_desc'] ?></p>
-          </article>
+            </article>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
       </section>
 
