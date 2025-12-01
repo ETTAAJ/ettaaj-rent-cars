@@ -435,42 +435,122 @@
       .brand-logo img { width: 90px; height: 60px; }
     }
 
-    /* 3D Logo Animation */
+    /* 3D Logo Animation - Professional */
     .logo-3d-container {
-      perspective: 1000px;
+      perspective: 2000px;
       perspective-origin: center center;
       display: inline-block;
+      position: relative;
     }
     .logo-3d {
       transform-style: preserve-3d;
-      animation: logo3dFloat 6s ease-in-out infinite;
-      transition: transform 0.3s ease;
+      animation: logo3dFloat 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s ease;
+      position: relative;
+      will-change: transform;
+    }
+    .logo-3d::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 178, 44, 0.3) 0%, transparent 70%);
+      opacity: 0;
+      animation: logoGlow 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      z-index: -1;
+      filter: blur(20px);
     }
     .logo-3d:hover {
       animation-play-state: paused;
-      transform: rotateY(15deg) rotateX(5deg) scale(1.05);
+      transform: rotateY(20deg) rotateX(10deg) scale(1.1) translateZ(30px);
+    }
+    .logo-3d:hover::before {
+      opacity: 1;
+      animation-play-state: paused;
     }
     @keyframes logo3dFloat {
-      0%, 100% {
-        transform: rotateY(0deg) rotateX(0deg) translateZ(0px);
+      0% {
+        transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) translateZ(0px) scale(1);
+      }
+      12.5% {
+        transform: rotateY(8deg) rotateX(-5deg) rotateZ(2deg) translateZ(15px) scale(1.02);
       }
       25% {
-        transform: rotateY(5deg) rotateX(-3deg) translateZ(10px);
+        transform: rotateY(15deg) rotateX(-8deg) rotateZ(-2deg) translateZ(25px) scale(1.03);
+      }
+      37.5% {
+        transform: rotateY(8deg) rotateX(-5deg) rotateZ(2deg) translateZ(20px) scale(1.02);
       }
       50% {
-        transform: rotateY(0deg) rotateX(0deg) translateZ(20px);
+        transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) translateZ(30px) scale(1.05);
+      }
+      62.5% {
+        transform: rotateY(-8deg) rotateX(5deg) rotateZ(-2deg) translateZ(20px) scale(1.02);
       }
       75% {
-        transform: rotateY(-5deg) rotateX(3deg) translateZ(10px);
+        transform: rotateY(-15deg) rotateX(8deg) rotateZ(2deg) translateZ(25px) scale(1.03);
+      }
+      87.5% {
+        transform: rotateY(-8deg) rotateX(5deg) rotateZ(-2deg) translateZ(15px) scale(1.02);
+      }
+      100% {
+        transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg) translateZ(0px) scale(1);
+      }
+    }
+    @keyframes logoGlow {
+      0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.9);
+      }
+      25% {
+        opacity: 0.5;
+        transform: scale(1.1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+      }
+      75% {
+        opacity: 0.5;
+        transform: scale(1.1);
       }
     }
     .logo-3d img {
       transform-style: preserve-3d;
-      filter: drop-shadow(0 10px 30px rgba(255, 178, 44, 0.3));
-      transition: filter 0.3s ease;
+      filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.4)) 
+              drop-shadow(0 5px 15px rgba(255, 178, 44, 0.3))
+              brightness(1.05) contrast(1.05);
+      transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s ease;
+      animation: logoShadowPulse 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      will-change: filter, transform;
     }
     .logo-3d:hover img {
-      filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.5));
+      filter: drop-shadow(0 25px 60px rgba(255, 178, 44, 0.6)) 
+              drop-shadow(0 10px 25px rgba(255, 178, 44, 0.5))
+              brightness(1.15) contrast(1.1);
+      transform: scale(1.05);
+    }
+    @keyframes logoShadowPulse {
+      0%, 100% {
+        filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.4)) 
+                drop-shadow(0 5px 15px rgba(255, 178, 44, 0.3))
+                brightness(1.05) contrast(1.05);
+      }
+      25% {
+        filter: drop-shadow(0 18px 45px rgba(255, 178, 44, 0.5)) 
+                drop-shadow(0 7px 18px rgba(255, 178, 44, 0.4))
+                brightness(1.08) contrast(1.06);
+      }
+      50% {
+        filter: drop-shadow(0 20px 50px rgba(255, 178, 44, 0.6)) 
+                drop-shadow(0 8px 20px rgba(255, 178, 44, 0.5))
+                brightness(1.1) contrast(1.08);
+      }
+      75% {
+        filter: drop-shadow(0 18px 45px rgba(255, 178, 44, 0.5)) 
+                drop-shadow(0 7px 18px rgba(255, 178, 44, 0.4))
+                brightness(1.08) contrast(1.06);
+      }
     }
 
     /* Infinite Car Slider */
@@ -548,6 +628,17 @@
        alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
        class="w-full h-full object-cover object-center"
        style="min-height: 100%; width: 100%; display: block;">
+  
+  <!-- Gradient Overlay with Logo -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 flex items-center justify-center">
+    <div class="logo-3d-container z-10">
+      <div class="logo-3d">
+        <img src="pub_img/ettaaj-rent-cars.jpeg" 
+             alt="ETTAAJ Rent Cars Logo" 
+             class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-72 xl:h-72 rounded-full ring-4 ring-[var(--gold)]/60 shadow-2xl object-cover backdrop-blur-sm">
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- INFINITE CAR SLIDER -->
