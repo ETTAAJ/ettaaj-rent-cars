@@ -217,6 +217,11 @@
   $allCarsStmt->execute();
   $allCars = $allCarsStmt->fetchAll(PDO::FETCH_ASSOC);
   
+  // Get all cars with images for slider
+  $sliderCarsStmt = $pdo->prepare("SELECT id, name, image FROM cars WHERE image IS NOT NULL AND image != '' ORDER BY id ASC");
+  $sliderCarsStmt->execute();
+  $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
+  
   // Get counts per option for filter dropdowns
   $countWhere = [];
   $countParams = [];
@@ -467,6 +472,70 @@
     .logo-3d:hover img {
       filter: drop-shadow(0 15px 40px rgba(255, 178, 44, 0.5));
     }
+
+    /* Infinite Car Slider */
+    .car-slider-container {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      padding: 2rem 0;
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+    .car-slider-track {
+      display: flex;
+      gap: 1.5rem;
+      animation: slideCars 30s linear infinite;
+      width: fit-content;
+    }
+    .car-slider-track:hover {
+      animation-play-state: paused;
+    }
+    .car-slide-item {
+      flex: 0 0 280px;
+      min-width: 280px;
+      height: 180px;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .car-slide-item:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 178, 44, 0.4);
+    }
+    .car-slide-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    @keyframes slideCars {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+    @media (max-width: 768px) {
+      .car-slide-item {
+        flex: 0 0 220px;
+        min-width: 220px;
+        height: 150px;
+      }
+      .car-slider-container {
+        padding: 1.5rem 0;
+      }
+    }
+    @media (max-width: 640px) {
+      .car-slide-item {
+        flex: 0 0 180px;
+        min-width: 180px;
+        height: 120px;
+      }
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -474,11 +543,45 @@
 <?php include 'header.php'; ?>
 
 <!-- HERO SECTION -->
-<section class="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden">
+<section class="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] xl:h-[85vh] overflow-hidden bg-[#353333]">
   <img src="pub_img/ettaaj-rent-cars.jpeg" 
        alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
-       class="w-full h-full object-cover">
+       class="w-full h-full object-cover object-center"
+       style="min-height: 100%; width: 100%; display: block;">
 </section>
+
+<!-- INFINITE CAR SLIDER -->
+<?php if (!empty($sliderCars)): ?>
+<section class="car-slider-container bg-[#353333] border-y border-[#4A5A66]">
+  <div class="car-slider-track">
+    <?php 
+    // Duplicate cars for seamless infinite loop
+    $duplicatedCars = array_merge($sliderCars, $sliderCars);
+    foreach ($duplicatedCars as $car): 
+      $imgUrl = 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($car['name']);
+      if (!empty($car['image']) && is_string($car['image'])) {
+        $filename = basename($car['image']);
+        $relative = 'uploads/' . $filename;
+        $fullPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $relative;
+        if (file_exists($fullPath)) {
+          $imgUrl = $relative . '?v=' . filemtime($fullPath);
+        } else {
+          $imgUrl = $relative;
+        }
+      }
+    ?>
+    <div class="car-slide-item">
+      <a href="<?= langUrl('car-detail.php', ['id' => (int)$car['id']]) ?>">
+        <img src="<?= htmlspecialchars($imgUrl, ENT_QUOTES) ?>" 
+             alt="<?= htmlspecialchars($car['name']) ?> - ETTAAJ Rent Cars"
+             loading="lazy"
+             onerror="this.onerror=null;this.src='https://via.placeholder.com/600x338/36454F/FFFFFF?text=<?= urlencode($car['name']) ?>';">
+      </a>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+<?php endif; ?>
 
 <!-- CARS SECTION -->
 <section id="cars" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
