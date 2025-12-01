@@ -834,9 +834,34 @@ function carImageUrl($image)
     position: relative;
   }
 
-  .date-range-picker-day:hover:not(.disabled):not(.start-date):not(.end-date) {
+  .date-range-picker-day:hover:not(.disabled):not(.start-date):not(.end-date):not(.in-range) {
     background: rgba(255, 178, 44, 0.2);
     transform: scale(1.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .date-range-picker-day:not(.disabled):not(.start-date):not(.end-date) {
+    cursor: pointer;
+  }
+
+  .date-range-picker-day.start-date,
+  .date-range-picker-day.end-date {
+    animation: dateSelected 0.3s ease-out;
+  }
+
+  @keyframes dateSelected {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.15);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   .date-range-picker-day.disabled {
@@ -949,6 +974,44 @@ function carImageUrl($image)
     color: rgba(30, 41, 59, 0.7);
   }
 
+  .date-range-picker-status {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 178, 44, 0.1);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 178, 44, 0.2);
+  }
+
+  .date-range-picker-status p {
+    margin: 0;
+    font-style: normal;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .date-range-picker-status i {
+    font-size: 1.125rem;
+    color: #FFB22C;
+  }
+
+  .date-range-picker-status strong {
+    color: #FFB22C;
+    font-weight: 700;
+  }
+
+  .light .date-range-picker-status {
+    background: rgba(217, 119, 6, 0.1);
+    border-color: rgba(217, 119, 6, 0.2);
+  }
+
+  .light .date-range-picker-status i,
+  .light .date-range-picker-status strong {
+    color: #d97706;
+  }
+
   .date-range-picker-same-day-warning {
     color: #fbbf24 !important;
     font-weight: 600;
@@ -1035,6 +1098,25 @@ function carImageUrl($image)
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    background: rgba(255, 178, 44, 0.3);
+  }
+
+  .date-range-picker-btn-apply:not(:disabled) {
+    box-shadow: 0 4px 15px rgba(255, 178, 44, 0.4);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 4px 15px rgba(255, 178, 44, 0.4);
+    }
+    50% {
+      box-shadow: 0 4px 25px rgba(255, 178, 44, 0.6);
+    }
+  }
+
+  .date-range-picker-btn-apply i {
+    margin-right: 0.5rem;
   }
 
   @media (max-width: 768px) {
@@ -1429,9 +1511,12 @@ function carImageUrl($image)
         this.toggle();
       });
 
-      // Close on outside click
+      // Close on outside click (but not when clicking inside popup)
       document.addEventListener('click', (e) => {
-        if (!this.popup.contains(e.target) && !this.input.contains(e.target)) {
+        if (this.isOpen && 
+            !this.popup.contains(e.target) && 
+            !this.input.contains(e.target) &&
+            !e.target.closest('.date-range-picker-popup')) {
           this.close();
         }
       });
@@ -1441,6 +1526,11 @@ function carImageUrl($image)
         if (e.key === 'Escape' && this.isOpen) {
           this.close();
         }
+      });
+
+      // Prevent popup clicks from closing the popup
+      this.popup.addEventListener('click', (e) => {
+        e.stopPropagation();
       });
     }
 
@@ -1477,12 +1567,12 @@ function carImageUrl($image)
       this.popup.innerHTML = `
         <div class="date-range-picker-header">
           <div class="date-range-picker-nav">
-            <button class="date-range-picker-nav-btn" onclick="dateRangePicker.prevMonth()" type="button">
+            <button class="date-range-picker-nav-btn" onclick="event.stopPropagation(); dateRangePicker.prevMonth()" type="button">
               <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
               </svg>
             </button>
-            <button class="date-range-picker-nav-btn" onclick="dateRangePicker.nextMonth()" type="button">
+            <button class="date-range-picker-nav-btn" onclick="event.stopPropagation(); dateRangePicker.nextMonth()" type="button">
               <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
@@ -1494,17 +1584,25 @@ function carImageUrl($image)
           ${this.renderCalendar(month2)}
         </div>
             <div class="date-range-picker-footer">
-              <p class="date-range-picker-note">Minimum rental period is ${this.minDays} days</p>
+              <div id="date-picker-status" class="date-range-picker-status">
+                ${!this.startDate ? 
+                  `<p class="date-range-picker-note"><i class="bi bi-calendar-check"></i> Click to select pickup date</p>` :
+                  !this.endDate ?
+                  `<p class="date-range-picker-note"><i class="bi bi-calendar-check"></i> Pickup: <strong>${this.formatDate(this.startDate)}</strong> - Now select return date</p>` :
+                  `<p class="date-range-picker-note text-green-400"><i class="bi bi-check-circle"></i> Selected: <strong>${this.formatDate(this.startDate)}</strong> to <strong>${this.formatDate(this.endDate)}</strong></p>`
+                }
+              </div>
+              <p class="date-range-picker-note" style="font-size: 0.75rem; margin-top: 0.5rem;">Minimum rental period is ${this.minDays} days</p>
               <p class="date-range-picker-note date-range-picker-same-day-warning">
                 <i class="bi bi-info-circle"></i> Same-day rentals are not accepted. Please choose a date starting from tomorrow.
               </p>
               <div id="same-day-error" class="date-range-picker-error hidden"></div>
               <div class="date-range-picker-actions">
-                <button class="date-range-picker-btn date-range-picker-btn-cancel" onclick="dateRangePicker.handleCancel()" type="button">
+                <button class="date-range-picker-btn date-range-picker-btn-cancel" onclick="event.stopPropagation(); dateRangePicker.handleCancel()" type="button">
                   Cancel
                 </button>
-                <button class="date-range-picker-btn date-range-picker-btn-apply" onclick="dateRangePicker.handleApply()" type="button" ${!this.isValidRange() ? 'disabled' : ''}>
-                  Apply
+                <button id="date-picker-apply-btn" class="date-range-picker-btn date-range-picker-btn-apply" onclick="event.stopPropagation(); dateRangePicker.handleApply()" type="button" ${!this.isValidRange() ? 'disabled' : ''}>
+                  ${this.isValidRange() ? '<i class="bi bi-check-circle"></i> Apply Selection' : 'Apply'}
                 </button>
               </div>
             </div>
@@ -1557,7 +1655,7 @@ function carImageUrl($image)
         html += `
           <div class="${classes}" 
                data-date="${dateStr}"
-               onclick="dateRangePicker.selectDate('${dateStr}')"
+               onclick="event.stopPropagation(); dateRangePicker.selectDate('${dateStr}', event)"
                ${isDisabled ? 'style="pointer-events: none;"' : ''}
                ${isToday ? 'title="Same-day booking is not allowed"' : ''}>
             ${day}
@@ -1566,6 +1664,25 @@ function carImageUrl($image)
       }
 
       html += '</div></div>';
+      
+      // Update Apply button state after a short delay to ensure DOM is ready
+      setTimeout(() => {
+        const applyBtn = document.getElementById('date-picker-apply-btn');
+        if (applyBtn) {
+          const isValid = this.isValidRange();
+          applyBtn.disabled = !isValid;
+          if (isValid) {
+            applyBtn.innerHTML = '<i class="bi bi-check-circle"></i> Apply Selection';
+            applyBtn.style.opacity = '1';
+            applyBtn.style.cursor = 'pointer';
+          } else {
+            applyBtn.innerHTML = 'Apply';
+            applyBtn.style.opacity = '0.5';
+            applyBtn.style.cursor = 'not-allowed';
+          }
+        }
+      }, 10);
+      
       return html;
     }
 
@@ -1614,7 +1731,13 @@ function carImageUrl($image)
       return checkDate > start && checkDate < end;
     }
 
-    selectDate(dateStr) {
+    selectDate(dateStr, event) {
+      // Stop event propagation to prevent popup from closing
+      if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
+      
       const date = new Date(dateStr);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -1627,34 +1750,60 @@ function carImageUrl($image)
         return;
       }
       
-      if (!this.startDate || (this.startDate && this.endDate)) {
-        // Start new selection (earliest is tomorrow)
+      // FIRST CLICK: Select pickup date (start date)
+      if (!this.startDate) {
         this.startDate = date;
         this.endDate = null;
         this.hideSameDayError();
-      } else {
-        // Select end date
+        this.render();
+        this.updateInput();
+        // Keep popup open - don't close it
+        return;
+      }
+      
+      // SECOND CLICK: Select return date (end date)
+      if (this.startDate && !this.endDate) {
         const startDate = new Date(this.startDate);
         startDate.setHours(0, 0, 0, 0);
         const daysDiff = Math.ceil((checkDate - startDate) / (1000 * 60 * 60 * 24));
         
-        if (daysDiff < this.minDays) {
-          // Invalid selection - end date must be at least minDays after start
+        // If clicked date is before start date, make it the new start date
+        if (checkDate < startDate) {
           this.startDate = date;
           this.endDate = null;
-        } else if (checkDate < startDate) {
-          // Selected date is before start, make it the new start
-          this.startDate = date;
-          this.endDate = null;
-        } else {
-          // Valid end date (at least minDays after start)
-          this.endDate = date;
+          this.hideSameDayError();
+          this.render();
+          this.updateInput();
+          return;
         }
+        
+        // If days difference is less than minimum, start new selection with this date
+        if (daysDiff < this.minDays) {
+          this.startDate = date;
+          this.endDate = null;
+          this.hideSameDayError();
+          this.render();
+          this.updateInput();
+          return;
+        }
+        
+        // Valid end date (at least minDays after start)
+        this.endDate = date;
         this.hideSameDayError();
+        this.render();
+        this.updateInput();
+        // Keep popup open so user can see the selection or click Apply
+        return;
       }
-
-      this.render();
-      this.updateInput();
+      
+      // If both dates are selected, start new selection (first click behavior)
+      if (this.startDate && this.endDate) {
+        this.startDate = date;
+        this.endDate = null;
+        this.hideSameDayError();
+        this.render();
+        this.updateInput();
+      }
     }
     
     showSameDayError() {
@@ -1687,7 +1836,9 @@ function carImageUrl($image)
 
       let isDragging = false;
       let startDragDate = null;
+      let dragStartPos = null;
       const picker = this;
+      const DRAG_THRESHOLD = 5; // pixels to consider it a drag vs click
 
       // Use event delegation - attach to popup once
       this.popup.addEventListener('mousedown', function(e) {
@@ -1708,18 +1859,32 @@ function carImageUrl($image)
           return;
         }
 
-        isDragging = true;
+        // Store drag start position to distinguish clicks from drags
+        dragStartPos = { x: e.clientX, y: e.clientY };
         startDragDate = new Date(dateStr);
-        picker.startDate = startDragDate;
-        picker.endDate = null;
-        picker.render();
-        picker.hideSameDayError();
-        e.preventDefault();
+        // Don't set dates yet - let click handler do it, or drag handler if it's a drag
       });
 
       // Global mouse move/up handlers (only active when dragging)
       const handleMouseMove = (e) => {
-        if (!isDragging || !picker.isOpen) return;
+        if (!dragStartPos || !picker.isOpen) return;
+        
+        // Check if mouse moved enough to be considered a drag
+        const moveDistance = Math.sqrt(
+          Math.pow(e.clientX - dragStartPos.x, 2) + 
+          Math.pow(e.clientY - dragStartPos.y, 2)
+        );
+        
+        if (moveDistance > DRAG_THRESHOLD && !isDragging) {
+          // Start dragging
+          isDragging = true;
+          picker.startDate = startDragDate;
+          picker.endDate = null;
+          picker.render();
+          picker.hideSameDayError();
+        }
+        
+        if (!isDragging) return;
         
         const dayEl = document.elementFromPoint(e.clientX, e.clientY)?.closest('.date-range-picker-day:not(.disabled)');
         if (!dayEl) return;
@@ -1742,17 +1907,24 @@ function carImageUrl($image)
         }
       };
 
-      const handleMouseUp = () => {
+      const handleMouseUp = (e) => {
         if (isDragging) {
+          // Was a drag - update input
           isDragging = false;
           picker.updateInput();
+        } else if (dragStartPos) {
+          // Was a click - let the onclick handler in renderCalendar handle it
+          // The onclick will call selectDate() which handles the two-click logic
         }
+        dragStartPos = null;
+        startDragDate = null;
       };
 
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
 
       // Touch support for mobile
+      let touchStartPos = null;
       this.popup.addEventListener('touchstart', function(e) {
         const dayEl = e.target.closest('.date-range-picker-day:not(.disabled)');
         if (!dayEl || !picker.isOpen) return;
@@ -1771,19 +1943,34 @@ function carImageUrl($image)
           return;
         }
 
-        isDragging = true;
+        const touch = e.touches[0];
+        touchStartPos = { x: touch.clientX, y: touch.clientY };
         startDragDate = new Date(dateStr);
-        picker.startDate = startDragDate;
-        picker.endDate = null;
-        picker.render();
-        picker.hideSameDayError();
-        e.preventDefault();
+        // Don't set dates yet - let tap handler do it, or drag handler if it's a drag
       });
 
       const handleTouchMove = (e) => {
-        if (!isDragging || !picker.isOpen) return;
+        if (!touchStartPos || !picker.isOpen) return;
         
         const touch = e.touches[0];
+        
+        // Check if touch moved enough to be considered a drag
+        const moveDistance = Math.sqrt(
+          Math.pow(touch.clientX - touchStartPos.x, 2) + 
+          Math.pow(touch.clientY - touchStartPos.y, 2)
+        );
+        
+        if (moveDistance > DRAG_THRESHOLD && !isDragging) {
+          // Start dragging
+          isDragging = true;
+          picker.startDate = startDragDate;
+          picker.endDate = null;
+          picker.render();
+          picker.hideSameDayError();
+        }
+        
+        if (!isDragging) return;
+        
         const dayEl = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.date-range-picker-day:not(.disabled)');
         if (!dayEl) return;
         
@@ -1808,9 +1995,15 @@ function carImageUrl($image)
 
       const handleTouchEnd = () => {
         if (isDragging) {
+          // Was a drag - update input
           isDragging = false;
           picker.updateInput();
+        } else if (touchStartPos) {
+          // Was a tap - let the onclick handler in renderCalendar handle it
+          // The onclick will call selectDate() which handles the two-click logic
         }
+        touchStartPos = null;
+        startDragDate = null;
       };
 
       document.addEventListener('touchmove', handleTouchMove);
