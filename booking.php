@@ -849,6 +849,37 @@ function carImageUrl($image)
     color: rgba(30, 41, 59, 0.3);
   }
 
+  /* Today's date styling - visually disabled */
+  .date-range-picker-day.is-today {
+    position: relative;
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: rgba(255, 0, 0, 0.1) !important;
+    border: 2px dashed rgba(255, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  .date-range-picker-day.is-today::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 0, 0, 0.6);
+    transform: translateY(-50%);
+  }
+
+  .light .date-range-picker-day.is-today {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: rgba(239, 68, 68, 0.4);
+    color: rgba(30, 41, 59, 0.4) !important;
+  }
+
+  .light .date-range-picker-day.is-today::after {
+    background: rgba(239, 68, 68, 0.6);
+  }
+
   .date-range-picker-day.in-range {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 0;
@@ -916,6 +947,42 @@ function carImageUrl($image)
 
   .light .date-range-picker-note {
     color: rgba(30, 41, 59, 0.7);
+  }
+
+  .date-range-picker-same-day-warning {
+    color: #fbbf24 !important;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .date-range-picker-same-day-warning i {
+    font-size: 1rem;
+  }
+
+  .date-range-picker-error {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    color: #fca5a5;
+    font-size: 0.875rem;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .date-range-picker-error.hidden {
+    display: none;
+  }
+
+  .light .date-range-picker-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #dc2626;
   }
 
   .date-range-picker-actions {
@@ -1426,17 +1493,21 @@ function carImageUrl($image)
           ${this.renderCalendar(month1)}
           ${this.renderCalendar(month2)}
         </div>
-        <div class="date-range-picker-footer">
-          <p class="date-range-picker-note">Minimum rental period is ${this.minDays} days</p>
-          <div class="date-range-picker-actions">
-            <button class="date-range-picker-btn date-range-picker-btn-cancel" onclick="dateRangePicker.handleCancel()" type="button">
-              Cancel
-            </button>
-            <button class="date-range-picker-btn date-range-picker-btn-apply" onclick="dateRangePicker.handleApply()" type="button" ${!this.isValidRange() ? 'disabled' : ''}>
-              Apply
-            </button>
-          </div>
-        </div>
+            <div class="date-range-picker-footer">
+              <p class="date-range-picker-note">Minimum rental period is ${this.minDays} days</p>
+              <p class="date-range-picker-note date-range-picker-same-day-warning">
+                <i class="bi bi-info-circle"></i> Same-day rentals are not accepted. Please choose a date starting from tomorrow.
+              </p>
+              <div id="same-day-error" class="date-range-picker-error hidden"></div>
+              <div class="date-range-picker-actions">
+                <button class="date-range-picker-btn date-range-picker-btn-cancel" onclick="dateRangePicker.handleCancel()" type="button">
+                  Cancel
+                </button>
+                <button class="date-range-picker-btn date-range-picker-btn-apply" onclick="dateRangePicker.handleApply()" type="button" ${!this.isValidRange() ? 'disabled' : ''}>
+                  Apply
+                </button>
+              </div>
+            </div>
       `;
     }
 
@@ -1471,12 +1542,14 @@ function carImageUrl($image)
         const date = new Date(year, monthIndex, day);
         const dateStr = this.formatDate(date);
         const isDisabled = this.isDateDisabled(date);
+        const isToday = this.isToday(date);
         const isStart = this.startDate && this.formatDate(this.startDate) === dateStr;
         const isEnd = this.endDate && this.formatDate(this.endDate) === dateStr;
         const inRange = this.isDateInRange(date);
 
         let classes = 'date-range-picker-day';
         if (isDisabled) classes += ' disabled';
+        if (isToday) classes += ' is-today';
         if (isStart) classes += ' start-date';
         if (isEnd) classes += ' end-date';
         if (inRange) classes += ' in-range';
@@ -1485,7 +1558,8 @@ function carImageUrl($image)
           <div class="${classes}" 
                data-date="${dateStr}"
                onclick="dateRangePicker.selectDate('${dateStr}')"
-               ${isDisabled ? 'style="pointer-events: none;"' : ''}>
+               ${isDisabled ? 'style="pointer-events: none;"' : ''}
+               ${isToday ? 'title="Same-day booking is not allowed"' : ''}>
             ${day}
           </div>
         `;
@@ -1501,20 +1575,30 @@ function carImageUrl($image)
       const checkDate = new Date(date);
       checkDate.setHours(0, 0, 0, 0);
       
-      // Disable past dates
-      if (checkDate < today) {
+      // Disable past dates AND today (same-day booking not allowed)
+      if (checkDate <= today) {
         return true;
       }
 
       // If start date is selected, disable dates that would result in less than minDays
       if (this.startDate && !this.endDate) {
-        const daysDiff = Math.ceil((checkDate - this.startDate) / (1000 * 60 * 60 * 24));
+        const startDate = new Date(this.startDate);
+        startDate.setHours(0, 0, 0, 0);
+        const daysDiff = Math.ceil((checkDate - startDate) / (1000 * 60 * 60 * 24));
         if (daysDiff > 0 && daysDiff < this.minDays) {
           return true;
         }
       }
 
       return false;
+    }
+    
+    isToday(date) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate.getTime() === today.getTime();
     }
 
     isDateInRange(date) {
@@ -1532,31 +1616,67 @@ function carImageUrl($image)
 
     selectDate(dateStr) {
       const date = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      
+      // Block same-day booking - today cannot be selected
+      if (checkDate <= today) {
+        this.showSameDayError();
+        return;
+      }
       
       if (!this.startDate || (this.startDate && this.endDate)) {
-        // Start new selection
+        // Start new selection (earliest is tomorrow)
         this.startDate = date;
         this.endDate = null;
+        this.hideSameDayError();
       } else {
         // Select end date
-        const daysDiff = Math.ceil((date - this.startDate) / (1000 * 60 * 60 * 24));
+        const startDate = new Date(this.startDate);
+        startDate.setHours(0, 0, 0, 0);
+        const daysDiff = Math.ceil((checkDate - startDate) / (1000 * 60 * 60 * 24));
         
         if (daysDiff < this.minDays) {
-          // Invalid selection, reset
+          // Invalid selection - end date must be at least minDays after start
           this.startDate = date;
           this.endDate = null;
-        } else if (date < this.startDate) {
+        } else if (checkDate < startDate) {
           // Selected date is before start, make it the new start
           this.startDate = date;
           this.endDate = null;
         } else {
-          // Valid end date
+          // Valid end date (at least minDays after start)
           this.endDate = date;
         }
+        this.hideSameDayError();
       }
 
       this.render();
       this.updateInput();
+    }
+    
+    showSameDayError() {
+      // Show error message
+      const errorMsg = document.getElementById('same-day-error');
+      if (errorMsg) {
+        errorMsg.classList.remove('hidden');
+        errorMsg.textContent = 'Same-day booking is not allowed. Please choose a date starting from tomorrow.';
+      }
+      // Also show in date error element if exists
+      const dateError = document.getElementById('date-error');
+      if (dateError) {
+        dateError.classList.remove('hidden');
+        dateError.textContent = 'Same-day booking is not allowed. Please choose a date starting from tomorrow.';
+      }
+    }
+    
+    hideSameDayError() {
+      const errorMsg = document.getElementById('same-day-error');
+      if (errorMsg) {
+        errorMsg.classList.add('hidden');
+      }
     }
 
     // Add drag selection support
@@ -1577,11 +1697,23 @@ function carImageUrl($image)
         const dateStr = dayEl.getAttribute('data-date');
         if (!dateStr) return;
 
+        // Check if date is today or in the past (same-day booking not allowed)
+        const selectedDate = new Date(dateStr);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        
+        if (selectedDate <= today) {
+          picker.showSameDayError();
+          return;
+        }
+
         isDragging = true;
         startDragDate = new Date(dateStr);
         picker.startDate = startDragDate;
         picker.endDate = null;
         picker.render();
+        picker.hideSameDayError();
         e.preventDefault();
       });
 
@@ -1628,11 +1760,23 @@ function carImageUrl($image)
         const dateStr = dayEl.getAttribute('data-date');
         if (!dateStr) return;
 
+        // Check if date is today or in the past (same-day booking not allowed)
+        const selectedDate = new Date(dateStr);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        selectedDate.setHours(0, 0, 0, 0);
+        
+        if (selectedDate <= today) {
+          picker.showSameDayError();
+          return;
+        }
+
         isDragging = true;
         startDragDate = new Date(dateStr);
         picker.startDate = startDragDate;
         picker.endDate = null;
         picker.render();
+        picker.hideSameDayError();
         e.preventDefault();
       });
 
@@ -1897,7 +2041,25 @@ function carImageUrl($image)
       return; 
     }
     
-    const days = Math.ceil((new Date(returnDate) - new Date(pickupDate)) / 86400000);
+    // Calculate days difference (same-day booking not allowed)
+    const pickupDateObj = new Date(pickupDate);
+    const returnDateObj = new Date(returnDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    pickupDateObj.setHours(0, 0, 0, 0);
+    
+    // Validate same-day booking is not allowed
+    if (pickupDateObj <= today) {
+      if (error) error.classList.remove('hidden');
+      if (error) error.textContent = 'Same-day booking is not allowed. Please choose a date starting from tomorrow.';
+      if (btn) btn.disabled = true;
+      if (totalEl) totalEl.textContent = formatPriceJS(0);
+      if (daysEl) daysEl.textContent = '';
+      return;
+    }
+    
+    const days = Math.ceil((returnDateObj - pickupDateObj) / 86400000);
+    
     if (days < minDays || days <= 0) {
       if (error) error.classList.remove('hidden');
       if (btn) btn.disabled = true;
@@ -1906,6 +2068,9 @@ function carImageUrl($image)
       return;
     }
     if (error) error.classList.add('hidden');
+    
+    // Use days for calculation
+    const rentalDays = days;
 
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked').id;
     const insuranceCostPerDay = insurancePrices[selectedInsurance];
@@ -1917,15 +2082,15 @@ function carImageUrl($image)
       const item = extrasPrices[id];
       if (item) {
         // Fix: Calculate per day correctly for daily extras
-        const cost = item.perDay ? (item.price * days) : item.price;
+        const cost = item.perDay ? (item.price * rentalDays) : item.price;
         extrasTotal += cost;
         selectedExtras.push(cb.value);
       }
     });
 
     // Use smart pricing (weekly/monthly when appropriate)
-    const carTotal = calculateCarPrice(days);
-    const insuranceTotal = days * insuranceCostPerDay;
+    const carTotal = calculateCarPrice(rentalDays);
+    const insuranceTotal = rentalDays * insuranceCostPerDay;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
 
     // Add animation class for price update
@@ -1936,19 +2101,19 @@ function carImageUrl($image)
       totalEl.classList.remove('updating');
     }, 150);
     
-    // Show pricing tier info
-    let pricingInfo = days + ' <?= $text['day'] ?>' + (days > 1 ? 's' : '');
-    if (days >= 30) {
-      const months = Math.floor(days / 30);
-      const remainingDays = days % 30;
+    // Show pricing tier info (use rentalDays for display)
+    let pricingInfo = rentalDays + ' <?= $text['day'] ?>' + (rentalDays > 1 ? 's' : '');
+    if (rentalDays >= 30) {
+      const months = Math.floor(rentalDays / 30);
+      const remainingDays = rentalDays % 30;
       pricingInfo += ` (${months} month${months > 1 ? 's' : ''}`;
       if (remainingDays > 0) {
         pricingInfo += ` + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
       }
       pricingInfo += ')';
-    } else if (days >= 7) {
-      const weeks = Math.floor(days / 7);
-      const remainingDays = days % 7;
+    } else if (rentalDays >= 7) {
+      const weeks = Math.floor(rentalDays / 7);
+      const remainingDays = rentalDays % 7;
       pricingInfo += ` (${weeks} week${weeks > 1 ? 's' : ''}`;
       if (remainingDays > 0) {
         pricingInfo += ` + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
@@ -2007,6 +2172,22 @@ function carImageUrl($image)
   if (pickup) {
     pickup.addEventListener('change', () => {
       if (pickup.value) {
+        // Same-day booking not allowed - minimum return date is pickup date + minDays
+        const pickupDate = new Date(pickup.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        pickupDate.setHours(0, 0, 0, 0);
+        
+        // Validate pickup is not today or in the past
+        if (pickupDate <= today) {
+          if (error) {
+            error.classList.remove('hidden');
+            error.textContent = 'Same-day booking is not allowed. Please choose a date starting from tomorrow.';
+          }
+          if (btn) btn.disabled = true;
+          return;
+        }
+        
         const minReturn = new Date(pickup.value);
         minReturn.setDate(minReturn.getDate() + minDays);
         if (ret) ret.min = minReturn.toISOString().split('T')[0];
@@ -2043,7 +2224,21 @@ function carImageUrl($image)
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const days = Math.ceil((new Date(ret.value) - new Date(pickup.value)) / 86400000);
+    // Validate same-day booking is not allowed
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const pickupDate = new Date(pickup.value);
+    pickupDate.setHours(0, 0, 0, 0);
+    
+    if (pickupDate <= today) {
+      alert('Same-day booking is not allowed. Please choose a date starting from tomorrow.');
+      return;
+    }
+
+    // Calculate days (same-day booking not allowed)
+    const daysDiff = Math.ceil((new Date(ret.value) - new Date(pickup.value)) / 86400000);
+    const rentalDays = daysDiff;
+    
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
     const insuranceText = selectedInsurance.value;
 
@@ -2053,16 +2248,16 @@ function carImageUrl($image)
       const id = cb.id;
       const item = extrasPrices[id];
       if (item) {
-        const cost = item.perDay ? item.price * days : item.price;
+        const cost = item.perDay ? item.price * rentalDays : item.price;
         extrasTotal += cost;
         extrasList.push(cb.value);
       }
     });
 
     // Use smart pricing (weekly/monthly when appropriate)
-    const carTotal = calculateCarPrice(days);
+    const carTotal = calculateCarPrice(rentalDays);
     const insuranceCostPerDay = insurancePrices[selectedInsurance.id];
-    const insuranceTotal = insuranceCostPerDay * days;
+    const insuranceTotal = insuranceCostPerDay * rentalDays;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
 
     const discountText = hasDiscount ? ` (-${discountPercent}% discount applied)` : '';
@@ -2072,24 +2267,24 @@ function carImageUrl($image)
       ? `Insurance: ${insuranceText} (MAD${insuranceTotal.toLocaleString()})\n`
       : `Insurance: ${insuranceText}\n`;
 
-    // Get pricing breakdown
+    // Get pricing breakdown (use rentalDays)
     let pricingBreakdown = '';
-    if (days >= 30) {
-      const months = Math.floor(days / 30);
-      const remainingDays = days % 30;
+    if (rentalDays >= 30) {
+      const months = Math.floor(rentalDays / 30);
+      const remainingDays = rentalDays % 30;
       pricingBreakdown = `${months} month(s) × MAD${pricePerMonth.toLocaleString()} = MAD${(months * pricePerMonth).toLocaleString()}`;
       if (remainingDays > 0) {
         pricingBreakdown += `\n${remainingDays} day(s) × MAD${pricePerDay.toLocaleString()} = MAD${(remainingDays * pricePerDay).toLocaleString()}`;
       }
-    } else if (days >= 7) {
-      const weeks = Math.floor(days / 7);
-      const remainingDays = days % 7;
+    } else if (rentalDays >= 7) {
+      const weeks = Math.floor(rentalDays / 7);
+      const remainingDays = rentalDays % 7;
       pricingBreakdown = `${weeks} week(s) × MAD${pricePerWeek.toLocaleString()} = MAD${(weeks * pricePerWeek).toLocaleString()}`;
       if (remainingDays > 0) {
         pricingBreakdown += `\n${remainingDays} day(s) × MAD${pricePerDay.toLocaleString()} = MAD${(remainingDays * pricePerDay).toLocaleString()}`;
       }
     } else {
-      pricingBreakdown = `${days} day(s) × MAD${pricePerDay.toLocaleString()}${discountText} = MAD${carTotal.toLocaleString()}`;
+      pricingBreakdown = `${rentalDays} day(s) × MAD${pricePerDay.toLocaleString()}${discountText} = MAD${carTotal.toLocaleString()}`;
     }
 
     const pickupLocation = form.pickup_location.value || 'Not specified';
@@ -2101,7 +2296,7 @@ function carImageUrl($image)
                 `Pickup Date: ${pickup.value} at ${pickupTime}\n` +
                 `Return Date: ${ret.value} at ${returnTime}\n` +
                 `Pickup Location: ${pickupLocation}\n` +
-                `Duration: ${days} days\n\n` +
+                `Duration: ${rentalDays} day${rentalDays > 1 ? 's' : ''}\n\n` +
                 `Car Rental Pricing:\n${pricingBreakdown}\n` +
                 `Car Total: MAD${carTotal.toLocaleString()}\n` +
                 `${insuranceDetail}` +
@@ -2139,8 +2334,10 @@ function carImageUrl($image)
       }
     });
     
-    // Set minimum date for hidden inputs (for form validation)
-    if (pickup) pickup.min = new Date().toISOString().split('T')[0];
+    // Set minimum date for hidden inputs (tomorrow - same-day booking not allowed)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (pickup) pickup.min = tomorrow.toISOString().split('T')[0];
     scheduleUpdate();
   });
 </script>
