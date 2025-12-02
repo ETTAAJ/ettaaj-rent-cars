@@ -295,7 +295,7 @@ require_once 'config.php';
     $wa_link           = "https://wa.me/$whatsapp_number";
     
     // Language flags
-    $langFlags = ['en' => 'EN', 'fr' => '🇫🇷', 'ar' => '🇲🇦'];
+    $langFlags = ['en' => '🇺🇸', 'fr' => '🇫🇷', 'ar' => '🇲🇦'];
     $langNames = ['en' => 'EN', 'fr' => 'FR', 'ar' => 'AR'];
     $currentPage = basename($_SERVER['PHP_SELF']);
     
