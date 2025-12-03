@@ -1479,6 +1479,19 @@ function carImageUrl($image)
   AOS.init({ once: true, duration: 800 });
 
   // ============================================
+  // DATE CALCULATION HELPER
+  // ============================================
+  // Calculate days between two dates: (endDate - startDate) + 1 day
+  // Normalizes both dates using setHours(0,0,0,0) to avoid timezone issues
+  function calculateDays(startDate, endDate) {
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
+    return (end - start) / 86400000 + 1;
+  }
+
+  // ============================================
   // DATE RANGE PICKER CLASS
   // ============================================
   class DateRangePicker {
@@ -1699,9 +1712,7 @@ function carImageUrl($image)
 
       // If start date is selected, disable dates that would result in less than minDays
       if (this.startDate && !this.endDate) {
-        const startDate = new Date(this.startDate);
-        startDate.setHours(0, 0, 0, 0);
-        const daysDiff = Math.ceil((checkDate - startDate) / (1000 * 60 * 60 * 24));
+        const daysDiff = calculateDays(this.startDate, checkDate);
         if (daysDiff > 0 && daysDiff < this.minDays) {
           return true;
         }
@@ -1765,7 +1776,7 @@ function carImageUrl($image)
       if (this.startDate && !this.endDate) {
         const startDate = new Date(this.startDate);
         startDate.setHours(0, 0, 0, 0);
-        const daysDiff = Math.ceil((checkDate - startDate) / (1000 * 60 * 60 * 24));
+        const daysDiff = calculateDays(this.startDate, checkDate);
         
         // If clicked date is before start date, make it the new start date
         if (checkDate < startDate) {
@@ -1792,7 +1803,11 @@ function carImageUrl($image)
         this.hideSameDayError();
         this.render();
         this.updateInput();
-        // Keep popup open so user can see the selection or click Apply
+        // Automatically apply the selection when return date is chosen
+        // Small delay to show the selection before closing
+        setTimeout(() => {
+          this.handleApply();
+        }, 300);
         return;
       }
       
@@ -1893,7 +1908,7 @@ function carImageUrl($image)
         if (!dateStr) return;
 
         const endDragDate = new Date(dateStr);
-        const daysDiff = Math.ceil((endDragDate - startDragDate) / (1000 * 60 * 60 * 24));
+        const daysDiff = calculateDays(startDragDate, endDragDate);
         
         if (daysDiff >= picker.minDays) {
           if (endDragDate >= startDragDate) {
@@ -1909,9 +1924,15 @@ function carImageUrl($image)
 
       const handleMouseUp = (e) => {
         if (isDragging) {
-          // Was a drag - update input
+          // Was a drag - check if valid range is selected and auto-apply
           isDragging = false;
           picker.updateInput();
+          // Auto-apply if valid range is selected
+          if (picker.startDate && picker.endDate && picker.isValidRange()) {
+            setTimeout(() => {
+              picker.handleApply();
+            }, 300);
+          }
         } else if (dragStartPos) {
           // Was a click - let the onclick handler in renderCalendar handle it
           // The onclick will call selectDate() which handles the two-click logic
@@ -1978,7 +1999,7 @@ function carImageUrl($image)
         if (!dateStr) return;
 
         const endDragDate = new Date(dateStr);
-        const daysDiff = Math.ceil((endDragDate - startDragDate) / (1000 * 60 * 60 * 24));
+        const daysDiff = calculateDays(startDragDate, endDragDate);
         
         if (daysDiff >= picker.minDays) {
           if (endDragDate >= startDragDate) {
@@ -1995,9 +2016,15 @@ function carImageUrl($image)
 
       const handleTouchEnd = () => {
         if (isDragging) {
-          // Was a drag - update input
+          // Was a drag - check if valid range is selected and auto-apply
           isDragging = false;
           picker.updateInput();
+          // Auto-apply if valid range is selected
+          if (picker.startDate && picker.endDate && picker.isValidRange()) {
+            setTimeout(() => {
+              picker.handleApply();
+            }, 300);
+          }
         } else if (touchStartPos) {
           // Was a tap - let the onclick handler in renderCalendar handle it
           // The onclick will call selectDate() which handles the two-click logic
@@ -2012,7 +2039,7 @@ function carImageUrl($image)
 
     isValidRange() {
       if (!this.startDate || !this.endDate) return false;
-      const daysDiff = Math.ceil((this.endDate - this.startDate) / (1000 * 60 * 60 * 24));
+      const daysDiff = calculateDays(this.startDate, this.endDate);
       return daysDiff >= this.minDays;
     }
 
@@ -2251,9 +2278,10 @@ function carImageUrl($image)
       return;
     }
     
-    const days = Math.ceil((returnDateObj - pickupDateObj) / 86400000);
+    // Calculate days: (endDate - startDate) + 1 day (normalized)
+    const rentalDays = calculateDays(pickupDateObj, returnDateObj);
     
-    if (days < minDays || days <= 0) {
+    if (rentalDays < minDays || rentalDays <= 0) {
       if (error) error.classList.remove('hidden');
       if (btn) btn.disabled = true;
       if (totalEl) totalEl.textContent = formatPriceJS(0);
@@ -2261,9 +2289,6 @@ function carImageUrl($image)
       return;
     }
     if (error) error.classList.add('hidden');
-    
-    // Use days for calculation
-    const rentalDays = days;
 
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked').id;
     const insuranceCostPerDay = insurancePrices[selectedInsurance];
@@ -2313,7 +2338,9 @@ function carImageUrl($image)
       }
       pricingInfo += ')';
     }
-    daysEl.textContent = pricingInfo;
+    // Add "Free Day Included" message
+    pricingInfo += ' <span class="text-green-400 font-semibold">(Free Day Included)</span>';
+    daysEl.innerHTML = pricingInfo;
     const basicPriceText = insurancePrices.basic > 0 
       ? formatPriceJS(insurancePrices.basic) + '/<?= $text['day'] ?>' 
       : "<?= $text['free'] ?>";
@@ -2429,8 +2456,12 @@ function carImageUrl($image)
     }
 
     // Calculate days (same-day booking not allowed)
-    const daysDiff = Math.ceil((new Date(ret.value) - new Date(pickup.value)) / 86400000);
-    const rentalDays = daysDiff;
+    // Normalize dates and calculate: (endDate - startDate) + 1 day
+    const pickupDateForCalc = new Date(pickup.value);
+    pickupDateForCalc.setHours(0, 0, 0, 0);
+    const returnDateForCalc = new Date(ret.value);
+    returnDateForCalc.setHours(0, 0, 0, 0);
+    const rentalDays = calculateDays(pickupDateForCalc, returnDateForCalc);
     
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
     const insuranceText = selectedInsurance.value;
@@ -2489,7 +2520,8 @@ function carImageUrl($image)
                 `Pickup Date: ${pickup.value} at ${pickupTime}\n` +
                 `Return Date: ${ret.value} at ${returnTime}\n` +
                 `Pickup Location: ${pickupLocation}\n` +
-                `Duration: ${rentalDays} day${rentalDays > 1 ? 's' : ''}\n\n` +
+                `Duration: ${rentalDays} day${rentalDays > 1 ? 's' : ''}\n` +
+                `🎉 Last Day is FREE (included in rental)\n\n` +
                 `Car Rental Pricing:\n${pricingBreakdown}\n` +
                 `Car Total: MAD${carTotal.toLocaleString()}\n` +
                 `${insuranceDetail}` +
