@@ -2167,6 +2167,25 @@ function carImageUrl($image)
   const btn = document.getElementById('submit-btn');
   const form = document.getElementById('booking-form');
 
+  // Car info for WhatsApp message
+  const carId = <?= json_encode($car['id']) ?>;
+  const carName = <?= json_encode($car['name']) ?>;
+  <?php
+  // Get base URL - use HTTPS if available, otherwise HTTP
+  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+  $host = $_SERVER['HTTP_HOST'] ?? 'ettaajrentcars.com';
+  // Remove www if present and use the clean domain
+  $host = str_replace('www.', '', $host);
+  // If localhost, use the production domain
+  if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+    $host = 'ettaajrentcars.com';
+    $protocol = 'https';
+  }
+  $baseUrl = $protocol . '://' . $host;
+  $carDetailUrl = $baseUrl . '/car-detail.php?id=' . $car['id'];
+  ?>
+  const carDetailUrl = <?= json_encode($carDetailUrl) ?>;
+
   // Currency info
   const currencyInfo = <?= json_encode(getCurrency()) ?>;
   const currencyRate = currencyInfo.rate || 1.0;
@@ -2515,8 +2534,13 @@ function carImageUrl($image)
     const pickupTime = form.pickup_time?.value || '10:00';
     const returnTime = form.return_time?.value || '10:00';
     
-    const msg = `NEW BOOKING - ET TAAJ RENT CARS\n\n` +
-                `Car: <?= htmlspecialchars($car['name']) ?>\n` +
+    const msg = `Hello, I want to book this car:\n\n` +
+                `${carName}\n\n` +
+                `From: ${pickup.value}\n` +
+                `To: ${ret.value}\n\n` +
+                `Here is the car link: ${carDetailUrl}\n\n` +
+                `---\n\n` +
+                `BOOKING DETAILS:\n\n` +
                 `Pickup Date: ${pickup.value} at ${pickupTime}\n` +
                 `Return Date: ${ret.value} at ${returnTime}\n` +
                 `Pickup Location: ${pickupLocation}\n` +
