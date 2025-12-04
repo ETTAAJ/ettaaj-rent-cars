@@ -20,9 +20,9 @@ if (isset($_GET['success'])) {
     $alert = ['type' => 'warning', 'msg' => 'An error occurred.'];
 }
 
-// Fetch all travel essentials
-$stmt = $pdo->query("SELECT * FROM travel_essentials ORDER BY sort_order ASC, id ASC");
-$essentials = $stmt->fetchAll();
+// Fetch all travel essentials - only get records with valid IDs
+$stmt = $pdo->query("SELECT * FROM travel_essentials WHERE id IS NOT NULL AND id > 0 ORDER BY sort_order ASC, id ASC");
+$essentials = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -3,12 +3,8 @@ Options -Indexes
 
 # Ensure query strings are preserved for admin pages
 # This is critical for edit pages that use ?id=123
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    # Preserve query strings - do not remove them
-    RewriteCond %{QUERY_STRING} .+
-    RewriteRule ^(.*)$ $1 [QSA,L]
-</IfModule>
+# Note: Query strings are preserved by default, no rewrite rules needed
+# The parent .htaccess already excludes /Admin/ directory from URL rewriting
 
 # Force HTTPS (uncomment if you have SSL)
 # RewriteEngine On

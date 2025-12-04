@@ -11,23 +11,31 @@ if (empty($_SESSION['csrf_token'])) {
 }
 $csrf = $_SESSION['csrf_token'];
 
-$id = intval($_GET['id'] ?? 0);
+// Get and validate ID from URL
+$id = isset($_GET['id']) ? trim($_GET['id']) : '';
+if (empty($id) || !is_numeric($id)) {
+    header('Location: travel-essentials.php?error=1');
+    exit;
+}
+$id = intval($id);
+
 if ($id <= 0) {
     header('Location: travel-essentials.php?error=1');
     exit;
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM travel_essentials WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM travel_essentials WHERE id = ? LIMIT 1");
     $stmt->execute([$id]);
     $essential = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    error_log("Edit travel essential error: " . $e->getMessage());
+    error_log("Edit travel essential error (ID: $id): " . $e->getMessage());
     header('Location: travel-essentials.php?error=1');
     exit;
 }
 
-if (!$essential || empty($essential)) {
+if (!$essential || empty($essential) || !isset($essential['id']) || (int)$essential['id'] !== $id) {
+    error_log("Travel essential not found or ID mismatch (ID: $id)");
     header('Location: travel-essentials.php?error=1');
     exit;
 }

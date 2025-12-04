@@ -62,14 +62,14 @@ if ($fuel !== '' && in_array($fuel, ['Diesel', 'Petrol'])) {
 }
 
 $order = ($sort === 'high') ? 'price_day DESC' : 'price_day ASC';
-$sql = "SELECT *, COALESCE(discount, 0) AS discount FROM cars";
+$sql = "SELECT *, COALESCE(discount, 0) AS discount FROM cars WHERE id IS NOT NULL AND id > 0";
 if (!empty($where)) {
-    $sql .= " WHERE " . implode(' AND ', $where);
+    $sql .= " AND " . implode(' AND ', $where);
 }
 $sql .= " ORDER BY $order";
 
 // Get all cars for dropdown list
-$allCarsStmt = $pdo->prepare("SELECT id, name FROM cars ORDER BY name ASC");
+$allCarsStmt = $pdo->prepare("SELECT id, name FROM cars WHERE id IS NOT NULL AND id > 0 ORDER BY name ASC");
 $allCarsStmt->execute();
 $allCars = $allCarsStmt->fetchAll(PDO::FETCH_ASSOC);
 

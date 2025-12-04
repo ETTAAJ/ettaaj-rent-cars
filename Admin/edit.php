@@ -20,7 +20,13 @@ $csrf = $_SESSION['csrf_token'];
 /* -------------------------------------------------
    3. GET CAR BY ID
    ------------------------------------------------- */
-$id = (int)($_GET['id'] ?? 0);
+// Get and validate ID from URL
+$id = isset($_GET['id']) ? trim($_GET['id']) : '';
+if (empty($id) || !is_numeric($id)) {
+    header('Location: index.php?error=1');
+    exit;
+}
+$id = (int)$id;
 
 if ($id <= 0) {
     header('Location: index.php?error=1');
@@ -28,16 +34,17 @@ if ($id <= 0) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM cars WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM cars WHERE id = ? LIMIT 1");
     $stmt->execute([$id]);
     $car = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    error_log("Edit car error: " . $e->getMessage());
+    error_log("Edit car error (ID: $id): " . $e->getMessage());
     header('Location: index.php?error=1');
     exit;
 }
 
-if (!$car || empty($car)) {
+if (!$car || empty($car) || !isset($car['id']) || (int)$car['id'] !== $id) {
+    error_log("Car not found or ID mismatch (ID: $id)");
     header('Location: index.php?error=1');
     exit;
 }
