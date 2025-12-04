@@ -9,6 +9,10 @@ require_once 'config.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ETTAAJ RENT CARS - Premium Car Rental in Morocco</title>
 
+  <!-- Google Search Console Verification -->
+  <!-- Replace YOUR_VERIFICATION_CODE with the code from Google Search Console -->
+  <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+
   <!-- Favicon -->
   <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg" type="image/jpeg" sizes="512x512">
   <link rel="icon" href="pub_img/favicon.ico" type="image/x-icon">

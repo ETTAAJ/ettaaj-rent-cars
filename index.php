@@ -285,6 +285,10 @@
   $currentSeo = $seoData[$lang] ?? $seoData['en'];
   ?>
   
+  <!-- Google Search Console Verification -->
+  <!-- Replace YOUR_VERIFICATION_CODE with the code from Google Search Console -->
+  <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+
   <!-- Primary Meta Tags -->
   <title><?= htmlspecialchars($currentSeo['title']) ?></title>
   <meta name="description" content="<?= htmlspecialchars($currentSeo['description']) ?>">

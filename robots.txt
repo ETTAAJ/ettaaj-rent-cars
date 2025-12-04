@@ -1,24 +1,40 @@
 # robots.txt for ETTAAJ Rent Cars
 # Optimized for Marrakech & Casablanca car rental SEO
+# Updated for SEO-Friendly URLs (without .php extension)
 
 User-agent: *
 Allow: /
 Disallow: /Admin/
-Disallow: /contact-process.php
-Disallow: /booking-process.php
+Disallow: /contact-process
+Disallow: /booking-process
 Disallow: /*?ajax=1
 Disallow: /*?currency=*
 
-# Allow important pages
-Allow: /index.php
-Allow: /about.php
-Allow: /contact.php
-Allow: /rental-guide.php
-Allow: /booking.php
-Allow: /car-detail.php
+# Allow important pages (SEO-Friendly URLs without .php)
+Allow: /
+Allow: /index
+Allow: /about
+Allow: /contact
+Allow: /rental-guide
+Allow: /booking
+Allow: /car-detail
 
-# Sitemap location
-Sitemap: https://www.ettaajrentcars.com/sitemap.xml
+# Allow static assets
+Allow: /uploads/
+Allow: /pub_img/
+Allow: /vidio/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.gif
+Allow: /*.webp
+Allow: /*.svg
+Allow: /*.mp4
+
+# Sitemap location (HTTPS without www)
+Sitemap: https://ettaajrentcars.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
