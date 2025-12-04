@@ -37,6 +37,63 @@ $essentials = $stmt->fetchAll();
     :root { --gold: #FFD700; }
     body { background: #36454F; color: white; font-family: 'Inter', sans-serif; }
     
+    /* Day Mode Overrides */
+    body.day-mode {
+        background: #f8fafc !important;
+        color: #1e293b;
+    }
+    body.day-mode div.bg-\[#2C3A44\],
+    body.day-mode div.bg-\[#36454F\] {
+        background: #ffffff !important;
+    }
+    body.day-mode .text-white {
+        color: #1e293b !important;
+    }
+    body.day-mode .text-gray-400,
+    body.day-mode .text-gray-500 {
+        color: #64748b !important;
+    }
+    body.day-mode .border-\[#4A5A66\] {
+        border-color: #e2e8f0 !important;
+    }
+    body.day-mode .text-yellow-500 {
+        color: #d97706 !important;
+    }
+    body.day-mode .bg-green-600,
+    body.day-mode .bg-gray-600 {
+        color: #ffffff !important;
+    }
+    
+    /* Day Mode Toggle Button */
+    .day-mode-toggle {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #FFD700;
+        color: #000;
+        border: none;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(255,215,0,.4);
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    .day-mode-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 30px rgba(255,215,0,.5);
+    }
+    .day-mode-toggle i {
+        transition: transform .3s;
+    }
+    .day-mode-toggle.active i {
+        transform: rotate(180deg);
+    }
     
     .line-clamp-2 {
       display: -webkit-box;
@@ -158,7 +215,41 @@ $essentials = $stmt->fetchAll();
 </div>
 </main>
 
+<!-- Day Mode Toggle -->
+<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
+    <i class="bi bi-sun-fill"></i>
+</button>
+
 <script>
+// Day/Night Mode Toggle
+const toggleBtn = document.getElementById('dayModeToggle');
+if (toggleBtn) {
+  const body = document.body;
+  const icon = toggleBtn.querySelector('i');
+
+  if (localStorage.getItem('dayMode') === 'true') {
+    body.classList.add('day-mode');
+    if (icon) {
+      icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+    }
+    toggleBtn.classList.add('active');
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('day-mode');
+    const isDay = body.classList.contains('day-mode');
+
+    if (icon) {
+      if (isDay) {
+        icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+      } else {
+        icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+      }
+    }
+    toggleBtn.classList.toggle('active', isDay);
+    localStorage.setItem('dayMode', isDay);
+  });
+}
 </script>
 </body>
 </html>

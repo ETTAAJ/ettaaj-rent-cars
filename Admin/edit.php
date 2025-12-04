@@ -20,13 +20,14 @@ $csrf = $_SESSION['csrf_token'];
 /* -------------------------------------------------
    3. GET CAR BY ID
    ------------------------------------------------- */
-$id = $_GET['id'] ?? 0;
+$id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare("SELECT * FROM cars WHERE id = ?");
 $stmt->execute([$id]);
 $car = $stmt->fetch();
 
-if (!$car) {
-    die("Car not found.");
+if (!$car || $id <= 0) {
+    header('Location: index.php?error=1');
+    exit;
 }
 
 /* -------------------------------------------------
@@ -414,17 +415,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Basic Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_basic_price" class="form-control"
                    value="<?= $car['insurance_basic_price'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_basic_price'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_basic_price']) ?></div>
-            <?php endif; ?>
           </div>
           <div class="mb-3">
             <label class="form-label">Basic Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_basic_deposit" class="form-control"
                    value="<?= $car['insurance_basic_deposit'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_basic_deposit'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_basic_deposit']) ?></div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -433,17 +428,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Smart Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_smart_price" class="form-control"
                    value="<?= $car['insurance_smart_price'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_smart_price'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_smart_price']) ?></div>
-            <?php endif; ?>
           </div>
           <div class="mb-3">
             <label class="form-label">Smart Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_smart_deposit" class="form-control"
                    value="<?= $car['insurance_smart_deposit'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_smart_deposit'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_smart_deposit']) ?></div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -452,17 +441,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Premium Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_premium_price" class="form-control"
                    value="<?= $car['insurance_premium_price'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_premium_price'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_premium_price']) ?></div>
-            <?php endif; ?>
           </div>
           <div class="mb-3">
             <label class="form-label">Premium Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_premium_deposit" class="form-control"
                    value="<?= $car['insurance_premium_deposit'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_premium_deposit'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_premium_deposit']) ?></div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -509,32 +492,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 
+<!-- Day/Night Mode Toggle Button -->
+<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
+  <i class="bi bi-sun-fill"></i>
+</button>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   // Day/Night Mode Toggle - same as index.php
   const toggleBtn = document.getElementById('dayModeToggle');
-  const body = document.body;
-  const icon = toggleBtn.querySelector('i');
+  if (toggleBtn) {
+    const body = document.body;
+    const icon = toggleBtn.querySelector('i');
 
-  // Load saved preference
-  if (localStorage.getItem('dayMode') === 'true') {
-      body.classList.add('day-mode');
-      icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-      toggleBtn.classList.add('active');
-  }
-
-  toggleBtn.addEventListener('click', () => {
-      body.classList.toggle('day-mode');
-      const isDay = body.classList.contains('day-mode');
-
-      if (isDay) {
+    // Load saved preference
+    if (localStorage.getItem('dayMode') === 'true') {
+        body.classList.add('day-mode');
+        if (icon) {
           icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-      } else {
-          icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
-      }
-      toggleBtn.classList.toggle('active', isDay);
-      localStorage.setItem('dayMode', isDay);
-  });
+        }
+        toggleBtn.classList.add('active');
+    }
+
+    toggleBtn.addEventListener('click', () => {
+        body.classList.toggle('day-mode');
+        const isDay = body.classList.contains('day-mode');
+
+        if (icon) {
+          if (isDay) {
+              icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+          } else {
+              icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+          }
+        }
+        toggleBtn.classList.toggle('active', isDay);
+        localStorage.setItem('dayMode', isDay);
+    });
+  }
 </script>
 </main>
 </body>

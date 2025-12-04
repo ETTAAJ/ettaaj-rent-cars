@@ -205,6 +205,37 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
     body { background: #36454F; color: white; font-family: 'Inter', sans-serif; }
     .spinner { width: 40px; height: 40px; border: 4px solid #2C3A44; border-top: 4px solid #FFD700; border-radius: 50%; animation: spin 1s linear infinite; margin: 40px auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* Day Mode Toggle Button */
+    .day-mode-toggle {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #FFD700;
+        color: #000;
+        border: none;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 20px rgba(255,215,0,.4);
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    .day-mode-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 30px rgba(255,215,0,.5);
+    }
+    .day-mode-toggle i {
+        transition: transform .3s;
+    }
+    .day-mode-toggle.active i {
+        transform: rotate(180deg);
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -352,7 +383,42 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
   })();
   <?php endif; ?>
 
+  // Day/Night Mode Toggle
+  const dayModeToggle = document.getElementById('dayModeToggle');
+  if (dayModeToggle) {
+    const body = document.body;
+    const icon = dayModeToggle.querySelector('i');
+
+    if (localStorage.getItem('dayMode') === 'true') {
+      body.classList.add('day-mode');
+      if (icon) {
+        icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+      }
+      dayModeToggle.classList.add('active');
+    }
+
+    dayModeToggle.addEventListener('click', () => {
+      body.classList.toggle('day-mode');
+      const isDay = body.classList.contains('day-mode');
+
+      if (icon) {
+        if (isDay) {
+          icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+        } else {
+          icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+        }
+      }
+      dayModeToggle.classList.toggle('active', isDay);
+      localStorage.setItem('dayMode', isDay);
+    });
+  }
+
 </script>
 </main>
+
+<!-- Day Mode Toggle -->
+<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
+  <i class="bi bi-sun-fill"></i>
+</button>
 </body>
 </html>

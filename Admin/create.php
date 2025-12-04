@@ -33,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insurance_smart_deposit  = (float)($_POST['insurance_smart_deposit'] ?? 0);
         $insurance_premium_deposit = (float)($_POST['insurance_premium_deposit'] ?? 0);
 
-        if (empty($name)) $errors['name'] = "Car name is required.";
-        if ($seats < 1) $errors['seats'] = "Seats must be at least 1.";
-        if ($bags < 0) $errors['bags'] = "Bags cannot be negative.";
-        if (!in_array($gear, ['Manual', 'Automatic'])) $errors['gear'] = "Invalid gear.";
-        if (!in_array($fuel, ['Petrol', 'Diesel'])) $errors['fuel'] = "Invalid fuel.";
-        if ($price_day <= 0) $errors['price_day'] = "Price per day must be positive.";
-        if ($discount < 0 || $discount > 100) $errors['discount'] = "Discount must be between 0 and 100.";
+        if (empty($name)) $errors[] = "Car name is required.";
+        if ($seats < 1) $errors[] = "Seats must be at least 1.";
+        if ($bags < 0) $errors[] = "Bags cannot be negative.";
+        if (!in_array($gear, ['Manual', 'Automatic'])) $errors[] = "Invalid gear.";
+        if (!in_array($fuel, ['Petrol', 'Diesel'])) $errors[] = "Invalid fuel.";
+        if ($price_day <= 0) $errors[] = "Price per day must be positive.";
+        if ($discount < 0 || $discount > 100) $errors[] = "Discount must be between 0 and 100.";
 
         $image = '';
         if (!empty($_FILES['image']['name'])) {
@@ -48,11 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $allowed = ['jpg', 'jpeg', 'png'];
 
             if (!in_array($ext, $allowed)) {
-                $errors['image'] = "Only JPG/PNG allowed.";
+                $errors[] = "Only JPG/PNG allowed.";
             } elseif ($file['size'] > 2 * 1024 * 1024) {
-                $errors['image'] = "Image too large (max 2MB).";
+                $errors[] = "Image too large (max 2MB).";
             } elseif (!getimagesize($file['tmp_name'])) {
-                $errors['image'] = "Not a valid image.";
+                $errors[] = "Not a valid image.";
             } else {
                 $baseName = preg_replace('/[^a-zA-Z0-9\s-]/', '', $name);
                 $baseName = trim(preg_replace('/\s+/', ' ', $baseName));
@@ -69,11 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (move_uploaded_file($file['tmp_name'], $targetPath)) {
                     $image = $fileName;
                 } else {
-                    $errors['image'] = "Upload failed.";
+                    $errors[] = "Upload failed.";
                 }
             }
         } else {
-            $errors['image'] = "Image is required.";
+            $errors[] = "Image is required.";
         }
 
         if (empty($errors)) {
@@ -325,9 +325,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Car Name *</label>
             <input type="text" name="name" class="form-control"
                    value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" required>
-            <?php if (isset($errors['name'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['name']) ?></div>
-            <?php endif; ?>
             <small class="small-muted">Image will be renamed to match this name.</small>
           </div>
 
@@ -335,9 +332,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Image (JPG/PNG, max 2MB) *</label>
             <input type="file" name="image" class="form-control"
                    accept="image/jpeg,image/png" required onchange="previewImage(this)">
-            <?php if (isset($errors['image'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['image']) ?></div>
-            <?php endif; ?>
             <div class="image-preview" id="imagePreview">
               <div class="placeholder">
                 No image selected
@@ -349,18 +343,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Seats *</label>
             <input type="number" name="seats" class="form-control" min="1"
                    value="<?= $_POST['seats'] ?? '4' ?>" required>
-            <?php if (isset($errors['seats'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['seats']) ?></div>
-            <?php endif; ?>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Bags *</label>
             <input type="number" name="bags" class="form-control" min="0"
                    value="<?= $_POST['bags'] ?? '2' ?>" required>
-            <?php if (isset($errors['bags'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['bags']) ?></div>
-            <?php endif; ?>
           </div>
 
           <!-- NEW: Discount Field -->
@@ -368,9 +356,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Discount (%)</label>
             <input type="number" name="discount" class="form-control" min="0" max="100"
                    value="<?= $_POST['discount'] ?? '0' ?>">
-            <?php if (isset($errors['discount'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['discount']) ?></div>
-            <?php endif; ?>
             <small class="small-muted">Enter discount percentage (0 = no discount)</small>
           </div>
         </div>
@@ -385,17 +370,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Basic Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_basic_price" class="form-control"
                    value="<?= $_POST['insurance_basic_price'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_basic_price'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_basic_price']) ?></div>
-            <?php endif; ?>
           </div>
           <div class="mb-3">
             <label class="form-label">Basic Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_basic_deposit" class="form-control"
                    value="<?= $_POST['insurance_basic_deposit'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_basic_deposit'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_basic_deposit']) ?></div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -404,17 +383,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Smart Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_smart_price" class="form-control"
                    value="<?= $_POST['insurance_smart_price'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_smart_price'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_smart_price']) ?></div>
-            <?php endif; ?>
           </div>
           <div class="mb-3">
             <label class="form-label">Smart Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_smart_deposit" class="form-control"
                    value="<?= $_POST['insurance_smart_deposit'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_smart_deposit'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_smart_deposit']) ?></div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -423,17 +396,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="form-label">Premium Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_premium_price" class="form-control"
                    value="<?= $_POST['insurance_premium_price'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_premium_price'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_premium_price']) ?></div>
-            <?php endif; ?>
           </div>
           <div class="mb-3">
             <label class="form-label">Premium Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_premium_deposit" class="form-control"
                    value="<?= $_POST['insurance_premium_deposit'] ?? '0' ?>" min="0">
-            <?php if (isset($errors['insurance_premium_deposit'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['insurance_premium_deposit']) ?></div>
-            <?php endif; ?>
           </div>
         </div>
 
@@ -445,9 +412,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <option value="Manual"   <?= ($_POST['gear'] ?? '') === 'Manual' ? 'selected' : '' ?>>Manual</option>
               <option value="Automatic"<?= ($_POST['gear'] ?? '') === 'Automatic' ? 'selected' : '' ?>>Automatic</option>
             </select>
-            <?php if (isset($errors['gear'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['gear']) ?></div>
-            <?php endif; ?>
           </div>
 
           <div class="mb-3">
@@ -457,18 +421,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <option value="Petrol" <?= ($_POST['fuel'] ?? '') === 'Petrol' ? 'selected' : '' ?>>Petrol</option>
               <option value="Diesel" <?= ($_POST['fuel'] ?? '') === 'Diesel' ? 'selected' : '' ?>>Diesel</option>
             </select>
-            <?php if (isset($errors['fuel'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['fuel']) ?></div>
-            <?php endif; ?>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Price per Day (MAD)*</label>
             <input type="number" step="0.01" name="price_day" class="form-control"
                    value="<?= $_POST['price_day'] ?? '' ?>" required>
-            <?php if (isset($errors['price_day'])): ?>
-              <div class="text-danger small"><?= htmlspecialchars($errors['price_day']) ?></div>
-            <?php endif; ?>
           </div>
 
           <div class="mb-3">
@@ -493,6 +451,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </div>
 </div>
+
+<!-- Day/Night Mode Toggle Button -->
+<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
+  <i class="bi bi-sun-fill"></i>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -519,27 +482,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Day/Night Mode Toggle
   const toggleBtn = document.getElementById('dayModeToggle');
-  const body = document.body;
-  const icon = toggleBtn.querySelector('i');
+  if (toggleBtn) {
+    const body = document.body;
+    const icon = toggleBtn.querySelector('i');
 
-  if (localStorage.getItem('dayMode') === 'true') {
-    body.classList.add('day-mode');
-    icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-    toggleBtn.classList.add('active');
-  }
-
-  toggleBtn.addEventListener('click', () => {
-    body.classList.toggle('day-mode');
-    const isDay = body.classList.contains('day-mode');
-
-    if (isDay) {
-      icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
-    } else {
-      icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+    if (localStorage.getItem('dayMode') === 'true') {
+      body.classList.add('day-mode');
+      if (icon) {
+        icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+      }
+      toggleBtn.classList.add('active');
     }
-    toggleBtn.classList.toggle('active', isDay);
-    localStorage.setItem('dayMode', isDay);
-  });
+
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('day-mode');
+      const isDay = body.classList.contains('day-mode');
+
+      if (icon) {
+        if (isDay) {
+          icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+        } else {
+          icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+        }
+      }
+      toggleBtn.classList.toggle('active', isDay);
+      localStorage.setItem('dayMode', isDay);
+    });
+  }
 </script>
 </main>
 </body>
