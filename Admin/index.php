@@ -78,6 +78,12 @@ $allCars = $allCarsStmt->fetchAll(PDO::FETCH_ASSOC);
    ------------------------------------------------- */
 function renderAdminCarCard($car, $index = 0): string
 {
+    // Validate car ID
+    if (empty($car['id']) || !is_numeric($car['id'])) {
+        return ''; // Return empty string if ID is invalid
+    }
+    $carId = (int)$car['id'];
+    
     $img = !empty($car['image']) ? '../uploads/' . basename($car['image']) . '?v=' . @filemtime(__DIR__ . '/../uploads/' . basename($car['image'])) : '';
     $placeholder = 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($car['name']);
     $src = $img && file_exists(__DIR__ . '/../uploads/' . basename($car['image'])) ? $img : $placeholder;
@@ -147,12 +153,12 @@ function renderAdminCarCard($car, $index = 0): string
             </div>
 
             <div class="mt-auto flex gap-3">
-                <a href="edit.php?id=<?= (int)$car['id'] ?>"
+                <a href="edit.php?id=<?= $carId ?>"
                    class="flex-1 text-center bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-red-500
                           text-black font-bold py-3 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105">
                     <i class="bi bi-pencil-fill"></i> Edit
                 </a>
-                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal<?= $car['id'] ?>"
+                <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal<?= $carId ?>"
                         class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-2xl shadow-lg transition-all duration-300">
                     <i class="bi bi-trash-fill"></i> Delete
                 </button>
@@ -296,10 +302,17 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <div id="cars-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
     <?php foreach ($cars as $i => $c): ?>
+      <?php 
+        // Skip if ID is missing or invalid
+        if (empty($c['id']) || !is_numeric($c['id'])) {
+          continue;
+        }
+        $cId = (int)$c['id'];
+      ?>
       <?= renderAdminCarCard($c, $i) ?>
       
       <!-- Delete Modal -->
-      <div class="modal fade" id="deleteModal<?= $c['id'] ?>" tabindex="-1">
+      <div class="modal fade" id="deleteModal<?= $cId ?>" tabindex="-1">
         <div class="modal-dialog modal-sm modal-dialog-centered">
           <div class="modal-content bg-[#2C3A44] border border-[#4A5A66] text-white">
             <div class="modal-header border-0">
@@ -311,8 +324,8 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="modal-footer border-0">
               <form action="delete.php" method="POST">
-                <input type="hidden" name="id" value="<?= $c['id'] ?>">
-                <input type="hidden" name="csrf" value="<?= $csrf ?>">
+                <input type="hidden" name="id" value="<?= $cId ?>">
+                <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf) ?>">
                 <button type="submit" class="btn btn-danger w-100">Yes, Delete</button>
               </form>
               <button type="button" class="btn btn-secondary w-100 mt-2" data-bs-dismiss="modal">Cancel</button>

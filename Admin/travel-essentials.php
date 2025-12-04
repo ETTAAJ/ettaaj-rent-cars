@@ -142,6 +142,11 @@ $essentials = $stmt->fetchAll();
   <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <?php foreach ($essentials as $essential): 
+        // Skip if ID is missing or invalid
+        if (empty($essential['id']) || !is_numeric($essential['id'])) {
+          continue;
+        }
+        $essentialId = (int)$essential['id'];
         $nameEn = $essential['name_en'] ?? $essential['name'] ?? '';
         $nameAr = $essential['name_ar'] ?? '';
         $nameFr = $essential['name_fr'] ?? '';
@@ -198,11 +203,11 @@ $essentials = $stmt->fetchAll();
 
           <!-- Actions -->
           <div class="flex gap-2 mt-auto">
-            <a href="travel-essentials-edit.php?id=<?= $essential['id'] ?>" 
+            <a href="travel-essentials-edit.php?id=<?= $essentialId ?>" 
                class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2.5 px-4 rounded-lg text-sm text-center transition">
               <i class="bi bi-pencil"></i> Edit
             </a>
-            <a href="travel-essentials-delete.php?id=<?= $essential['id'] ?>&csrf=<?= $csrf ?>" 
+            <a href="travel-essentials-delete.php?id=<?= $essentialId ?>&csrf=<?= htmlspecialchars($csrf) ?>" 
                onclick="return confirm('Are you sure you want to delete this travel essential?')"
                class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-lg text-sm text-center transition">
               <i class="bi bi-trash"></i> Delete
