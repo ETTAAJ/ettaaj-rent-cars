@@ -52,6 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!hash_equals($csrf, $_POST['csrf'] ?? '')) {
         $errors[] = "Invalid request. Please try again.";
     } else {
+        // Ensure ID from URL matches POST ID (if provided)
+        $postId = (int)($_POST['id'] ?? 0);
+        if ($postId > 0 && $postId !== $id) {
+            $errors[] = "Invalid car ID. Please try again.";
+        }
         $name        = trim($_POST['name'] ?? '');
         $seats       = (int)($_POST['seats'] ?? 0);
         $bags        = (int)($_POST['bags'] ?? 0);
@@ -372,14 +377,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
 
   <div class="card p-4 p-md-5">
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" action="edit.php?id=<?= $id ?>">
       <input type="hidden" name="csrf" value="<?= $csrf ?>">
+      <input type="hidden" name="id" value="<?= $id ?>">
 
       <div class="row g-4">
         <div class="col-md-6">
           <div class="mb-3">
             <label class="form-label">Car Name *</label>
-            <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($car['name']) ?>" required>
+            <input type="text" name="name" class="form-control" value="<?= htmlspecialchars($_POST['name'] ?? $car['name']) ?>" required>
             <small class="small-muted">Image will be renamed to match this name.</small>
           </div>
 
@@ -402,17 +408,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <div class="mb-3">
             <label class="form-label">Seats *</label>
-            <input type="number" name="seats" class="form-control" value="<?= $car['seats'] ?>" min="1" required>
+            <input type="number" name="seats" class="form-control" value="<?= $_POST['seats'] ?? $car['seats'] ?>" min="1" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Bags *</label>
-            <input type="number" name="bags" class="form-control" value="<?= $car['bags'] ?>" min="0" required>
+            <input type="number" name="bags" class="form-control" value="<?= $_POST['bags'] ?? $car['bags'] ?>" min="0" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Discount (%)</label>
-            <input type="number" name="discount" class="form-control" min="0" max="100" value="<?= $car['discount'] ?? 0 ?>">
+            <input type="number" name="discount" class="form-control" min="0" max="100" value="<?= $_POST['discount'] ?? ($car['discount'] ?? 0) ?>">
             <small class="small-muted">Enter discount percentage (0 = no discount)</small>
           </div>
         </div>
@@ -426,12 +432,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="mb-3">
             <label class="form-label">Basic Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_basic_price" class="form-control"
-                   value="<?= $car['insurance_basic_price'] ?? '0' ?>" min="0">
+                   value="<?= $_POST['insurance_basic_price'] ?? ($car['insurance_basic_price'] ?? '0') ?>" min="0">
           </div>
           <div class="mb-3">
             <label class="form-label">Basic Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_basic_deposit" class="form-control"
-                   value="<?= $car['insurance_basic_deposit'] ?? '0' ?>" min="0">
+                   value="<?= $_POST['insurance_basic_deposit'] ?? ($car['insurance_basic_deposit'] ?? '0') ?>" min="0">
           </div>
         </div>
 
@@ -439,12 +445,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="mb-3">
             <label class="form-label">Smart Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_smart_price" class="form-control"
-                   value="<?= $car['insurance_smart_price'] ?? '0' ?>" min="0">
+                   value="<?= $_POST['insurance_smart_price'] ?? ($car['insurance_smart_price'] ?? '0') ?>" min="0">
           </div>
           <div class="mb-3">
             <label class="form-label">Smart Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_smart_deposit" class="form-control"
-                   value="<?= $car['insurance_smart_deposit'] ?? '0' ?>" min="0">
+                   value="<?= $_POST['insurance_smart_deposit'] ?? ($car['insurance_smart_deposit'] ?? '0') ?>" min="0">
           </div>
         </div>
 
@@ -452,12 +458,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="mb-3">
             <label class="form-label">Premium Insurance - Price per Day (MAD)</label>
             <input type="number" step="0.01" name="insurance_premium_price" class="form-control"
-                   value="<?= $car['insurance_premium_price'] ?? '0' ?>" min="0">
+                   value="<?= $_POST['insurance_premium_price'] ?? ($car['insurance_premium_price'] ?? '0') ?>" min="0">
           </div>
           <div class="mb-3">
             <label class="form-label">Premium Insurance - Deposit (MAD)</label>
             <input type="number" step="0.01" name="insurance_premium_deposit" class="form-control"
-                   value="<?= $car['insurance_premium_deposit'] ?? '0' ?>" min="0">
+                   value="<?= $_POST['insurance_premium_deposit'] ?? ($car['insurance_premium_deposit'] ?? '0') ?>" min="0">
           </div>
         </div>
 
@@ -465,32 +471,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="mb-3">
             <label class="form-label">Gear *</label>
             <select name="gear" class="form-select" required>
-              <option value="Manual"   <?= $car['gear'] == 'Manual' ? 'selected' : '' ?>>Manual</option>
-              <option value="Automatic" <?= $car['gear'] == 'Automatic' ? 'selected' : '' ?>>Automatic</option>
+              <?php $selectedGear = $_POST['gear'] ?? $car['gear']; ?>
+              <option value="Manual"   <?= $selectedGear == 'Manual' ? 'selected' : '' ?>>Manual</option>
+              <option value="Automatic" <?= $selectedGear == 'Automatic' ? 'selected' : '' ?>>Automatic</option>
             </select>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Fuel *</label>
             <select name="fuel" class="form-select" required>
-              <option value="Petrol" <?= $car['fuel'] == 'Petrol' ? 'selected' : '' ?>>Petrol</option>
-              <option value="Diesel" <?= $car['fuel'] == 'Diesel' ? 'selected' : '' ?>>Diesel</option>
+              <?php $selectedFuel = $_POST['fuel'] ?? $car['fuel']; ?>
+              <option value="Petrol" <?= $selectedFuel == 'Petrol' ? 'selected' : '' ?>>Petrol</option>
+              <option value="Diesel" <?= $selectedFuel == 'Diesel' ? 'selected' : '' ?>>Diesel</option>
             </select>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Price per Day (MAD)*</label>
-            <input type="number" step="0.01" name="price_day" class="form-control" value="<?= $car['price_day'] ?>" required>
+            <input type="number" step="0.01" name="price_day" class="form-control" value="<?= $_POST['price_day'] ?? $car['price_day'] ?>" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Price per Week (MAD)*</label>
-            <input type="number" step="0.01" name="price_week" class="form-control" value="<?= $car['price_week'] ?>" required>
+            <input type="number" step="0.01" name="price_week" class="form-control" value="<?= $_POST['price_week'] ?? $car['price_week'] ?>" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Price per Month (MAD)*</label>
-            <input type="number" step="0.01" name="price_month" class="form-control" value="<?= $car['price_month'] ?>" required>
+            <input type="number" step="0.01" name="price_month" class="form-control" value="<?= $_POST['price_month'] ?? $car['price_month'] ?>" required>
           </div>
         </div>
       </div>

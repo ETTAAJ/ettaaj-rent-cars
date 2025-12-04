@@ -38,6 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!hash_equals($csrf, $_POST['csrf'] ?? '')) {
         $errors[] = "Invalid request.";
     } else {
+        // Ensure ID from URL matches POST ID (if provided)
+        $postId = intval($_POST['id'] ?? 0);
+        if ($postId > 0 && $postId !== $id) {
+            $errors[] = "Invalid essential ID. Please try again.";
+        }
         $name_en = trim($_POST['name_en'] ?? '');
         $name_ar = trim($_POST['name_ar'] ?? '');
         $name_fr = trim($_POST['name_fr'] ?? '');
@@ -257,8 +262,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container mx-auto px-4 sm:px-6 py-6 sm:py-10 max-w-4xl">
   <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] p-8">
-    <form method="POST" class="space-y-6">
+    <form method="POST" action="travel-essentials-edit.php?id=<?= $id ?>" class="space-y-6">
       <input type="hidden" name="csrf" value="<?= $csrf ?>">
+      <input type="hidden" name="id" value="<?= $id ?>">
 
       <!-- Language Tabs -->
       <div class="border-b border-[#4A5A66] mb-6">

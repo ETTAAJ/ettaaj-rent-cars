@@ -1,13 +1,22 @@
 # Disable directory listing
 Options -Indexes
 
+# Ensure query strings are preserved for admin pages
+# This is critical for edit pages that use ?id=123
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Preserve query strings - do not remove them
+    RewriteCond %{QUERY_STRING} .+
+    RewriteRule ^(.*)$ $1 [QSA,L]
+</IfModule>
+
 # Force HTTPS (uncomment if you have SSL)
 # RewriteEngine On
 # RewriteCond %{HTTPS} off
-# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,QSA]
 
 # Deny access to sensitive files
-<FilesMatch "\.(env|log|ini|bak)$">
+<FilesMatch "\.(env|log|ini|bak|sql|md|git)$">
     Order allow,deny
     Deny from all
 </FilesMatch>

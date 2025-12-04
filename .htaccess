@@ -75,29 +75,29 @@ Options -Indexes
     # 2. REMOVE .PHP EXTENSION (SEO-Friendly URLs)
     # ============================================
     # Skip Admin directory - keep .php extension for admin panel
-    RewriteCond %{REQUEST_URI} !^/Admin/
     
     # External redirect from .php to non-.php (301 permanent redirect)
+    # EXCLUDE Admin directory from this rule
+    RewriteCond %{REQUEST_URI} !^/Admin/ [NC]
     RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
-    RewriteRule ^ /%1 [R=301,L]
+    RewriteRule ^ /%1 [R=301,L,QSA]
     
     # Internal rewrite to add .php extension (skip Admin directory)
-    RewriteCond %{REQUEST_URI} !^/Admin/
+    RewriteCond %{REQUEST_URI} !^/Admin/ [NC]
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME}.php -f
-    RewriteRule ^(.+?)/?$ $1.php [L]
+    RewriteRule ^(.+?)/?$ $1.php [L,QSA]
     
     # ============================================
     # 3. PRESERVE QUERY STRINGS (lang, currency, id, etc.)
     # ============================================
-    # This is automatically handled by QSA flag, but we ensure it works
-    RewriteCond %{QUERY_STRING} .+
-    RewriteRule ^(.*)$ $1? [R=301,L]
-    
-    # Allow query strings to pass through
-    RewriteCond %{QUERY_STRING} ^(.*)$
-    RewriteRule ^(.*)$ - [QSA]
+    # Query strings are automatically preserved by QSA flag
+    # DO NOT remove query strings - they are needed for:
+    # - Admin edit pages: edit.php?id=123
+    # - Language switching: ?lang=en
+    # - Currency switching: ?currency=USD
+    # - Pagination and filters
 </IfModule>
 
 # ============================================
