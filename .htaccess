@@ -21,10 +21,12 @@ Options -Indexes
 </FilesMatch>
 
 # Protect Admin directory (additional security)
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^Admin/ - [F,L]
-</IfModule>
+# NOTE: Commented out to allow access to Admin panel
+# Admin security is handled by login.php and session management
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteRule ^Admin/ - [F,L]
+# </IfModule>
 
 # ============================================
 # FORCE HTTPS (SSL)
@@ -72,11 +74,15 @@ Options -Indexes
     # ============================================
     # 2. REMOVE .PHP EXTENSION (SEO-Friendly URLs)
     # ============================================
+    # Skip Admin directory - keep .php extension for admin panel
+    RewriteCond %{REQUEST_URI} !^/Admin/
+    
     # External redirect from .php to non-.php (301 permanent redirect)
     RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
     RewriteRule ^ /%1 [R=301,L]
     
-    # Internal rewrite to add .php extension
+    # Internal rewrite to add .php extension (skip Admin directory)
+    RewriteCond %{REQUEST_URI} !^/Admin/
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME}.php -f
