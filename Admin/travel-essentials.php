@@ -38,36 +38,11 @@ $essentials = $stmt->fetchAll();
     body { background: #36454F; color: white; font-family: 'Inter', sans-serif; }
     
     
-    /* Responsive Table */
-    @media (max-width: 768px) {
-      .table-container {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      table {
-        min-width: 800px;
-      }
-      .mobile-card {
-        display: block;
-      }
-      .mobile-card .table-row {
-        display: none;
-      }
-    }
-    
-    @media (min-width: 769px) {
-      .mobile-card {
-        display: none;
-      }
-    }
-    
-    .mobile-essential-card {
-      background: #36454F;
-      border: 1px solid #4A5A66;
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   </style>
 </head>
@@ -99,156 +74,87 @@ $essentials = $stmt->fetchAll();
 </div>
 
 <div class="container mx-auto px-4 sm:px-6 py-10 max-w-7xl">
-  <!-- Travel Essentials List -->
-  <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] overflow-hidden">
-    <!-- Desktop Table -->
-    <div class="table-container overflow-x-auto hidden md:block">
-      <table class="w-full">
-        <thead class="bg-[#36454F]">
-          <tr>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Icon</th>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Name (EN/AR/FR)</th>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Description</th>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Price</th>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Type</th>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Status</th>
-            <th class="px-4 lg:px-6 py-4 text-left text-sm font-bold text-yellow-500">Order</th>
-            <th class="px-4 lg:px-6 py-4 text-center text-sm font-bold text-yellow-500">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if (empty($essentials)): ?>
-            <tr>
-              <td colspan="8" class="px-6 py-8 text-center text-gray-400">
-                No travel essentials found. <a href="travel-essentials-create.php" class="text-yellow-500 hover:underline">Add one now</a>
-              </td>
-            </tr>
-          <?php else: ?>
-            <?php foreach ($essentials as $essential): 
-              $nameEn = $essential['name_en'] ?? $essential['name'] ?? '';
-              $nameAr = $essential['name_ar'] ?? '';
-              $nameFr = $essential['name_fr'] ?? '';
-              $descEn = $essential['description_en'] ?? $essential['description'] ?? '';
-            ?>
-              <tr class="border-t border-[#4A5A66] hover:bg-[#36454F] transition table-row">
-                <td class="px-4 lg:px-6 py-4">
-                  <?php if ($essential['icon']): ?>
-                    <i class="bi <?= htmlspecialchars($essential['icon']) ?> text-2xl text-yellow-500"></i>
-                  <?php else: ?>
-                    <i class="bi bi-box text-2xl text-gray-500"></i>
-                  <?php endif; ?>
-                </td>
-                <td class="px-4 lg:px-6 py-4">
-                  <div class="font-semibold">EN: <?= htmlspecialchars($nameEn) ?></div>
-                  <?php if ($nameAr): ?>
-                    <div class="text-sm text-gray-400 mt-1">AR: <?= htmlspecialchars($nameAr) ?></div>
-                  <?php endif; ?>
-                  <?php if ($nameFr): ?>
-                    <div class="text-sm text-gray-400 mt-1">FR: <?= htmlspecialchars($nameFr) ?></div>
-                  <?php endif; ?>
-                </td>
-                <td class="px-4 lg:px-6 py-4 text-gray-300 text-sm"><?= htmlspecialchars($descEn) ?></td>
-                <td class="px-4 lg:px-6 py-4 font-bold text-yellow-500" dir="ltr">
-                  MAD <?= number_format($essential['price'], 2) ?>
-                  <?php if ($essential['per_day']): ?>
-                    <span class="text-xs text-gray-400">/day</span>
-                  <?php else: ?>
-                    <span class="text-xs text-gray-400">/rental</span>
-                  <?php endif; ?>
-                </td>
-                <td class="px-4 lg:px-6 py-4">
-                  <span class="px-3 py-1 rounded-full text-xs font-bold <?= $essential['per_day'] ? 'bg-blue-600' : 'bg-purple-600' ?>">
-                    <?= $essential['per_day'] ? 'Per Day' : 'One-Time' ?>
-                  </span>
-                </td>
-                <td class="px-4 lg:px-6 py-4">
-                  <span class="px-3 py-1 rounded-full text-xs font-bold <?= $essential['is_active'] ? 'bg-green-600' : 'bg-red-600' ?>">
-                    <?= $essential['is_active'] ? 'Active' : 'Inactive' ?>
-                  </span>
-                </td>
-                <td class="px-4 lg:px-6 py-4 text-center"><?= $essential['sort_order'] ?></td>
-                <td class="px-4 lg:px-6 py-4">
-                  <div class="flex justify-center gap-2 flex-wrap">
-                    <a href="travel-essentials-edit.php?id=<?= $essential['id'] ?>" 
-                       class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2 px-3 rounded-lg text-xs">
-                      <i class="bi bi-pencil"></i> Edit
-                    </a>
-                    <a href="travel-essentials-delete.php?id=<?= $essential['id'] ?>&csrf=<?= $csrf ?>" 
-                       onclick="return confirm('Are you sure you want to delete this travel essential?')"
-                       class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-xs">
-                      <i class="bi bi-trash"></i> Delete
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          <?php endif; ?>
-        </tbody>
-      </table>
+  <!-- Travel Essentials Cards -->
+  <?php if (empty($essentials)): ?>
+    <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] p-8 text-center">
+      <p class="text-gray-400 text-lg mb-4">No travel essentials found.</p>
+      <a href="travel-essentials-create.php" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl">
+        <i class="bi bi-plus-circle"></i> Add New Essential
+      </a>
     </div>
-    
-    <!-- Mobile Cards -->
-    <div class="mobile-card p-4">
-      <?php if (empty($essentials)): ?>
-        <div class="text-center text-gray-400 py-8">
-          No travel essentials found. <a href="travel-essentials-create.php" class="text-yellow-500 hover:underline">Add one now</a>
-        </div>
-      <?php else: ?>
-        <?php foreach ($essentials as $essential): 
-          $nameEn = $essential['name_en'] ?? $essential['name'] ?? '';
-          $nameAr = $essential['name_ar'] ?? '';
-          $nameFr = $essential['name_fr'] ?? '';
-          $descEn = $essential['description_en'] ?? $essential['description'] ?? '';
-        ?>
-          <div class="mobile-essential-card">
-            <div class="flex items-start justify-between mb-3">
-              <div class="flex items-center gap-3">
-                <?php if ($essential['icon']): ?>
-                  <i class="bi <?= htmlspecialchars($essential['icon']) ?> text-2xl text-yellow-500"></i>
-                <?php else: ?>
-                  <i class="bi bi-box text-2xl text-gray-500"></i>
+  <?php else: ?>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <?php foreach ($essentials as $essential): 
+        $nameEn = $essential['name_en'] ?? $essential['name'] ?? '';
+        $nameAr = $essential['name_ar'] ?? '';
+        $nameFr = $essential['name_fr'] ?? '';
+        $descEn = $essential['description_en'] ?? $essential['description'] ?? '';
+      ?>
+        <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] p-6 hover:shadow-yellow-500/20 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] flex flex-col">
+          <!-- Card Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3 flex-1">
+              <?php if ($essential['icon']): ?>
+                <i class="bi <?= htmlspecialchars($essential['icon']) ?> text-3xl text-yellow-500"></i>
+              <?php else: ?>
+                <i class="bi bi-box text-3xl text-gray-500"></i>
+              <?php endif; ?>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-white text-lg mb-1 truncate"><?= htmlspecialchars($nameEn) ?></h3>
+                <?php if ($nameAr || $nameFr): ?>
+                  <div class="text-xs text-gray-400 space-y-1">
+                    <?php if ($nameAr): ?>
+                      <div>AR: <span class="text-gray-300"><?= htmlspecialchars($nameAr) ?></span></div>
+                    <?php endif; ?>
+                    <?php if ($nameFr): ?>
+                      <div>FR: <span class="text-gray-300"><?= htmlspecialchars($nameFr) ?></span></div>
+                    <?php endif; ?>
+                  </div>
                 <?php endif; ?>
-                <div>
-                  <div class="font-semibold text-white"><?= htmlspecialchars($nameEn) ?></div>
-                  <?php if ($nameAr || $nameFr): ?>
-                    <div class="text-xs text-gray-400 mt-1">
-                      <?php if ($nameAr): ?>AR: <?= htmlspecialchars($nameAr) ?><?php endif; ?>
-                      <?php if ($nameAr && $nameFr): ?> • <?php endif; ?>
-                      <?php if ($nameFr): ?>FR: <?= htmlspecialchars($nameFr) ?><?php endif; ?>
-                    </div>
-                  <?php endif; ?>
-                </div>
               </div>
-              <span class="px-2 py-1 rounded-full text-xs font-bold <?= $essential['is_active'] ? 'bg-green-600' : 'bg-red-600' ?>">
-                <?= $essential['is_active'] ? 'Active' : 'Inactive' ?>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap <?= $essential['is_active'] ? 'bg-green-600' : 'bg-red-600' ?>">
+              <?= $essential['is_active'] ? 'Active' : 'Inactive' ?>
+            </span>
+          </div>
+
+          <!-- Description -->
+          <?php if ($descEn): ?>
+            <p class="text-sm text-gray-300 mb-4 line-clamp-2 flex-1"><?= htmlspecialchars($descEn) ?></p>
+          <?php endif; ?>
+
+          <!-- Price & Type -->
+          <div class="flex items-center justify-between flex-wrap gap-3 mb-4 pb-4 border-b border-[#4A5A66]">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-bold text-yellow-500 text-xl" dir="ltr">MAD <?= number_format($essential['price'], 2) ?></span>
+              <span class="text-xs text-gray-400"><?= $essential['per_day'] ? '/day' : '/rental' ?></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-xs font-bold <?= $essential['per_day'] ? 'bg-blue-600' : 'bg-purple-600' ?>">
+                <?= $essential['per_day'] ? 'Per Day' : 'One-Time' ?>
+              </span>
+              <span class="px-2 py-1 rounded-full text-xs font-bold bg-gray-600 text-gray-300">
+                Order: <?= $essential['sort_order'] ?>
               </span>
             </div>
-            <div class="text-sm text-gray-300 mb-3"><?= htmlspecialchars($descEn) ?></div>
-            <div class="flex items-center justify-between flex-wrap gap-2">
-              <div>
-                <span class="font-bold text-yellow-500" dir="ltr">MAD <?= number_format($essential['price'], 2) ?></span>
-                <span class="text-xs text-gray-400"><?= $essential['per_day'] ? '/day' : '/rental' ?></span>
-                <span class="px-2 py-1 rounded-full text-xs font-bold ml-2 <?= $essential['per_day'] ? 'bg-blue-600' : 'bg-purple-600' ?>">
-                  <?= $essential['per_day'] ? 'Per Day' : 'One-Time' ?>
-                </span>
-              </div>
-              <div class="flex gap-2">
-                <a href="travel-essentials-edit.php?id=<?= $essential['id'] ?>" 
-                   class="bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2 px-3 rounded-lg text-xs">
-                  <i class="bi bi-pencil"></i> Edit
-                </a>
-                <a href="travel-essentials-delete.php?id=<?= $essential['id'] ?>&csrf=<?= $csrf ?>" 
-                   onclick="return confirm('Are you sure?')"
-                   class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-xs">
-                  <i class="bi bi-trash"></i>
-                </a>
-              </div>
-            </div>
           </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
+
+          <!-- Actions -->
+          <div class="flex gap-2 mt-auto">
+            <a href="travel-essentials-edit.php?id=<?= $essential['id'] ?>" 
+               class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2.5 px-4 rounded-lg text-sm text-center transition">
+              <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a href="travel-essentials-delete.php?id=<?= $essential['id'] ?>&csrf=<?= $csrf ?>" 
+               onclick="return confirm('Are you sure you want to delete this travel essential?')"
+               class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-lg text-sm text-center transition">
+              <i class="bi bi-trash"></i> Delete
+            </a>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
-  </div>
+  <?php endif; ?>
 </div>
 </main>
 

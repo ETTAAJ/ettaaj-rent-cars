@@ -10,15 +10,6 @@ if (!isset($pdo)) {
 // Get current page for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Get visitor count for badge
-$visitorCount = 0;
-try {
-    $visitorCountStmt = $pdo->query("SELECT COUNT(*) as count FROM visitor_data WHERE email IS NOT NULL OR phone IS NOT NULL");
-    $visitorCountResult = $visitorCountStmt->fetch(PDO::FETCH_ASSOC);
-    $visitorCount = (int)($visitorCountResult['count'] ?? 0);
-} catch (Exception $e) {
-    $visitorCount = 0;
-}
 ?>
 
 <style>
@@ -195,17 +186,6 @@ try {
           <span>Cars</span>
         </a>
         
-        <a href="visitors.php" 
-           class="header-link flex items-center gap-2 <?= $current_page === 'visitors.php' ? 'active' : 'text-gray-300' ?>">
-          <i class="bi bi-people-fill"></i>
-          <span>Visitors</span>
-          <?php if ($visitorCount > 0): ?>
-          <span class="header-badge text-black text-xs font-bold px-2 py-0.5 rounded-full">
-            <?= $visitorCount > 99 ? '99+' : $visitorCount ?>
-          </span>
-          <?php endif; ?>
-        </a>
-        
         <a href="travel-essentials.php" 
            class="header-link flex items-center gap-2 <?= $current_page === 'travel-essentials.php' ? 'active' : 'text-gray-300' ?>">
           <i class="bi bi-bag-check-fill"></i>
@@ -262,18 +242,6 @@ try {
          onclick="closeMobileMenu()">
         <i class="bi bi-car-front-fill text-xl"></i>
         <span>Car Management</span>
-      </a>
-      
-      <a href="visitors.php" 
-         class="header-link flex items-center gap-3 px-4 py-3 rounded-lg <?= $current_page === 'visitors.php' ? 'active' : 'text-gray-300' ?>"
-         onclick="closeMobileMenu()">
-        <i class="bi bi-people-fill text-xl"></i>
-        <span>Visitor Tracking</span>
-        <?php if ($visitorCount > 0): ?>
-        <span class="ml-auto header-badge text-black text-xs font-bold px-2.5 py-1 rounded-full">
-          <?= $visitorCount > 99 ? '99+' : $visitorCount ?>
-        </span>
-        <?php endif; ?>
       </a>
       
       <a href="travel-essentials.php" 

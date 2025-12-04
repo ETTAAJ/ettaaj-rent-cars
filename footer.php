@@ -141,7 +141,4 @@
       .group-hover\\:opacity-100:hover > span { opacity: 1 !important; }
     }
   </style>
-  
-  <!-- Visitor Tracking Script -->
-  <script src="js/visitor-tracker.js"></script>
 </footer>

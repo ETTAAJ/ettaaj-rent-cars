@@ -70,24 +70,29 @@ $currencies = $stmt->fetchAll(PDO::FETCH_ASSOC);
             --border: #3a3a3a;
         }
         body {
-            background: var(--bg-dark);
+            background: #36454F;
             color: #fff;
             font-family: 'Inter', sans-serif;
         }
         
     </style>
 </head>
-<body class="min-h-screen bg-gray-900 text-white">
+<body class="min-h-screen">
 <?php include 'header.php'; ?>
 
 <main class="min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-6xl">
-        <!-- Page Header -->
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-yellow-400">
-                <i class="bi bi-currency-exchange"></i> Currency Management
-            </h1>
+    <!-- Header -->
+    <div class="bg-[#2C3A44] border-b border-[#4A5A66] shadow-xl">
+      <div class="container mx-auto px-6 py-6">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+          <h2 class="text-2xl font-bold flex items-center gap-3">
+            <i class="bi bi-currency-exchange text-yellow-500"></i> Currency Management
+          </h2>
         </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 sm:px-6 py-10 max-w-7xl">
 
         <!-- Alert -->
         <?php if ($alert): ?>
@@ -105,66 +110,61 @@ $currencies = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </p>
         </div>
 
-        <!-- Currencies Table -->
-        <div class="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <table class="w-full">
-                <thead class="bg-gray-700">
-                    <tr>
-                        <th class="px-6 py-4 text-left">Code</th>
-                        <th class="px-6 py-4 text-left">Name</th>
-                        <th class="px-6 py-4 text-left">Symbol</th>
-                        <th class="px-6 py-4 text-left">Rate to MAD</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($currencies as $currency): ?>
-                    <tr class="border-t border-gray-700 hover:bg-gray-750">
-                        <td class="px-6 py-4">
-                            <span class="font-bold text-yellow-400"><?= htmlspecialchars($currency['code']) ?></span>
-                        </td>
-                        <td class="px-6 py-4"><?= htmlspecialchars($currency['name']) ?></td>
-                        <td class="px-6 py-4 text-xl"><?= htmlspecialchars($currency['symbol']) ?></td>
-                        <td class="px-6 py-4">
-                            <form method="POST" class="inline-flex items-center gap-2">
-                                <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
-                                <input type="hidden" name="action" value="update">
-                                <input type="hidden" name="id" value="<?= $currency['id'] ?>">
-                                <input type="number" 
-                                       name="rate_to_mad" 
-                                       value="<?= htmlspecialchars($currency['rate_to_mad']) ?>" 
-                                       step="0.0001"
-                                       min="0.0001"
-                                       class="w-32 px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:border-yellow-400"
-                                       required>
-                                <button type="submit" 
-                                        class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded transition">
-                                    <i class="bi bi-check-lg"></i> Update
-                                </button>
-                            </form>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold <?= $currency['is_active'] ? 'bg-green-600' : 'bg-gray-600' ?>">
-                                <?= $currency['is_active'] ? 'Active' : 'Inactive' ?>
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <form method="POST" class="inline">
-                                <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
-                                <input type="hidden" name="action" value="toggle">
-                                <input type="hidden" name="id" value="<?= $currency['id'] ?>">
-                                <button type="submit" 
-                                        class="px-4 py-2 <?= $currency['is_active'] ? 'bg-gray-600 hover:bg-gray-500' : 'bg-green-600 hover:bg-green-500' ?> rounded transition">
-                                    <i class="bi bi-<?= $currency['is_active'] ? 'pause' : 'play' ?>-fill"></i>
-                                    <?= $currency['is_active'] ? 'Deactivate' : 'Activate' ?>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <!-- Currencies Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php foreach ($currencies as $currency): ?>
+            <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] p-6 hover:shadow-yellow-500/20 transition-all duration-300 transform hover:-translate-y-2 hover:scale-[1.02] flex flex-col">
+                <!-- Card Header -->
+                <div class="flex items-center justify-between mb-4 pb-4 border-b border-[#4A5A66]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-2xl font-bold text-black"><?= htmlspecialchars($currency['symbol']) ?></span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg"><?= htmlspecialchars($currency['name']) ?></h3>
+                            <p class="text-sm text-yellow-400 font-semibold"><?= htmlspecialchars($currency['code']) ?></p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap <?= $currency['is_active'] ? 'bg-green-600' : 'bg-gray-600' ?>">
+                        <?= $currency['is_active'] ? 'Active' : 'Inactive' ?>
+                    </span>
+                </div>
+
+                <!-- Rate Form -->
+                <form method="POST" class="mb-4">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="id" value="<?= $currency['id'] ?>">
+                    <div class="mb-3">
+                        <label class="block text-sm text-gray-400 mb-2">Rate to MAD</label>
+                        <input type="number" 
+                               name="rate_to_mad" 
+                               value="<?= htmlspecialchars($currency['rate_to_mad']) ?>" 
+                               step="0.0001"
+                               min="0.0001"
+                               class="w-full px-4 py-3 bg-[#36454F] border border-[#4A5A66] rounded-xl text-white focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/50"
+                               required>
+                        <p class="text-xs text-gray-500 mt-1">1 <?= htmlspecialchars($currency['code']) ?> = <?= htmlspecialchars($currency['rate_to_mad']) ?> MAD</p>
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-4 rounded-xl transition flex items-center justify-center gap-2">
+                        <i class="bi bi-check-lg"></i> Update Rate
+                    </button>
+                </form>
+
+                <!-- Toggle Status -->
+                <form method="POST" class="mt-auto">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf ?>">
+                    <input type="hidden" name="action" value="toggle">
+                    <input type="hidden" name="id" value="<?= $currency['id'] ?>">
+                    <button type="submit" 
+                            class="w-full px-4 py-3 <?= $currency['is_active'] ? 'bg-gray-600 hover:bg-gray-500' : 'bg-green-600 hover:bg-green-500' ?> rounded-xl transition font-bold flex items-center justify-center gap-2">
+                        <i class="bi bi-<?= $currency['is_active'] ? 'pause' : 'play' ?>-fill"></i>
+                        <?= $currency['is_active'] ? 'Deactivate' : 'Activate' ?>
+                    </button>
+                </form>
+            </div>
+            <?php endforeach; ?>
         </div>
 
         <!-- Example Conversion -->

@@ -4,7 +4,6 @@
 User-agent: *
 Allow: /
 Disallow: /Admin/
-Disallow: /track_visitor.php
 Disallow: /contact-process.php
 Disallow: /booking-process.php
 Disallow: /*?ajax=1

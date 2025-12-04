@@ -101,8 +101,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Add New Car – Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
         --dark-bg: #36454F;
@@ -282,29 +284,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .day-mode-toggle.active i { transform: rotate(180deg); }
   </style>
 </head>
-<body>
+<body class="min-h-screen">
 <?php include 'header.php'; ?>
 
-<!-- DAY MODE TOGGLE -->
-<button class="day-mode-toggle" id="dayModeToggle" title="Toggle Day/Night Mode">
-    <i class="bi bi-sun-fill"></i>
-</button>
-
-<!-- Page Header -->
-<div class="page-header">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-      <h2 class="h4 mb-0 fw-bold d-flex align-items-center gap-2">
-        <i class="bi bi-plus-circle text-warning"></i> Add New Car
+<main class="min-h-screen">
+<!-- Header -->
+<div class="bg-[#2C3A44] border-b border-[#4A5A66] shadow-xl">
+  <div class="container mx-auto px-6 py-6">
+    <div class="flex justify-between items-center flex-wrap gap-4">
+      <h2 class="text-2xl font-bold flex items-center gap-3">
+        <i class="bi bi-plus-circle-fill text-yellow-500"></i> Add New Car
       </h2>
-      <a href="index.php" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back to List
-      </a>
+      <div class="flex gap-3">
+        <a href="index.php" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2">
+          <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="container mt-5 pb-5">
+<div class="container mx-auto px-6 py-10 max-w-7xl">
   <?php if (!empty($errors)): ?>
     <div class="alert alert-danger">
       <ul class="mb-0">
@@ -541,5 +541,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     localStorage.setItem('dayMode', isDay);
   });
 </script>
+</main>
 </body>
 </html>

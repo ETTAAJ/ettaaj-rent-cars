@@ -10,15 +10,6 @@ if (!isset($pdo)) {
 // Get current page for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Get visitor count for badge
-$visitorCount = 0;
-try {
-    $visitorCountStmt = $pdo->query("SELECT COUNT(*) as count FROM visitor_data WHERE email IS NOT NULL OR phone IS NOT NULL");
-    $visitorCountResult = $visitorCountStmt->fetch(PDO::FETCH_ASSOC);
-    $visitorCount = (int)($visitorCountResult['count'] ?? 0);
-} catch (Exception $e) {
-    $visitorCount = 0;
-}
 ?>
 
 <style>
@@ -275,22 +266,6 @@ try {
               <i class="bi bi-car-front-fill text-xl"></i>
             </div>
             <span class="flex-1">Car Management</span>
-          </a>
-        </li>
-        
-        <!-- Visitors -->
-        <li>
-          <a href="visitors.php" 
-             class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg <?= $current_page === 'visitors.php' ? 'active' : 'text-gray-300 hover:text-white' ?>">
-            <div class="sidebar-icon">
-              <i class="bi bi-people-fill text-xl"></i>
-            </div>
-            <span class="flex-1">Visitor Tracking</span>
-            <?php if ($visitorCount > 0): ?>
-            <span class="sidebar-badge text-black text-xs font-bold px-2.5 py-1 rounded-full min-w-[28px] text-center">
-              <?= $visitorCount > 99 ? '99+' : $visitorCount ?>
-            </span>
-            <?php endif; ?>
           </a>
         </li>
         
