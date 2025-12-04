@@ -17,11 +17,17 @@ if ($id <= 0) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT * FROM travel_essentials WHERE id = ?");
-$stmt->execute([$id]);
-$essential = $stmt->fetch();
+try {
+    $stmt = $pdo->prepare("SELECT * FROM travel_essentials WHERE id = ?");
+    $stmt->execute([$id]);
+    $essential = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Edit travel essential error: " . $e->getMessage());
+    header('Location: travel-essentials.php?error=1');
+    exit;
+}
 
-if (!$essential) {
+if (!$essential || empty($essential)) {
     header('Location: travel-essentials.php?error=1');
     exit;
 }

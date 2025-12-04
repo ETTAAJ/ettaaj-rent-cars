@@ -21,11 +21,23 @@ $csrf = $_SESSION['csrf_token'];
    3. GET CAR BY ID
    ------------------------------------------------- */
 $id = (int)($_GET['id'] ?? 0);
-$stmt = $pdo->prepare("SELECT * FROM cars WHERE id = ?");
-$stmt->execute([$id]);
-$car = $stmt->fetch();
 
-if (!$car || $id <= 0) {
+if ($id <= 0) {
+    header('Location: index.php?error=1');
+    exit;
+}
+
+try {
+    $stmt = $pdo->prepare("SELECT * FROM cars WHERE id = ?");
+    $stmt->execute([$id]);
+    $car = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Edit car error: " . $e->getMessage());
+    header('Location: index.php?error=1');
+    exit;
+}
+
+if (!$car || empty($car)) {
     header('Location: index.php?error=1');
     exit;
 }
