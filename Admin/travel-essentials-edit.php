@@ -12,8 +12,11 @@ if (empty($_SESSION['csrf_token'])) {
 $csrf = $_SESSION['csrf_token'];
 
 // Get and validate ID from URL
-$id = isset($_GET['id']) ? trim($_GET['id']) : '';
-if (empty($id) || !is_numeric($id)) {
+$id = isset($_GET['id']) ? $_GET['id'] : '';
+// Convert to string and clean
+$id = trim((string)$id);
+// Check if it's a valid number (allows string numbers like "123")
+if ($id === '' || !ctype_digit($id)) {
     header('Location: travel-essentials.php?error=1');
     exit;
 }
@@ -25,17 +28,25 @@ if ($id <= 0) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM travel_essentials WHERE id = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM travel_essentials WHERE CAST(id AS UNSIGNED) = ? LIMIT 1");
     $stmt->execute([$id]);
     $essential = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$essential) {
+        error_log("Travel essential not found in database (ID: $id)");
+        header('Location: travel-essentials.php?error=1');
+        exit;
+    }
+    
+    // Convert DB ID to int for comparison
+    $dbId = isset($essential['id']) ? (int)$essential['id'] : 0;
+    if ($dbId !== $id || $dbId <= 0) {
+        error_log("Travel essential ID mismatch or invalid (ID: $id, DB ID: $dbId)");
+        header('Location: travel-essentials.php?error=1');
+        exit;
+    }
 } catch (PDOException $e) {
     error_log("Edit travel essential error (ID: $id): " . $e->getMessage());
-    header('Location: travel-essentials.php?error=1');
-    exit;
-}
-
-if (!$essential || empty($essential) || !isset($essential['id']) || (int)$essential['id'] !== $id) {
-    error_log("Travel essential not found or ID mismatch (ID: $id)");
     header('Location: travel-essentials.php?error=1');
     exit;
 }
@@ -270,9 +281,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="container mx-auto px-4 sm:px-6 py-6 sm:py-10 max-w-4xl">
   <div class="bg-[#2C3A44] rounded-2xl shadow-2xl border border-[#4A5A66] p-8">
-    <form method="POST" action="travel-essentials-edit.php?id=<?= $id ?>" class="space-y-6">
-      <input type="hidden" name="csrf" value="<?= $csrf ?>">
-      <input type="hidden" name="id" value="<?= $id ?>">
+    <form method="POST" action="travel-essentials-edit.php?id=<?= urlencode($id) ?>" class="space-y-6">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+      <input type="hidden" name="id" value="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>">
 
       <!-- Language Tabs -->
       <div class="border-b border-[#4A5A66] mb-6">

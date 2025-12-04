@@ -21,8 +21,11 @@ $csrf = $_SESSION['csrf_token'];
    3. GET CAR BY ID
    ------------------------------------------------- */
 // Get and validate ID from URL
-$id = isset($_GET['id']) ? trim($_GET['id']) : '';
-if (empty($id) || !is_numeric($id)) {
+$id = isset($_GET['id']) ? $_GET['id'] : '';
+// Convert to string and clean
+$id = trim((string)$id);
+// Check if it's a valid number (allows string numbers like "123")
+if ($id === '' || !ctype_digit($id)) {
     header('Location: index.php?error=1');
     exit;
 }
@@ -34,17 +37,25 @@ if ($id <= 0) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM cars WHERE id = ? LIMIT 1");
+    $stmt = $pdo->prepare("SELECT * FROM cars WHERE CAST(id AS UNSIGNED) = ? LIMIT 1");
     $stmt->execute([$id]);
     $car = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$car) {
+        error_log("Car not found in database (ID: $id)");
+        header('Location: index.php?error=1');
+        exit;
+    }
+    
+    // Convert DB ID to int for comparison
+    $dbId = isset($car['id']) ? (int)$car['id'] : 0;
+    if ($dbId !== $id || $dbId <= 0) {
+        error_log("Car ID mismatch or invalid (ID: $id, DB ID: $dbId)");
+        header('Location: index.php?error=1');
+        exit;
+    }
 } catch (PDOException $e) {
     error_log("Edit car error (ID: $id): " . $e->getMessage());
-    header('Location: index.php?error=1');
-    exit;
-}
-
-if (!$car || empty($car) || !isset($car['id']) || (int)$car['id'] !== $id) {
-    error_log("Car not found or ID mismatch (ID: $id)");
     header('Location: index.php?error=1');
     exit;
 }
@@ -384,9 +395,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <?php endif; ?>
 
   <div class="card p-4 p-md-5">
-    <form method="POST" enctype="multipart/form-data" action="edit.php?id=<?= $id ?>">
-      <input type="hidden" name="csrf" value="<?= $csrf ?>">
-      <input type="hidden" name="id" value="<?= $id ?>">
+    <form method="POST" enctype="multipart/form-data" action="edit.php?id=<?= urlencode($id) ?>">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+      <input type="hidden" name="id" value="<?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?>">
 
       <div class="row g-4">
         <div class="col-md-6">

@@ -142,11 +142,15 @@ $essentials = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <?php foreach ($essentials as $essential): 
-        // Skip if ID is missing or invalid
-        if (empty($essential['id']) || !is_numeric($essential['id'])) {
+        // Skip if ID is missing or invalid - be more flexible
+        if (!isset($essential['id']) || $essential['id'] === null || $essential['id'] === '') {
           continue;
         }
-        $essentialId = (int)$essential['id'];
+        $idStr = trim((string)$essential['id']);
+        if ($idStr === '' || !ctype_digit($idStr)) {
+          continue;
+        }
+        $essentialId = (int)$idStr;
         $nameEn = $essential['name_en'] ?? $essential['name'] ?? '';
         $nameAr = $essential['name_ar'] ?? '';
         $nameFr = $essential['name_fr'] ?? '';
@@ -203,11 +207,11 @@ $essentials = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
           <!-- Actions -->
           <div class="flex gap-2 mt-auto">
-            <a href="travel-essentials-edit.php?id=<?= $essentialId ?>" 
+            <a href="travel-essentials-edit.php?id=<?= urlencode($essentialId) ?>" 
                class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-black font-bold py-2.5 px-4 rounded-lg text-sm text-center transition">
               <i class="bi bi-pencil"></i> Edit
             </a>
-            <a href="travel-essentials-delete.php?id=<?= $essentialId ?>&csrf=<?= htmlspecialchars($csrf) ?>" 
+            <a href="travel-essentials-delete.php?id=<?= urlencode($essentialId) ?>&csrf=<?= urlencode($csrf) ?>" 
                onclick="return confirm('Are you sure you want to delete this travel essential?')"
                class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-lg text-sm text-center transition">
               <i class="bi bi-trash"></i> Delete

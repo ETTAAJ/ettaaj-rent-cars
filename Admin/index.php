@@ -78,11 +78,16 @@ $allCars = $allCarsStmt->fetchAll(PDO::FETCH_ASSOC);
    ------------------------------------------------- */
 function renderAdminCarCard($car, $index = 0): string
 {
-    // Validate car ID
-    if (empty($car['id']) || !is_numeric($car['id'])) {
+    // Validate car ID - be more flexible with different ID formats
+    if (!isset($car['id']) || $car['id'] === null || $car['id'] === '') {
+        return ''; // Return empty string if ID is missing
+    }
+    // Convert to string first, then check if it's numeric
+    $idStr = trim((string)$car['id']);
+    if ($idStr === '' || !ctype_digit($idStr)) {
         return ''; // Return empty string if ID is invalid
     }
-    $carId = (int)$car['id'];
+    $carId = (int)$idStr;
     
     $img = !empty($car['image']) ? '../uploads/' . basename($car['image']) . '?v=' . @filemtime(__DIR__ . '/../uploads/' . basename($car['image'])) : '';
     $placeholder = 'https://via.placeholder.com/600x338/36454F/FFFFFF?text=' . urlencode($car['name']);
@@ -153,7 +158,7 @@ function renderAdminCarCard($car, $index = 0): string
             </div>
 
             <div class="mt-auto flex gap-3">
-                <a href="edit.php?id=<?= $carId ?>"
+                <a href="edit.php?id=<?= urlencode($carId) ?>"
                    class="flex-1 text-center bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-orange-500 hover:to-red-500
                           text-black font-bold py-3 rounded-2xl shadow-lg transition-all duration-300 transform hover:scale-105">
                     <i class="bi bi-pencil-fill"></i> Edit
@@ -179,6 +184,14 @@ if (isset($_GET['ajax'])) {
 
     $html = '';
     foreach ($cars as $i => $c) {
+        // Validate car ID before rendering - be more flexible
+        if (!isset($c['id']) || $c['id'] === null || $c['id'] === '') {
+            continue; // Skip invalid cars
+        }
+        $idStr = trim((string)$c['id']);
+        if ($idStr === '' || !ctype_digit($idStr)) {
+            continue; // Skip invalid cars
+        }
         $html .= renderAdminCarCard($c, $i);
     }
 
@@ -303,11 +316,15 @@ $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <div id="cars-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
     <?php foreach ($cars as $i => $c): ?>
       <?php 
-        // Skip if ID is missing or invalid
-        if (empty($c['id']) || !is_numeric($c['id'])) {
+        // Skip if ID is missing or invalid - be more flexible
+        if (!isset($c['id']) || $c['id'] === null || $c['id'] === '') {
           continue;
         }
-        $cId = (int)$c['id'];
+        $idStr = trim((string)$c['id']);
+        if ($idStr === '' || !ctype_digit($idStr)) {
+          continue;
+        }
+        $cId = (int)$idStr;
       ?>
       <?= renderAdminCarCard($c, $i) ?>
       
