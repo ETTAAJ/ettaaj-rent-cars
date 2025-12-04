@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 01, 2025 at 08:51 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Hôte : 127.0.0.1
+-- Généré le : jeu. 04 déc. 2025 à 17:04
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ettaajrentcars`
+-- Base de données : `ettaajrentcars`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admins`
+-- Structure de la table `admins`
 --
 
 CREATE TABLE `admins` (
@@ -35,7 +35,7 @@ CREATE TABLE `admins` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `admins`
+-- Déchargement des données de la table `admins`
 --
 
 INSERT INTO `admins` (`id`, `username`, `password`, `created_at`) VALUES
@@ -44,7 +44,7 @@ INSERT INTO `admins` (`id`, `username`, `password`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cars`
+-- Structure de la table `cars`
 --
 
 CREATE TABLE `cars` (
@@ -68,11 +68,11 @@ CREATE TABLE `cars` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `cars`
+-- Déchargement des données de la table `cars`
 --
 
 INSERT INTO `cars` (`id`, `name`, `image`, `seats`, `bags`, `gear`, `fuel`, `price_day`, `price_week`, `price_month`, `discount`, `insurance_basic_price`, `insurance_smart_price`, `insurance_premium_price`, `insurance_basic_deposit`, `insurance_smart_deposit`, `insurance_premium_deposit`) VALUES
-(21, 'Dacia Logan', 'Dacia Logan.jpg', 5, 2, 'Manual', 'Diesel', 300.00, 1800.00, 6000.00, 5, 0.00, 142.90, 223.50, 8079.12, 4039.56, 1795.36),
+(21, 'Dacia Logan', 'Dacia Logan (1).jpg', 5, 2, 'Manual', 'Diesel', 300.00, 1800.00, 6000.00, 5, 0.00, 142.90, 223.50, 8079.12, 4039.56, 1795.36),
 (22, 'Fiat 500 Convertible', 'Fiat 500 Convertible.jpg', 4, 1, 'Automatic', 'Petrol', 400.00, 2400.00, 8000.00, 0, 0.00, 142.90, 223.50, 8079.12, 4039.56, 1795.36),
 (23, 'Hyundai Accent', 'Hyundai Accent.jpg', 5, 2, 'Automatic', 'Petrol', 400.00, 2400.00, 8000.00, 0, 0.00, 142.90, 223.50, 8079.12, 4039.56, 1795.36),
 (24, 'Dacia Duster', 'Dacia Duster (1).jpg', 5, 3, 'Automatic', 'Diesel', 350.00, 2700.00, 9000.00, 0, 0.00, 142.90, 223.50, 8079.12, 4039.56, 1795.36),
@@ -96,7 +96,7 @@ INSERT INTO `cars` (`id`, `name`, `image`, `seats`, `bags`, `gear`, `fuel`, `pri
 -- --------------------------------------------------------
 
 --
--- Table structure for table `currencies`
+-- Structure de la table `currencies`
 --
 
 CREATE TABLE `currencies` (
@@ -111,7 +111,7 @@ CREATE TABLE `currencies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `currencies`
+-- Déchargement des données de la table `currencies`
 --
 
 INSERT INTO `currencies` (`id`, `code`, `name`, `symbol`, `rate_to_mad`, `is_active`, `created_at`, `updated_at`) VALUES
@@ -122,7 +122,7 @@ INSERT INTO `currencies` (`id`, `code`, `name`, `symbol`, `rate_to_mad`, `is_act
 -- --------------------------------------------------------
 
 --
--- Table structure for table `login_attempts`
+-- Structure de la table `login_attempts`
 --
 
 CREATE TABLE `login_attempts` (
@@ -134,7 +134,7 @@ CREATE TABLE `login_attempts` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `travel_essentials`
+-- Structure de la table `travel_essentials`
 --
 
 CREATE TABLE `travel_essentials` (
@@ -157,7 +157,7 @@ CREATE TABLE `travel_essentials` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `travel_essentials`
+-- Déchargement des données de la table `travel_essentials`
 --
 
 INSERT INTO `travel_essentials` (`id`, `name`, `name_en`, `name_ar`, `name_fr`, `description`, `description_en`, `description_ar`, `description_fr`, `price`, `per_day`, `icon`, `is_active`, `sort_order`, `created_at`, `updated_at`) VALUES
@@ -166,66 +166,38 @@ INSERT INTO `travel_essentials` (`id`, `name`, `name_en`, `name_ar`, `name_fr`, 
 (3, 'Flexible Cancellation', 'Flexible Cancellation', 'إلغاء مرن', 'Annulation flexible', 'Free cancellation until scheduled departure', 'Free cancellation until scheduled departure', 'إلغاء مجاني حتى وقت المغادرة المقرر', 'Annulation gratuite jusqu\'au départ prévu', 9.50, 0, 'bi-check-circle', 1, 3, '2025-11-28 16:46:54', '2025-11-28 16:54:28'),
 (4, 'Additional Drivers', 'Additional Drivers', 'سائقون إضافيون', 'Conducteurs supplémentaires', 'Add up to 2 additional drivers', 'Add up to 2 additional drivers', 'أضف حتى سائقين إضافيين', 'Ajouter jusqu\'à 2 conducteurs supplémentaires', 2.50, 1, 'bi-people', 1, 4, '2025-11-28 16:46:54', '2025-11-28 16:54:28');
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `visitor_data`
---
-
-CREATE TABLE `visitor_data` (
-  `id` int(11) NOT NULL,
-  `ip_address` varchar(45) DEFAULT NULL,
-  `user_agent` text DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `cookies_data` text DEFAULT NULL,
-  `page_url` varchar(500) DEFAULT NULL,
-  `referrer` varchar(500) DEFAULT NULL,
-  `session_id` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `visitor_data`
---
-
-INSERT INTO `visitor_data` (`id`, `ip_address`, `user_agent`, `name`, `email`, `phone`, `cookies_data`, `page_url`, `referrer`, `session_id`, `created_at`) VALUES
-(11, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'youssef', 'yettaaj@gmail.com', '0653330752', '{\"lang\":\"en\",\"currency\":\"MAD\",\"PHPSESSID\":\"5v48gvlhbd9kgqpl7att640nei\"}', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', '2e4a5adbce7e6f03453967dce4df9d72', '2025-12-01 19:10:41'),
-(12, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'fff', 'ff@gmail.con', '065330752', '{\"lang\":\"en\",\"currency\":\"MAD\",\"PHPSESSID\":\"5v48gvlhbd9kgqpl7att640nei\"}', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', 'http://localhost/ETTAAJ-RENT-CARS/booking.php?id=21&lang=en', '898e4b1244857bd247f614f93b8da221', '2025-12-01 19:15:03');
-
---
--- Indexes for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Indexes for table `admins`
+-- Index pour la table `admins`
 --
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indexes for table `cars`
+-- Index pour la table `cars`
 --
 ALTER TABLE `cars`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `currencies`
+-- Index pour la table `currencies`
 --
 ALTER TABLE `currencies`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`);
 
 --
--- Indexes for table `login_attempts`
+-- Index pour la table `login_attempts`
 --
 ALTER TABLE `login_attempts`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `travel_essentials`
+-- Index pour la table `travel_essentials`
 --
 ALTER TABLE `travel_essentials`
   ADD PRIMARY KEY (`id`),
@@ -233,53 +205,38 @@ ALTER TABLE `travel_essentials`
   ADD KEY `sort_order` (`sort_order`);
 
 --
--- Indexes for table `visitor_data`
---
-ALTER TABLE `visitor_data`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_email` (`email`),
-  ADD KEY `idx_phone` (`phone`),
-  ADD KEY `idx_created_at` (`created_at`);
-
---
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT for table `admins`
+-- AUTO_INCREMENT pour la table `admins`
 --
 ALTER TABLE `admins`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `cars`
+-- AUTO_INCREMENT pour la table `cars`
 --
 ALTER TABLE `cars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
--- AUTO_INCREMENT for table `currencies`
+-- AUTO_INCREMENT pour la table `currencies`
 --
 ALTER TABLE `currencies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `login_attempts`
+-- AUTO_INCREMENT pour la table `login_attempts`
 --
 ALTER TABLE `login_attempts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `travel_essentials`
+-- AUTO_INCREMENT pour la table `travel_essentials`
 --
 ALTER TABLE `travel_essentials`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `visitor_data`
---
-ALTER TABLE `visitor_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

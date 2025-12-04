@@ -1,0 +1,175 @@
+# ETTAAJ RENT CARS - .htaccess Configuration
+# Production site: https://ettaajrentcars.com/
+
+# ============================================
+# SECURITY & PROTECTION
+# ============================================
+
+# Disable directory listing
+Options -Indexes
+
+# Deny access to sensitive files
+<FilesMatch "\.(env|log|ini|bak|sql|md|git)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect config files
+<FilesMatch "^(config|init)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect Admin directory (additional security)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^Admin/ - [F,L]
+</IfModule>
+
+# ============================================
+# FORCE HTTPS (SSL)
+# ============================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ============================================
+# FORCE WWW (Optional - uncomment if needed)
+# ============================================
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{HTTP_HOST} !^www\. [NC]
+#     RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# ============================================
+# REMOVE WWW (Current setting - use www or non-www, not both)
+# ============================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    RewriteRule ^(.*)$ https://%1%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ============================================
+# URL REWRITING & CLEAN URLs
+# ============================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # ============================================
+    # 1. REMOVE TRAILING SLASHES
+    # ============================================
+    # Remove trailing slashes (except for directories and root)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteCond %{REQUEST_URI} !^/$
+    RewriteRule ^(.+)/$ /$1 [R=301,L]
+    
+    # ============================================
+    # 2. REMOVE .PHP EXTENSION (SEO-Friendly URLs)
+    # ============================================
+    # External redirect from .php to non-.php (301 permanent redirect)
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+    RewriteRule ^ /%1 [R=301,L]
+    
+    # Internal rewrite to add .php extension
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.+?)/?$ $1.php [L]
+    
+    # ============================================
+    # 3. PRESERVE QUERY STRINGS (lang, currency, id, etc.)
+    # ============================================
+    # This is automatically handled by QSA flag, but we ensure it works
+    RewriteCond %{QUERY_STRING} .+
+    RewriteRule ^(.*)$ $1? [R=301,L]
+    
+    # Allow query strings to pass through
+    RewriteCond %{QUERY_STRING} ^(.*)$
+    RewriteRule ^(.*)$ - [QSA]
+</IfModule>
+
+# ============================================
+# PERFORMANCE OPTIMIZATION
+# ============================================
+
+# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Browser caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# Cache-Control headers
+<IfModule mod_headers.c>
+    # Cache static assets
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|css|js|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    
+    # Don't cache HTML files
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires 0
+    </FilesMatch>
+    
+    # Security headers
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ============================================
+# ERROR PAGES
+# ============================================
+ErrorDocument 404 /index.php
+ErrorDocument 403 /index.php
+ErrorDocument 500 /index.php
+
+# ============================================
+# MIME TYPES
+# ============================================
+<IfModule mod_mime.c>
+    AddType image/webp .webp
+    AddType application/javascript .js
+    AddType text/css .css
+</IfModule>
+
+# ============================================
+# PHP SETTINGS (if allowed by hosting)
+# ============================================
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# ============================================
+# CHARACTER ENCODING
+# ============================================
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+</IfModule>
+
