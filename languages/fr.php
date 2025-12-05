@@ -76,6 +76,8 @@ return [
     'after_pickup' => 'jours après la prise en charge.',
     'pickup_location' => 'Lieu de prise en charge',
     'marrakech_airport' => 'Aéroport de Marrakech Menara (RAK)',
+    'marrakech_city_center' => 'Centre-ville Marrakech',
+    'marrakech_train_station' => 'Gare Marrakech',
     'casablanca_airport' => 'Aéroport de Casablanca Mohammed V (CMN)',
     
     // Protection Plan

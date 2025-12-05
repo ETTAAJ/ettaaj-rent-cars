@@ -76,6 +76,8 @@ return [
     'after_pickup' => 'days after pickup.',
     'pickup_location' => 'Pickup Location',
     'marrakech_airport' => 'Marrakech Menara Airport (RAK)',
+    'marrakech_city_center' => 'Marrakech City Center',
+    'marrakech_train_station' => 'Marrakech Train Station',
     'casablanca_airport' => 'Casablanca Mohammed V Airport (CMN)',
     
     // Protection Plan

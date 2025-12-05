@@ -76,6 +76,8 @@ return [
     'after_pickup' => 'أيام بعد الاستلام.',
     'pickup_location' => 'موقع الاستلام',
     'marrakech_airport' => 'مطار مراكش منارة (RAK)',
+    'marrakech_city_center' => 'وسط مدينة مراكش',
+    'marrakech_train_station' => 'محطة قطار مراكش',
     'casablanca_airport' => 'مطار الدار البيضاء محمد الخامس (CMN)',
     
     // Protection Plan

@@ -1280,10 +1280,15 @@ function carImageUrl($image)
           <h2 class="text-xl sm:text-2xl font-bold text-gold mb-4"><?= $text['pickup_location'] ?></h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="relative">
+              <div class="absolute <?= $lang === 'ar' ? 'right-4' : 'left-4' ?> top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                <i class="bi bi-geo-alt-fill text-gold text-lg"></i>
+              </div>
               <select name="pickup_location" id="pickup_location" required 
-                      class="w-full p-4 bg-white/10 border border-border rounded-2xl focus:ring-2 focus:ring-gold focus:border-gold transition appearance-none cursor-pointer text-primary pr-10">
+                      class="w-full p-4 <?= $lang === 'ar' ? 'pr-12 pl-4' : 'pl-12 pr-10' ?> bg-white/10 border border-border rounded-2xl focus:ring-2 focus:ring-gold focus:border-gold transition appearance-none cursor-pointer text-primary">
                 <option value="" class="bg-[var(--card-dark)] text-primary"><?= $text['pickup_location'] ?>...</option>
                 <option value="<?= htmlspecialchars($text['marrakech_airport']) ?>" class="bg-[var(--card-dark)] text-primary"><?= $text['marrakech_airport'] ?></option>
+                <option value="<?= htmlspecialchars($text['marrakech_city_center']) ?>" class="bg-[var(--card-dark)] text-primary"><?= $text['marrakech_city_center'] ?></option>
+                <option value="<?= htmlspecialchars($text['marrakech_train_station']) ?>" class="bg-[var(--card-dark)] text-primary"><?= $text['marrakech_train_station'] ?></option>
                 <option value="<?= htmlspecialchars($text['casablanca_airport']) ?>" class="bg-[var(--card-dark)] text-primary"><?= $text['casablanca_airport'] ?></option>
               </select>
               <label class="absolute <?= $lang === 'ar' ? 'right-4' : 'left-4' ?> -top-2.5 bg-[var(--card)] px-3 text-xs font-bold text-gold pointer-events-none"><?= $text['pickup_location'] ?></label>
