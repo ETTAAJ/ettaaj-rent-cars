@@ -177,25 +177,47 @@ require_once 'config.php';
 
 <main class="min-h-screen">
   <!-- Hero Section -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20 lg:py-32">
-    <div class="absolute inset-0 opacity-20">
-      <div class="absolute top-0 left-0 w-96 h-96 bg-gold rounded-full filter blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 w-96 h-96 bg-yellow-500 rounded-full filter blur-3xl"></div>
+  <section class="relative overflow-hidden bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#0f0f0f] py-24 lg:py-32">
+    <!-- Animated Background Effects -->
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute top-0 left-0 w-[600px] h-[600px] bg-gold/20 rounded-full filter blur-[120px] animate-pulse"></div>
+      <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-yellow-500/20 rounded-full filter blur-[120px] animate-pulse" style="animation-delay: 1s;"></div>
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/10 rounded-full filter blur-[150px]"></div>
     </div>
     
+    <!-- Grid Pattern Overlay -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px); background-size: 50px 50px;"></div>
+    
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center" data-aos="fade-up">
-        <div class="inline-block mb-6">
-          <img src="pub_img/ettaaj-rent-cars.jpeg" 
-               alt="ETTAAJ Rent Cars Logo" 
-               class="h-24 md:h-32 w-auto mx-auto">
+      <div class="text-center" data-aos="fade-up" data-aos-duration="1000">
+        <!-- Logo with Glow Effect -->
+        <div class="inline-block mb-8 relative group">
+          <div class="absolute inset-0 bg-gold/30 blur-2xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
+          <div class="relative">
+            <img src="pub_img/ettaaj-rent-cars.jpeg" 
+                 alt="ETTAAJ Rent Cars Logo" 
+                 class="h-28 md:h-36 lg:h-44 w-auto mx-auto rounded-full ring-4 ring-gold/50 shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+          </div>
         </div>
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
-          <?= $text['about_hero_title'] ?? ($lang === 'ar' ? 'من نحن' : ($lang === 'fr' ? 'À Propos' : 'About Us')) ?>
+        
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-8 leading-tight">
+          <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent drop-shadow-2xl">
+            <?= $text['about_hero_title'] ?? ($lang === 'ar' ? 'من نحن' : ($lang === 'fr' ? 'À Propos' : 'About Us')) ?>
+          </span>
         </h1>
-        <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        
+        <div class="w-32 h-1.5 bg-gradient-to-r from-transparent via-gold to-transparent rounded-full mx-auto mb-8"></div>
+        
+        <p class="text-xl md:text-2xl lg:text-3xl text-gray-200 max-w-4xl mx-auto leading-relaxed font-medium">
           <?= $text['about_hero_desc'] ?? ($lang === 'ar' ? 'نحن نقدم أفضل خدمات تأجير السيارات في المغرب مع التزام بالتميز والشفافية' : ($lang === 'fr' ? 'Nous offrons les meilleurs services de location de voitures au Maroc avec un engagement envers l\'excellence et la transparence' : 'We provide the best car rental services in Morocco with a commitment to excellence and transparency')) ?>
         </p>
+        
+        <!-- Decorative Elements -->
+        <div class="flex justify-center gap-4 mt-12">
+          <div class="w-2 h-2 bg-gold rounded-full animate-pulse"></div>
+          <div class="w-2 h-2 bg-gold rounded-full animate-pulse" style="animation-delay: 0.3s;"></div>
+          <div class="w-2 h-2 bg-gold rounded-full animate-pulse" style="animation-delay: 0.6s;"></div>
+        </div>
       </div>
     </div>
     
@@ -207,11 +229,12 @@ require_once 'config.php';
   </section>
 
   <!-- Our Story Section -->
-  <section class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
+  <section class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
       <!-- Image Side -->
-      <div data-aos="fade-right" class="relative">
-        <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+      <div data-aos="fade-right" data-aos-duration="1000" class="relative group">
+        <div class="absolute -inset-4 bg-gradient-to-r from-gold/20 via-gold/10 to-transparent rounded-3xl blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+        <div class="relative rounded-3xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(255,215,0,0.3)] border-2 border-gold/20">
           <?php
             $storyStmt = $pdo->prepare("SELECT * FROM cars ORDER BY RAND() LIMIT 1");
             $storyStmt->execute();
@@ -222,87 +245,129 @@ require_once 'config.php';
           ?>
           <img src="<?= htmlspecialchars($storyImg) ?>" 
                alt="ETTAAJ Rent Cars Story" 
-               class="w-full h-[400px] lg:h-[500px] object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+               class="w-full h-[450px] lg:h-[550px] object-cover transform group-hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
         </div>
         <!-- Floating Badge -->
-        <div class="absolute -bottom-6 -right-6 bg-gold text-black rounded-2xl p-6 shadow-2xl">
-          <div class="text-4xl font-black">2024</div>
-          <div class="text-sm font-semibold"><?= $lang === 'ar' ? 'سنة التأسيس' : ($lang === 'fr' ? 'Année de fondation' : 'Since') ?></div>
+        <div class="absolute -bottom-8 -right-8 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 text-black rounded-3xl p-8 shadow-2xl transform hover:scale-110 transition-transform border-4 border-black/20">
+          <div class="text-5xl font-black mb-2">2024</div>
+          <div class="text-sm font-bold uppercase tracking-wider"><?= $lang === 'ar' ? 'سنة التأسيس' : ($lang === 'fr' ? 'Année de fondation' : 'Since') ?></div>
         </div>
       </div>
       
       <!-- Content Side -->
-      <div data-aos="fade-left" class="space-y-6">
-        <h2 class="text-4xl lg:text-5xl font-black text-primary leading-tight">
-          <?= $text['our_story_title'] ?? ($lang === 'ar' ? 'قصتنا' : ($lang === 'fr' ? 'Notre Histoire' : 'Our Story')) ?>
-        </h2>
-        <div class="w-20 h-1.5 bg-gradient-to-r from-gold to-yellow-500 rounded-full"></div>
-        <p class="text-lg text-muted leading-relaxed">
-          <?= $text['our_story_desc'] ?? ($lang === 'ar' ? 'تأسست ETTAAJ Rent Cars لتكون الوجهة الأولى لتأجير السيارات في المغرب. نحن نؤمن بأن كل رحلة يجب أن تبدأ بسيارة موثوقة وخدمة استثنائية.' : ($lang === 'fr' ? 'ETTAAJ Rent Cars a été fondée pour être la première destination de location de voitures au Maroc. Nous croyons que chaque voyage doit commencer par une voiture fiable et un service exceptionnel.' : 'ETTAAJ Rent Cars was founded to be Morocco\'s premier car rental destination. We believe every journey should start with a reliable vehicle and exceptional service.')) ?>
-        </p>
-        <p class="text-lg text-muted leading-relaxed">
-          <?= $text['our_story_desc2'] ?? ($lang === 'ar' ? 'من مراكش إلى الدار البيضاء، نخدم الآلاف من العملاء كل عام بأسطول متنوع من السيارات وأسعار شفافة وبدون رسوم مخفية.' : ($lang === 'fr' ? 'De Marrakech à Casablanca, nous servons des milliers de clients chaque année avec une flotte diversifiée, des prix transparents et sans frais cachés.' : 'From Marrakech to Casablanca, we serve thousands of customers annually with a diverse fleet, transparent pricing, and no hidden fees.')) ?>
-        </p>
+      <div data-aos="fade-left" data-aos-duration="1000" class="space-y-8">
+        <div>
+          <h2 class="text-5xl lg:text-6xl font-black text-primary leading-tight mb-4">
+            <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+              <?= $text['our_story_title'] ?? ($lang === 'ar' ? 'قصتنا' : ($lang === 'fr' ? 'Notre Histoire' : 'Our Story')) ?>
+            </span>
+          </h2>
+          <div class="w-24 h-2 bg-gradient-to-r from-gold via-yellow-500 to-gold rounded-full"></div>
+        </div>
+        <div class="space-y-6">
+          <p class="text-xl text-muted leading-relaxed font-medium">
+            <?= $text['our_story_desc'] ?? ($lang === 'ar' ? 'تأسست ETTAAJ Rent Cars لتكون الوجهة الأولى لتأجير السيارات في المغرب. نحن نؤمن بأن كل رحلة يجب أن تبدأ بسيارة موثوقة وخدمة استثنائية.' : ($lang === 'fr' ? 'ETTAAJ Rent Cars a été fondée pour être la première destination de location de voitures au Maroc. Nous croyons que chaque voyage doit commencer par une voiture fiable et un service exceptionnel.' : 'ETTAAJ Rent Cars was founded to be Morocco\'s premier car rental destination. We believe every journey should start with a reliable vehicle and exceptional service.')) ?>
+          </p>
+          <p class="text-xl text-muted leading-relaxed font-medium">
+            <?= $text['our_story_desc2'] ?? ($lang === 'ar' ? 'من مراكش إلى الدار البيضاء، نخدم الآلاف من العملاء كل عام بأسطول متنوع من السيارات وأسعار شفافة وبدون رسوم مخفية.' : ($lang === 'fr' ? 'De Marrakech à Casablanca, nous servons des milliers de clients chaque année avec une flotte diversifiée, des prix transparents et sans frais cachés.' : 'From Marrakech to Casablanca, we serve thousands of customers annually with a diverse fleet, transparent pricing, and no hidden fees.')) ?>
+          </p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Stats Section -->
-  <section class="py-16 bg-card-dark">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-        <div data-aos="zoom-in" class="text-center">
-          <div class="text-5xl lg:text-6xl font-black text-gold mb-2">5K+</div>
-          <div class="text-muted font-semibold"><?= $lang === 'ar' ? 'عميل سعيد' : ($lang === 'fr' ? 'Clients Satisfaits' : 'Happy Clients') ?></div>
+  <section class="py-20 lg:py-28 bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] relative overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-gold rounded-full filter blur-3xl"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-500 rounded-full filter blur-3xl"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div data-aos="zoom-in" data-aos-duration="800" class="text-center group">
+          <div class="relative inline-block mb-4">
+            <div class="absolute inset-0 bg-gold/20 blur-2xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-gold/20 to-gold/10 backdrop-blur-xl border-2 border-gold/30 rounded-3xl p-8 lg:p-10 transform group-hover:scale-110 transition-all duration-300">
+              <div class="text-6xl lg:text-7xl font-black text-gold mb-3 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]">5K+</div>
+              <div class="text-muted font-bold text-lg"><?= $lang === 'ar' ? 'عميل سعيد' : ($lang === 'fr' ? 'Clients Satisfaits' : 'Happy Clients') ?></div>
+            </div>
+          </div>
         </div>
-        <div data-aos="zoom-in" data-aos-delay="100" class="text-center">
-          <div class="text-5xl lg:text-6xl font-black text-gold mb-2">20+</div>
-          <div class="text-muted font-semibold"><?= $lang === 'ar' ? 'سيارة متاحة' : ($lang === 'fr' ? 'Voitures Disponibles' : 'Cars Available') ?></div>
+        <div data-aos="zoom-in" data-aos-delay="100" data-aos-duration="800" class="text-center group">
+          <div class="relative inline-block mb-4">
+            <div class="absolute inset-0 bg-gold/20 blur-2xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-gold/20 to-gold/10 backdrop-blur-xl border-2 border-gold/30 rounded-3xl p-8 lg:p-10 transform group-hover:scale-110 transition-all duration-300">
+              <div class="text-6xl lg:text-7xl font-black text-gold mb-3 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]">20+</div>
+              <div class="text-muted font-bold text-lg"><?= $lang === 'ar' ? 'سيارة متاحة' : ($lang === 'fr' ? 'Voitures Disponibles' : 'Cars Available') ?></div>
+            </div>
+          </div>
         </div>
-        <div data-aos="zoom-in" data-aos-delay="200" class="text-center">
-          <div class="text-5xl lg:text-6xl font-black text-gold mb-2">24/7</div>
-          <div class="text-muted font-semibold"><?= $lang === 'ar' ? 'دعم' : ($lang === 'fr' ? 'Support' : 'Support') ?></div>
+        <div data-aos="zoom-in" data-aos-delay="200" data-aos-duration="800" class="text-center group">
+          <div class="relative inline-block mb-4">
+            <div class="absolute inset-0 bg-gold/20 blur-2xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-gold/20 to-gold/10 backdrop-blur-xl border-2 border-gold/30 rounded-3xl p-8 lg:p-10 transform group-hover:scale-110 transition-all duration-300">
+              <div class="text-6xl lg:text-7xl font-black text-gold mb-3 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]">24/7</div>
+              <div class="text-muted font-bold text-lg"><?= $lang === 'ar' ? 'دعم' : ($lang === 'fr' ? 'Support' : 'Support') ?></div>
+            </div>
+          </div>
         </div>
-        <div data-aos="zoom-in" data-aos-delay="300" class="text-center">
-          <div class="text-5xl lg:text-6xl font-black text-gold mb-2">2</div>
-          <div class="text-muted font-semibold"><?= $lang === 'ar' ? 'مدن رئيسية' : ($lang === 'fr' ? 'Villes Principales' : 'Major Cities') ?></div>
+        <div data-aos="zoom-in" data-aos-delay="300" data-aos-duration="800" class="text-center group">
+          <div class="relative inline-block mb-4">
+            <div class="absolute inset-0 bg-gold/20 blur-2xl rounded-full opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-gold/20 to-gold/10 backdrop-blur-xl border-2 border-gold/30 rounded-3xl p-8 lg:p-10 transform group-hover:scale-110 transition-all duration-300">
+              <div class="text-6xl lg:text-7xl font-black text-gold mb-3 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]">2</div>
+              <div class="text-muted font-bold text-lg"><?= $lang === 'ar' ? 'مدن رئيسية' : ($lang === 'fr' ? 'Villes Principales' : 'Major Cities') ?></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Mission & Vision - Modern Grid -->
-  <section class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid lg:grid-cols-2 gap-8">
+  <section class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-10">
       <!-- Mission -->
-      <div data-aos="fade-up" class="relative group">
-        <div class="absolute inset-0 bg-gradient-to-br from-gold/20 to-yellow-500/20 rounded-3xl transform group-hover:scale-105 transition-transform duration-300"></div>
-        <div class="relative bg-card/90 backdrop-blur-xl p-10 rounded-3xl border-2 border-border hover:border-gold transition-all duration-300 h-full">
-          <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold to-yellow-500 rounded-2xl mb-6 shadow-lg">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div data-aos="fade-up" data-aos-duration="1000" class="relative group">
+        <div class="absolute -inset-1 bg-gradient-to-br from-gold/30 via-yellow-500/20 to-gold/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+        <div class="relative bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] backdrop-blur-xl p-10 lg:p-12 rounded-3xl border-2 border-gold/30 hover:border-gold/60 transition-all duration-500 h-full shadow-[0_20px_60px_-15px_rgba(255,215,0,0.2)] group-hover:shadow-[0_25px_70px_-15px_rgba(255,215,0,0.4)] transform group-hover:-translate-y-2">
+          <div class="relative inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 rounded-3xl mb-8 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gold/50 blur-xl"></div>
+            <svg class="w-12 h-12 text-black relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
-          <h3 class="text-3xl font-black text-primary mb-4"><?= $text['our_mission'] ?></h3>
-          <p class="text-muted leading-relaxed text-lg">
+          <h3 class="text-4xl font-black text-primary mb-6">
+            <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+              <?= $text['our_mission'] ?>
+            </span>
+          </h3>
+          <p class="text-muted leading-relaxed text-xl font-medium">
             <?= $text['mission_desc'] ?>
           </p>
         </div>
       </div>
 
       <!-- Vision -->
-      <div data-aos="fade-up" data-aos-delay="100" class="relative group">
-        <div class="absolute inset-0 bg-gradient-to-br from-gold/20 to-yellow-500/20 rounded-3xl transform group-hover:scale-105 transition-transform duration-300"></div>
-        <div class="relative bg-card/90 backdrop-blur-xl p-10 rounded-3xl border-2 border-border hover:border-gold transition-all duration-300 h-full">
-          <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold to-yellow-500 rounded-2xl mb-6 shadow-lg">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <div data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000" class="relative group">
+        <div class="absolute -inset-1 bg-gradient-to-br from-gold/30 via-yellow-500/20 to-gold/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+        <div class="relative bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] backdrop-blur-xl p-10 lg:p-12 rounded-3xl border-2 border-gold/30 hover:border-gold/60 transition-all duration-500 h-full shadow-[0_20px_60px_-15px_rgba(255,215,0,0.2)] group-hover:shadow-[0_25px_70px_-15px_rgba(255,215,0,0.4)] transform group-hover:-translate-y-2">
+          <div class="relative inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 rounded-3xl mb-8 shadow-2xl group-hover:scale-110 transition-transform duration-300">
+            <div class="absolute inset-0 bg-gold/50 blur-xl"></div>
+            <svg class="w-12 h-12 text-black relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
             </svg>
           </div>
-          <h3 class="text-3xl font-black text-primary mb-4"><?= $text['our_vision'] ?></h3>
-          <p class="text-muted leading-relaxed text-lg">
+          <h3 class="text-4xl font-black text-primary mb-6">
+            <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+              <?= $text['our_vision'] ?>
+            </span>
+          </h3>
+          <p class="text-muted leading-relaxed text-xl font-medium">
             <?= $text['vision_desc'] ?>
           </p>
         </div>
@@ -311,52 +376,81 @@ require_once 'config.php';
   </section>
 
   <!-- Core Values - 3 Column Grid -->
-  <section class="py-16 lg:py-24 bg-card-dark">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16" data-aos="fade-up">
-        <h2 class="text-4xl lg:text-5xl font-black text-primary mb-4">
-          <?= $lang === 'ar' ? 'قيمنا الأساسية' : ($lang === 'fr' ? 'Nos Valeurs' : 'Our Core Values') ?>
+  <section class="py-20 lg:py-28 bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-[0.02]" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 50px 50px;"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="text-center mb-20" data-aos="fade-up" data-aos-duration="1000">
+        <h2 class="text-5xl lg:text-6xl font-black text-primary mb-6">
+          <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+            <?= $lang === 'ar' ? 'قيمنا الأساسية' : ($lang === 'fr' ? 'Nos Valeurs' : 'Our Core Values') ?>
+          </span>
         </h2>
-        <div class="w-20 h-1.5 bg-gradient-to-r from-gold to-yellow-500 rounded-full mx-auto"></div>
+        <div class="w-32 h-2 bg-gradient-to-r from-transparent via-gold to-transparent rounded-full mx-auto"></div>
       </div>
 
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid md:grid-cols-3 gap-10">
         <!-- Value 1 -->
-        <div data-aos="flip-left" class="group">
-          <div class="bg-card/80 backdrop-blur-xl p-8 rounded-3xl border-2 border-border hover:border-gold transition-all duration-300 transform hover:-translate-y-2 h-full">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gold to-yellow-500 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-              </svg>
+        <div data-aos="flip-left" data-aos-duration="1000" class="group">
+          <div class="relative">
+            <div class="absolute -inset-1 bg-gradient-to-br from-gold/30 via-yellow-500/20 to-gold/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] backdrop-blur-xl p-10 rounded-3xl border-2 border-gold/30 hover:border-gold/60 transition-all duration-500 transform group-hover:-translate-y-3 h-full shadow-[0_20px_60px_-15px_rgba(255,215,0,0.2)] group-hover:shadow-[0_25px_70px_-15px_rgba(255,215,0,0.4)]">
+              <div class="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 rounded-3xl mb-8 shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <div class="absolute inset-0 bg-gold/50 blur-xl"></div>
+                <svg class="w-10 h-10 text-black relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                </svg>
+              </div>
+              <h3 class="text-3xl font-black text-primary mb-4">
+                <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+                  <?= $text['no_hidden_fees'] ?>
+                </span>
+              </h3>
+              <p class="text-muted leading-relaxed text-lg font-medium"><?= $text['no_hidden_fees_desc'] ?></p>
             </div>
-            <h3 class="text-2xl font-black text-primary mb-3"><?= $text['no_hidden_fees'] ?></h3>
-            <p class="text-muted leading-relaxed"><?= $text['no_hidden_fees_desc'] ?></p>
           </div>
         </div>
 
         <!-- Value 2 -->
-        <div data-aos="flip-left" data-aos-delay="100" class="group">
-          <div class="bg-card/80 backdrop-blur-xl p-8 rounded-3xl border-2 border-border hover:border-gold transition-all duration-300 transform hover:-translate-y-2 h-full">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gold to-yellow-500 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
+        <div data-aos="flip-left" data-aos-delay="100" data-aos-duration="1000" class="group">
+          <div class="relative">
+            <div class="absolute -inset-1 bg-gradient-to-br from-gold/30 via-yellow-500/20 to-gold/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] backdrop-blur-xl p-10 rounded-3xl border-2 border-gold/30 hover:border-gold/60 transition-all duration-500 transform group-hover:-translate-y-3 h-full shadow-[0_20px_60px_-15px_rgba(255,215,0,0.2)] group-hover:shadow-[0_25px_70px_-15px_rgba(255,215,0,0.4)]">
+              <div class="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 rounded-3xl mb-8 shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <div class="absolute inset-0 bg-gold/50 blur-xl"></div>
+                <svg class="w-10 h-10 text-black relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <h3 class="text-3xl font-black text-primary mb-4">
+                <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+                  <?= $text['support_24_7'] ?>
+                </span>
+              </h3>
+              <p class="text-muted leading-relaxed text-lg font-medium"><?= $text['support_24_7_desc'] ?></p>
             </div>
-            <h3 class="text-2xl font-black text-primary mb-3"><?= $text['support_24_7'] ?></h3>
-            <p class="text-muted leading-relaxed"><?= $text['support_24_7_desc'] ?></p>
           </div>
         </div>
 
         <!-- Value 3 -->
-        <div data-aos="flip-left" data-aos-delay="200" class="group">
-          <div class="bg-card/80 backdrop-blur-xl p-8 rounded-3xl border-2 border-border hover:border-gold transition-all duration-300 transform hover:-translate-y-2 h-full">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-gold to-yellow-500 rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
+        <div data-aos="flip-left" data-aos-delay="200" data-aos-duration="1000" class="group">
+          <div class="relative">
+            <div class="absolute -inset-1 bg-gradient-to-br from-gold/30 via-yellow-500/20 to-gold/30 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] backdrop-blur-xl p-10 rounded-3xl border-2 border-gold/30 hover:border-gold/60 transition-all duration-500 transform group-hover:-translate-y-3 h-full shadow-[0_20px_60px_-15px_rgba(255,215,0,0.2)] group-hover:shadow-[0_25px_70px_-15px_rgba(255,215,0,0.4)]">
+              <div class="relative inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 rounded-3xl mb-8 shadow-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <div class="absolute inset-0 bg-gold/50 blur-xl"></div>
+                <svg class="w-10 h-10 text-black relative z-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <h3 class="text-3xl font-black text-primary mb-4">
+                <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+                  <?= $text['fastest_delivery'] ?>
+                </span>
+              </h3>
+              <p class="text-muted leading-relaxed text-lg font-medium"><?= $text['fastest_delivery_desc'] ?></p>
             </div>
-            <h3 class="text-2xl font-black text-primary mb-3"><?= $text['fastest_delivery'] ?></h3>
-            <p class="text-muted leading-relaxed"><?= $text['fastest_delivery_desc'] ?></p>
           </div>
         </div>
       </div>
@@ -364,13 +458,15 @@ require_once 'config.php';
   </section>
 
   <!-- Car Fleet Showcase -->
-  <section class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12" data-aos="fade-up">
-      <h2 class="text-4xl lg:text-5xl font-black text-primary mb-4">
-        <?= $lang === 'ar' ? 'أسطولنا' : ($lang === 'fr' ? 'Notre Flotte' : 'Our Fleet') ?>
+  <section class="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000">
+      <h2 class="text-5xl lg:text-6xl font-black text-primary mb-6">
+        <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent">
+          <?= $lang === 'ar' ? 'أسطولنا' : ($lang === 'fr' ? 'Notre Flotte' : 'Our Fleet') ?>
+        </span>
       </h2>
-      <div class="w-20 h-1.5 bg-gradient-to-r from-gold to-yellow-500 rounded-full mx-auto mb-6"></div>
-      <p class="text-xl text-muted max-w-2xl mx-auto">
+      <div class="w-32 h-2 bg-gradient-to-r from-transparent via-gold to-transparent rounded-full mx-auto mb-8"></div>
+      <p class="text-2xl text-muted max-w-3xl mx-auto font-medium">
         <?= $lang === 'ar' ? 'اكتشف مجموعتنا المتنوعة من السيارات الفاخرة والاقتصادية' : ($lang === 'fr' ? 'Découvrez notre collection diversifiée de voitures de luxe et économiques' : 'Discover our diverse collection of luxury and economy vehicles') ?>
       </p>
     </div>
@@ -381,28 +477,31 @@ require_once 'config.php';
       $fleetCars = $fleetStmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
       <?php foreach ($fleetCars as $idx => $car): 
         $carImg = !empty($car['image']) 
           ? 'uploads/' . basename($car['image']) 
           : 'https://via.placeholder.com/400x300/FFB22C/000000?text=' . urlencode($car['name']);
       ?>
-        <div data-aos="zoom-in" data-aos-delay="<?= $idx * 100 ?>" class="group">
-          <div class="relative overflow-hidden rounded-3xl shadow-2xl">
-            <img src="<?= htmlspecialchars($carImg) ?>" 
-                 alt="<?= htmlspecialchars($car['name']) ?>" 
-                 class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                 loading="lazy">
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-              <h4 class="text-white text-xl font-bold mb-2"><?= htmlspecialchars($car['name']) ?></h4>
-              <a href="car-detail.php?id=<?= $car['id'] ?>&lang=<?= $lang ?>" 
-                 class="inline-flex items-center gap-2 text-gold font-semibold hover:gap-3 transition-all">
-                <?= $lang === 'ar' ? 'عرض التفاصيل' : ($lang === 'fr' ? 'Voir Détails' : 'View Details') ?>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </a>
+        <div data-aos="zoom-in" data-aos-delay="<?= $idx * 100 ?>" data-aos-duration="800" class="group">
+          <div class="relative overflow-hidden rounded-3xl shadow-[0_25px_50px_-12px_rgba(255,215,0,0.3)] border-2 border-gold/20 hover:border-gold/50 transition-all duration-500 transform group-hover:-translate-y-3">
+            <div class="absolute -inset-1 bg-gradient-to-br from-gold/20 via-yellow-500/10 to-gold/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+            <div class="relative">
+              <img src="<?= htmlspecialchars($carImg) ?>" 
+                   alt="<?= htmlspecialchars($car['name']) ?>" 
+                   class="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-700"
+                   loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-8 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                <h4 class="text-white text-2xl font-black mb-4 drop-shadow-lg"><?= htmlspecialchars($car['name']) ?></h4>
+                <a href="car-detail.php?id=<?= $car['id'] ?>&lang=<?= $lang ?>" 
+                   class="inline-flex items-center gap-3 bg-gradient-to-r from-gold to-yellow-500 text-black font-bold px-6 py-3 rounded-xl hover:from-yellow-500 hover:to-orange-500 transition-all transform hover:scale-105 shadow-xl">
+                  <?= $lang === 'ar' ? 'عرض التفاصيل' : ($lang === 'fr' ? 'Voir Détails' : 'View Details') ?>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -411,27 +510,36 @@ require_once 'config.php';
   </section>
 
   <!-- CTA Section -->
-  <section class="py-20 bg-gradient-to-br from-gold via-yellow-500 to-orange-500">
-    <div class="max-w-4xl mx-auto px-4 text-center" data-aos="zoom-in">
-      <h2 class="text-4xl lg:text-5xl font-black text-black mb-6">
+  <section class="py-24 lg:py-32 bg-gradient-to-br from-gold via-yellow-500 to-orange-500 relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full filter blur-3xl animate-pulse"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full filter blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="max-w-5xl mx-auto px-4 text-center relative" data-aos="zoom-in" data-aos-duration="1000">
+      <h2 class="text-5xl lg:text-7xl font-black text-black mb-8 leading-tight drop-shadow-2xl">
         <?= $lang === 'ar' ? 'هل أنت مستعد للبدء؟' : ($lang === 'fr' ? 'Prêt à Commencer?' : 'Ready to Get Started?') ?>
       </h2>
-      <p class="text-xl text-black/80 mb-10 max-w-2xl mx-auto">
+      <div class="w-32 h-2 bg-black/30 rounded-full mx-auto mb-10"></div>
+      <p class="text-2xl lg:text-3xl text-black/90 mb-12 max-w-3xl mx-auto font-semibold leading-relaxed">
         <?= $lang === 'ar' ? 'احجز سيارتك اليوم واستمتع بأفضل تجربة تأجير سيارات في المغرب' : ($lang === 'fr' ? 'Réservez votre voiture aujourd\'hui et profitez de la meilleure expérience de location au Maroc' : 'Book your car today and enjoy the best rental experience in Morocco') ?>
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <div class="flex flex-col sm:flex-row gap-6 justify-center">
         <a href="<?= langUrl('index.php') ?>" 
-           class="inline-flex items-center justify-center gap-3 bg-black text-white font-bold text-lg py-5 px-10 rounded-full shadow-2xl hover:scale-105 transition-all duration-300">
-          <?= $text['view_cars_airport'] ?>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+           class="group relative inline-flex items-center justify-center gap-4 bg-black text-white font-bold text-xl py-6 px-12 rounded-2xl shadow-2xl hover:scale-110 transition-all duration-300 overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+          <span class="relative z-10"><?= $text['view_cars_airport'] ?></span>
+          <svg class="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
           </svg>
         </a>
         <a href="<?= langUrl('contact.php') ?>" 
-           class="inline-flex items-center justify-center gap-3 bg-white text-black font-bold text-lg py-5 px-10 rounded-full shadow-2xl hover:scale-105 transition-all duration-300">
-          <?= $lang === 'ar' ? 'اتصل بنا' : ($lang === 'fr' ? 'Contactez-Nous' : 'Contact Us') ?>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+           class="group relative inline-flex items-center justify-center gap-4 bg-white text-black font-bold text-xl py-6 px-12 rounded-2xl shadow-2xl hover:scale-110 transition-all duration-300 overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+          <span class="relative z-10"><?= $lang === 'ar' ? 'اتصل بنا' : ($lang === 'fr' ? 'Contactez-Nous' : 'Contact Us') ?></span>
+          <svg class="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
           </svg>
         </a>
       </div>

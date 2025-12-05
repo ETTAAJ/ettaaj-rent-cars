@@ -1188,43 +1188,139 @@
 
 <!-- CARS SECTION -->
 <section id="cars" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <div data-aos="fade-up" class="bg-[#353333] p-4 sm:p-6 rounded-xl shadow-lg mb-8 border border-[#4A5A66]">
-    <form id="filter-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+  <div data-aos="fade-up" class="relative bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1f1f1f] p-8 sm:p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] mb-8 border border-gold/20 backdrop-blur-xl overflow-hidden group">
+    <!-- Animated gradient overlay -->
+    <div class="absolute inset-0 bg-gradient-to-r from-gold/10 via-transparent to-gold/10 pointer-events-none animate-pulse"></div>
+    <!-- Animated shimmer effect -->
+    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-gold/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
+    <!-- Subtle pattern overlay -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+    <!-- Glow effect -->
+    <div class="absolute -inset-1 bg-gradient-to-r from-gold/20 via-gold/10 to-gold/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-500"></div>
+    
+    <!-- Header -->
+    <div class="relative mb-8 pb-6 border-b border-[#4A5A66]/30">
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h3 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3 mb-2">
+            <div class="relative">
+              <svg class="w-7 h-7 text-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.5)] animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+              </svg>
+              <div class="absolute inset-0 bg-gold/30 blur-xl"></div>
+            </div>
+            <span class="bg-gradient-to-r from-white via-gold/90 to-white bg-clip-text text-transparent"><?= $text['browse_cars'] ?? 'Browse Cars' ?></span>
+          </h3>
+          <p class="text-muted text-sm sm:text-base mt-1 flex items-center gap-2">
+            <span class="w-1 h-1 bg-gold rounded-full"></span>
+            <?= $text['search_car'] ?? 'Search and filter our fleet' ?>
+          </p>
+        </div>
+        <div class="hidden sm:flex items-center gap-2 px-4 py-2 bg-gold/10 border border-gold/30 rounded-xl backdrop-blur-sm">
+          <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span class="text-gold text-sm font-semibold">Premium Selection</span>
+        </div>
+      </div>
+    </div>
+    
+    <form id="filter-form" class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 sm:gap-6">
       <!-- Car Dropdown - Full width on mobile, spans 2 columns on md -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 sm:col-span-2 lg:col-span-1">
-        <label for="search" class="text-muted text-sm font-medium whitespace-nowrap sm:min-w-[50px]">Car:</label>
-        <select id="search" class="w-full flex-1 p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 12px; padding-right: 2.5rem;">
-          <option value="" class="bg-[#353333] text-white">All</option>
+      <div class="flex flex-col gap-3 sm:col-span-2 lg:col-span-1 group/item">
+        <label for="search" class="text-muted text-xs font-bold uppercase tracking-widest flex items-center gap-2.5 group-hover/item:text-gold/80 transition-colors">
+          <div class="relative">
+            <svg class="w-5 h-5 text-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)] group-hover/item:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <?= $text['cars'] ?? 'Car' ?>
+        </label>
+        <div class="relative">
+          <select id="search" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFD700' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 14px; padding-right: 3rem;">
+          <option value="" class="bg-[#1a1a1a] text-white">All</option>
           <?php foreach ($allCars as $carOption): ?>
-            <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?> class="bg-[#353333] text-white">
+            <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?> class="bg-[#1a1a1a] text-white">
               <?= htmlspecialchars($carOption['name']) ?>
             </option>
           <?php endforeach; ?>
         </select>
+        <div class="absolute inset-0 rounded-2xl bg-gold/0 group-hover/item:bg-gold/5 transition-colors pointer-events-none"></div>
+        </div>
       </div>
       
       <!-- Gear Select -->
-      <select id="gear" class="w-full p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer">
-        <option value="" class="bg-[#353333] text-white"><?= $text['all_transmission'] ?> (<?= formatNumber($totalCount) ?>)</option>
-        <option value="Manual" <?= $gear==='Manual'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['manual'] ?> (<?= formatNumber($gearCounts['Manual'] ?? 0) ?>)</option>
-        <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['automatic'] ?> (<?= formatNumber($gearCounts['Automatic'] ?? 0) ?>)</option>
-      </select>
+      <div class="flex flex-col gap-3 group/item">
+        <label for="gear" class="text-muted text-xs font-bold uppercase tracking-widest flex items-center gap-2.5 group-hover/item:text-gold/80 transition-colors">
+          <div class="relative">
+            <svg class="w-5 h-5 text-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)] group-hover/item:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+          </div>
+          <?= $text['transmission'] ?? 'Transmission' ?>
+        </label>
+        <div class="relative">
+          <select id="gear" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30">
+          <option value="" class="bg-[#1a1a1a] text-white"><?= $text['all_transmission'] ?> (<?= formatNumber($totalCount) ?>)</option>
+          <option value="Manual" <?= $gear==='Manual'?'selected':'' ?> class="bg-[#1a1a1a] text-white"><?= $text['manual'] ?> (<?= formatNumber($gearCounts['Manual'] ?? 0) ?>)</option>
+          <option value="Automatic" <?= $gear==='Automatic'?'selected':'' ?> class="bg-[#1a1a1a] text-white"><?= $text['automatic'] ?> (<?= formatNumber($gearCounts['Automatic'] ?? 0) ?>)</option>
+        </select>
+        <div class="absolute inset-0 rounded-2xl bg-gold/0 group-hover/item:bg-gold/5 transition-colors pointer-events-none"></div>
+        </div>
+      </div>
       
       <!-- Fuel Select -->
-      <select id="fuel" class="w-full p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer">
-        <option value="" class="bg-[#353333] text-white"><?= $text['all_fuel'] ?> (<?= formatNumber($totalCount) ?>)</option>
-        <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['diesel'] ?> (<?= formatNumber($fuelCounts['Diesel'] ?? 0) ?>)</option>
-        <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['petrol'] ?> (<?= formatNumber($fuelCounts['Petrol'] ?? 0) ?>)</option>
-      </select>
+      <div class="flex flex-col gap-3 group/item">
+        <label for="fuel" class="text-muted text-xs font-bold uppercase tracking-widest flex items-center gap-2.5 group-hover/item:text-gold/80 transition-colors">
+          <div class="relative">
+            <svg class="w-5 h-5 text-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)] group-hover/item:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <?= $text['fuel'] ?? 'Fuel' ?>
+        </label>
+        <div class="relative">
+          <select id="fuel" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30">
+          <option value="" class="bg-[#1a1a1a] text-white"><?= $text['all_fuel'] ?> (<?= formatNumber($totalCount) ?>)</option>
+          <option value="Diesel" <?= $fuel==='Diesel'?'selected':'' ?> class="bg-[#1a1a1a] text-white"><?= $text['diesel'] ?> (<?= formatNumber($fuelCounts['Diesel'] ?? 0) ?>)</option>
+          <option value="Petrol" <?= $fuel==='Petrol'?'selected':'' ?> class="bg-[#1a1a1a] text-white"><?= $text['petrol'] ?> (<?= formatNumber($fuelCounts['Petrol'] ?? 0) ?>)</option>
+        </select>
+        <div class="absolute inset-0 rounded-2xl bg-gold/0 group-hover/item:bg-gold/5 transition-colors pointer-events-none"></div>
+        </div>
+      </div>
       
       <!-- Sort Select -->
-      <select id="sort" class="w-full p-3 sm:p-4 bg-[#353333] border border-[#4A5A66] text-white rounded-xl focus:ring-2 focus:ring-yellow-500 text-sm cursor-pointer">
-        <option value="low" <?= $sort==='low'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['low_to_high'] ?></option>
-        <option value="high" <?= $sort==='high'?'selected':'' ?> class="bg-[#353333] text-white"><?= $text['high_to_low'] ?></option>
-      </select>
+      <div class="flex flex-col gap-3 group/item">
+        <label for="sort" class="text-muted text-xs font-bold uppercase tracking-widest flex items-center gap-2.5 group-hover/item:text-gold/80 transition-colors">
+          <div class="relative">
+            <svg class="w-5 h-5 text-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.4)] group-hover/item:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+            </svg>
+          </div>
+          <?= $text['sort'] ?? 'Sort' ?>
+        </label>
+        <div class="relative">
+          <select id="sort" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30">
+          <option value="low" <?= $sort==='low'?'selected':'' ?> class="bg-[#1a1a1a] text-white"><?= $text['low_to_high'] ?></option>
+          <option value="high" <?= $sort==='high'?'selected':'' ?> class="bg-[#1a1a1a] text-white"><?= $text['high_to_low'] ?></option>
+        </select>
+        <div class="absolute inset-0 rounded-2xl bg-gold/0 group-hover/item:bg-gold/5 transition-colors pointer-events-none"></div>
+        </div>
+      </div>
       
       <!-- Clear Button -->
-      <a href="?" class="w-full bg-gold/20 hover:bg-gold/30 text-gold font-bold py-3 sm:py-4 rounded-lg text-center transition-colors"><?= $text['clear'] ?></a>
+      <div class="flex flex-col gap-3">
+        <label class="text-muted text-xs font-bold uppercase tracking-widest opacity-0 pointer-events-none">Action</label>
+        <a href="?" class="relative w-full bg-gradient-to-r from-gold/25 via-gold/20 to-gold/15 hover:from-gold/35 hover:via-gold/30 hover:to-gold/25 text-gold font-bold py-4 rounded-2xl text-center transition-all duration-300 border-2 border-gold/40 hover:border-gold/60 flex items-center justify-center gap-2.5 group/btn overflow-hidden shadow-[0_4px_15px_rgba(255,215,0,0.2)] hover:shadow-[0_6px_25px_rgba(255,215,0,0.4)] hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700"></div>
+          <svg class="w-5 h-5 group-hover/btn:rotate-180 transition-transform duration-500 drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <span class="relative z-10"><?= $text['clear'] ?></span>
+        </a>
+      </div>
     </form>
   </div>
 
