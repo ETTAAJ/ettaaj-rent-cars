@@ -1235,11 +1235,11 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <?= $text['cars'] ?? 'Car' ?>
+          <?= strtoupper($text['cars'] ?? 'CARS') ?>
         </label>
         <div class="relative">
-          <select id="search" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30" style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFD700' d='M6 9L1 4h10z'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 14px; padding-right: 3rem;">
-          <option value="" class="bg-[#1a1a1a] text-white">All</option>
+          <select id="search" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30">
+          <option value="" class="bg-[#1a1a1a] text-white"><?= $text['cars'] ?? 'Cars' ?> (<?= formatNumber($totalCount) ?>)</option>
           <?php foreach ($allCars as $carOption): ?>
             <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?> class="bg-[#1a1a1a] text-white">
               <?= htmlspecialchars($carOption['name']) ?>
@@ -1368,8 +1368,16 @@
         
         // Update filter option counts
         if (data.options) {
+          const searchSelect = els.search;
           const gearSelect = els.gear;
           const fuelSelect = els.fuel;
+          
+          // Update cars dropdown
+          Array.from(searchSelect.options).forEach(opt => {
+            if (opt.value === '') {
+              opt.text = '<?= $text['cars'] ?? 'Cars' ?> (' + data.options.total + ')';
+            }
+          });
           
           // Update gear options
           Array.from(gearSelect.options).forEach(opt => {
