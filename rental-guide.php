@@ -724,10 +724,6 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
               </div>
             </div>
 
-            <div class="p-4 rounded-xl bg-card-dark/50 border border-green-500/20 mb-4">
-              <p class="text-sm text-muted"><?= $text['deposit'] ?>:</p>
-              <p class="text-2xl font-bold text-primary" dir="ltr"><?= formatPrice(5880) ?></p>
-            </div>
             <ul class="space-y-3 text-primary text-sm">
               <li class="flex items-center gap-2"><span class="text-green-400 font-bold text-lg">•</span> <?= $text['third_party_liability'] ?></li>
               <li class="flex items-center gap-2"><span class="text-green-400 font-bold text-lg">•</span> <?= $text['basic_collision'] ?></li>
@@ -745,14 +741,10 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
               </span>
               <div>
                 <h3 class="text-2xl font-bold text-primary"><?= $text['smart_insurance'] ?></h3>
-                <p class="text-sm text-amber-400 font-bold mt-1" dir="ltr">+<?= formatPrice(89) ?>/<?= $text['day'] ?></p>
+                <p class="text-sm text-amber-400 font-bold mt-1"><?= $text['citadine_rate'] ?></p>
               </div>
             </div>
 
-            <div class="p-4 rounded-xl bg-card-dark/50 border border-amber-500/20 mb-4">
-              <p class="text-sm text-muted"><?= $text['deposit'] ?>:</p>
-              <p class="text-2xl font-bold text-primary" dir="ltr"><?= formatPrice(2940) ?></p>
-            </div>
             <ul class="space-y-3 text-primary text-sm">
               <li class="flex items-center gap-2"><span class="text-amber-400 font-bold text-lg">•</span> <?= $text['all_basic_coverage'] ?></li>
               <li class="flex items-center gap-2"><span class="text-amber-400 font-bold text-lg">•</span> <?= $text['reduced_excess'] ?></li>
@@ -772,14 +764,10 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
                 </span>
                 <div>
                   <h3 class="text-2xl font-bold text-primary"><?= $text['premium_insurance'] ?></h3>
-                  <p class="text-sm text-amber-400 font-bold mt-1" dir="ltr">+<?= formatPrice(144) ?>/<?= $text['day'] ?></p>
+                  <p class="text-sm text-amber-400 font-bold mt-1"><?= $text['citadine_rate'] ?></p>
                 </div>
               </div>
 
-              <div class="p-4 rounded-xl bg-gold/20 border border-gold/40 mb-4">
-                <p class="text-sm text-muted"><?= $text['deposit'] ?>:</p>
-                <p class="text-2xl font-bold text-primary" dir="ltr"><?= formatPrice(980) ?></p>
-              </div>
               <ul class="space-y-3 text-primary text-sm">
                 <li class="flex items-center gap-2"><span class="text-gold font-bold text-lg">•</span> <?= $text['all_basic_coverage'] ?></li>
                 <li class="flex items-center gap-2"><span class="text-gold font-bold text-lg">•</span> <?= $text['zero_excess'] ?></li>
@@ -827,9 +815,6 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
               $descKey = 'description_' . $lang;
               $essentialName = !empty($essential[$nameKey]) ? $essential[$nameKey] : ($essential['name_en'] ?? $essential['name'] ?? '');
               $essentialDesc = !empty($essential[$descKey]) ? $essential[$descKey] : ($essential['description_en'] ?? $essential['description'] ?? '');
-              
-              $priceText = number_format($essential['price'], 2);
-              $unitText = $essential['per_day'] ? '/' . $text['day'] : '/rental';
             ?>
             <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in">
               <div class="flex items-center gap-4 mb-4">
@@ -847,10 +832,6 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
                   <?php if ($essentialDesc): ?>
                     <p class="text-sm text-muted mt-1"><?= htmlspecialchars($essentialDesc) ?></p>
                   <?php endif; ?>
-                </div>
-                <div class="text-right">
-                  <span class="text-2xl font-black text-gold" dir="ltr"><?= formatPrice($essential['price'], 2) ?></span>
-                  <span class="text-sm text-muted block" dir="ltr"><?= $unitText ?></span>
                 </div>
               </div>
             </article>
