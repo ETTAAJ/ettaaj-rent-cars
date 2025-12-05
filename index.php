@@ -266,17 +266,17 @@
   // Language-specific titles and descriptions
   $seoData = [
     'en' => [
-      'title' => 'Car Rental Marrakech & Casablanca Airport | ETTAAJ Rent Cars – No Deposit, From 250 MAD/day',
-      'description' => 'Best car rental in Marrakech & Casablanca airports. No deposit, free delivery 24/7, luxury & economy cars. Instant booking via WhatsApp +212 772 331 080. Rent a car in Morocco today!',
+      'title' => 'Car Rental Marrakech & Casablanca Airport | ETTAAJ Rent Cars – , From 250 MAD/day',
+      'description' => 'Best car rental in Marrakech & Casablanca airports. , free delivery 24/7, luxury & economy cars. Instant booking via WhatsApp +212 772 331 080. Rent a car in Morocco today!',
       'keywords' => 'car rental Marrakech, car rental Casablanca, rent a car Morocco, car rental Marrakech airport, car rental Casablanca airport, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, no deposit car rental Marrakech, no deposit car rental Casablanca, car rental Morocco airport, vehicle rental Marrakech, vehicle rental Casablanca, ETTAAJ rent cars, rent car Marrakech, rent car Casablanca, car rental Marrakech Menara, car rental Casablanca Mohammed V'
     ],
     'fr' => [
-      'title' => 'Location de Voiture Aéroport Marrakech & Casablanca | ETTAAJ Rent Cars – Sans Caution, À partir de 250 MAD/jour',
-      'description' => 'Meilleure location de voiture aux aéroports de Marrakech et Casablanca. Sans caution, livraison gratuite 24/7, voitures de luxe et économiques. Réservation instantanée via WhatsApp +212 772 331 080. Louez une voiture au Maroc aujourd\'hui !',
+      'title' => 'Location de Voiture Aéroport Marrakech & Casablanca | ETTAAJ Rent Cars –  À partir de 250 MAD/jour',
+      'description' => 'Meilleure location de voiture aux aéroports de Marrakech et Casablanca.  livraison gratuite 24/7, voitures de luxe et économiques. Réservation instantanée via WhatsApp +212 772 331 080. Louez une voiture au Maroc aujourd\'hui !',
       'keywords' => 'location voiture Marrakech, location voiture Casablanca, location voiture Maroc, location voiture aéroport Marrakech, location voiture aéroport Casablanca, location voiture Marrakech Menara, location voiture Casablanca Mohammed V, location voiture sans caution Marrakech, location voiture sans caution Casablanca, ETTAAJ rent cars, louer voiture Marrakech, louer voiture Casablanca'
     ],
     'ar' => [
-      'title' => 'تأجير السيارات مطار مراكش والدار البيضاء | ETTAAJ Rent Cars – بدون وديعة، من 250 درهم/يوم',
+      'title' => 'تأجير السيارات مطار مراكش والدار البيضاء | ETTAAJ Rent Cars –  من 250 درهم/يوم',
       'description' => 'أفضل تأجير سيارات في مطارات مراكش والدار البيضاء. بدون وديعة، توصيل مجاني 24/7، سيارات فاخرة واقتصادية. حجز فوري عبر واتساب +212 772 331 080. استأجر سيارة في المغرب اليوم!',
       'keywords' => 'تأجير سيارات مراكش، تأجير سيارات الدار البيضاء، تأجير سيارات المغرب، تأجير سيارات مطار مراكش، تأجير سيارات مطار الدار البيضاء، تأجير سيارات بدون وديعة مراكش، تأجير سيارات بدون وديعة الدار البيضاء، ETTAAJ rent cars'
     ]
@@ -1101,11 +1101,11 @@
       </h1>
       <p class="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl text-gold font-bold mb-4 sm:mb-5 md:mb-6 lg:mb-6 xl:mb-8 2xl:mb-10 drop-shadow-lg leading-relaxed lg:leading-relaxed">
         <?php if ($lang === 'en'): ?>
-          ETTAAJ Rent Cars - No Deposit • Free Delivery 24/7 • Luxury & Economy Cars
+          ETTAAJ Rent Cars  • Free Delivery 24/7 • Luxury & Economy Cars
         <?php elseif ($lang === 'fr'): ?>
-          ETTAAJ Rent Cars - Sans Caution • Livraison Gratuite 24/7 • Voitures de Luxe et Économiques
+          ETTAAJ Rent Cars  • Livraison Gratuite 24/7 • Voitures de Luxe et Économiques
         <?php else: ?>
-          ETTAAJ Rent Cars - بدون وديعة • توصيل مجاني 24/7 • سيارات فاخرة واقتصادية
+          ETTAAJ Rent Cars -   • توصيل مجاني 24/7 • سيارات فاخرة واقتصادية
         <?php endif; ?>
       </p>
       <div class="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8 2xl:gap-10 text-xs sm:text-sm md:text-base lg:text-base xl:text-lg 2xl:text-xl mb-4 sm:mb-5 md:mb-6 lg:mb-6 xl:mb-8 2xl:mb-10">
