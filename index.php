@@ -532,16 +532,23 @@
     .text-muted { color: var(--muted); }
     .text-gold { color: var(--gold); }
 
-    /* Search Dropdown Styles */
-    #search {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    /* Search Dropdown Styles - Match other dropdowns */
+    #search,
+    #gear,
+    #fuel,
+    #sort {
+      background-color: #1a1a1a !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFD700' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.75rem center;
+      background-position: right 1rem center;
       background-size: 12px;
     }
-    #search option {
-      background: white;
-      color: #333;
+    #search option,
+    #gear option,
+    #fuel option,
+    #sort option {
+      background: #1a1a1a !important;
+      color: #ffffff !important;
       padding: 8px;
     }
 
@@ -1238,7 +1245,7 @@
           <?= strtoupper($text['cars'] ?? 'CARS') ?>
         </label>
         <div class="relative">
-          <select id="search" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30">
+          <select id="search" name="search" class="w-full p-4 bg-gradient-to-br from-[#1a1a1a]/90 to-[#2a2a2a]/90 border-2 border-[#4A5A66]/40 text-white rounded-2xl focus:ring-4 focus:ring-gold/30 focus:border-gold/60 transition-all duration-300 text-sm cursor-pointer hover:border-gold/40 hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] backdrop-blur-md group-hover/item:border-gold/30">
           <option value="" class="bg-[#1a1a1a] text-white"><?= $text['cars'] ?? 'Cars' ?> (<?= formatNumber($totalCount) ?>)</option>
           <?php foreach ($allCars as $carOption): ?>
             <option value="<?= htmlspecialchars($carOption['name']) ?>" <?= $search === $carOption['name'] ? 'selected' : '' ?> class="bg-[#1a1a1a] text-white">
