@@ -28,8 +28,11 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
     }
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <style>
     :root {
@@ -322,6 +325,29 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         height: 120px;
       }
     }
+
+    /* GSAP Animation Classes - Removed, using direct JS animations instead */
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Parallax Elements */
+    .parallax-slow {
+      will-change: transform;
+    }
+    .parallax-fast {
+      will-change: transform;
+    }
+
+    /* Section Dividers */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 4rem 0;
+      opacity: 0.3;
+    }
   </style>
 </head>
 <body class="min-h-screen">
@@ -345,16 +371,16 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
   
   <!-- Enhanced Gradient Overlay with Content -->
   <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 flex flex-col items-center justify-center pointer-events-none z-20">
-    <div class="logo-3d-container z-10 pointer-events-auto mb-8" data-aos="zoom-in" data-aos-duration="1000">
+    <div class="logo-3d-container z-10 pointer-events-auto mb-8" id="hero-logo">
       <div class="logo-3d">
         <img src="pub_img/ettaaj-rent-cars.jpeg" 
              alt="ETTAAJ Rent Cars Logo" 
              class="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-72 xl:h-72 rounded-full ring-4 ring-gold/60 shadow-2xl object-cover backdrop-blur-sm">
       </div>
     </div>
-    <div class="text-center px-4" data-aos="fade-up" data-aos-delay="300">
+    <div class="text-center px-4" id="hero-text">
       <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 drop-shadow-2xl">
-        <span class="bg-gradient-to-r from-gold via-yellow-300 to-gold bg-clip-text text-transparent animate-pulse">
+        <span class="bg-gradient-to-r from-gold via-yellow-300 to-gold bg-clip-text text-transparent">
           <?= $text['rental_guide'] ?? 'Rental Guide' ?>
         </span>
       </h1>
@@ -399,8 +425,9 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
 <?php endif; ?>
 
     <main class="relative z-10 px-4 sm:px-6 lg:px-8 py-16 space-y-20 max-w-6xl mx-auto">
-      <section id="rental-guidelines" data-aos="fade-up">
-        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20">
+      <div class="section-divider"></div>
+      <section id="rental-guidelines">
+        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20" id="section-header-1">
           <span class="relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold shadow-lg shadow-gold/30 border-2 border-gold/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m3 5H6a2 2 0 01-2-2V5a2 2 0 012-2h8l6 6v10a2 2 0 01-2 2z" />
@@ -417,7 +444,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- cards -->
         <div class="grid gap-6 md:grid-cols-2">
-          <article class="group p-6 md:p-8 bg-gradient-to-br from-card via-card-dark to-card rounded-3xl border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="100">
+          <article class="group p-6 md:p-8 bg-gradient-to-br from-card via-card-dark to-card rounded-3xl border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" id="card-1">
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold border-2 border-gold/40 shadow-lg group-hover:scale-110 group-hover:shadow-gold/50 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -457,7 +484,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </article>
 
-          <article class="group p-6 md:p-8 bg-gradient-to-br from-card via-card-dark to-card rounded-3xl border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="200">
+          <article class="group p-6 md:p-8 bg-gradient-to-br from-card via-card-dark to-card rounded-3xl border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" id="card-2">
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold border-2 border-gold/40 shadow-lg group-hover:scale-110 group-hover:shadow-gold/50 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -478,7 +505,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </article>
 
-          <article class="group p-6 md:p-8 bg-gradient-to-br from-gold/10 via-gold/5 to-transparent rounded-3xl border-2 border-gold/30 shadow-xl hover:shadow-2xl hover:shadow-gold/40 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02] md:col-span-2" data-aos="zoom-in" data-aos-delay="300">
+          <article class="group p-6 md:p-8 bg-gradient-to-br from-gold/10 via-gold/5 to-transparent rounded-3xl border-2 border-gold/30 shadow-xl hover:shadow-2xl hover:shadow-gold/40 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02] md:col-span-2" id="card-3">
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/30 to-gold/20 text-gold border-2 border-gold/50 shadow-lg group-hover:scale-110 group-hover:shadow-gold/60 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -509,9 +536,10 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </section>
 
+      <div class="section-divider"></div>
       <!-- pricing & payment -->
-      <section id="pricing-payment" data-aos="fade-up">
-        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20">
+      <section id="pricing-payment">
+        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20" id="section-header-2">
           <span class="relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold shadow-lg shadow-gold/30 border-2 border-gold/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-3.866 0-7 2.239-7 5s3.134 5 7 5 7-2.239 7-5-3.134-5-7-5zm0 0V5m0 15v-3" />
@@ -526,7 +554,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
         </div>
 
-        <div class="bg-gradient-to-br from-card via-card-dark to-card rounded-3xl p-6 lg:p-10 border-2 border-border shadow-2xl" data-aos="zoom-in">
+        <div class="bg-gradient-to-br from-card via-card-dark to-card rounded-3xl p-6 lg:p-10 border-2 border-border shadow-2xl" id="pricing-card">
           <div class="grid lg:grid-cols-3 gap-8">
             <div class="space-y-4 p-6 rounded-2xl bg-card-dark/50 border border-gold/20 hover:border-gold/40 transition-all">
               <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 flex items-center justify-center mb-3">
@@ -588,9 +616,10 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </section>
 
+      <div class="section-divider"></div>
       <!-- emergency procedures -->
-      <section id="emergency-procedures" data-aos="fade-up">
-        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20">
+      <section id="emergency-procedures">
+        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20" id="section-header-3">
           <span class="relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold shadow-lg shadow-gold/30 border-2 border-gold/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 00-8 16.32L12 22l8-3.68A10 10 0 0012 2z" />
@@ -607,7 +636,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="grid gap-6 lg:grid-cols-2">
           <!-- Accident Procedures -->
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-red-900/20 via-card-dark to-card-dark border-2 border-red-500/30 shadow-xl hover:shadow-2xl hover:shadow-red-500/30 hover:border-red-500/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="100">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-red-900/20 via-card-dark to-card-dark border-2 border-red-500/30 shadow-xl hover:shadow-2xl hover:shadow-red-500/30 hover:border-red-500/50 transition-all duration-500 hover:scale-[1.02]" id="emergency-card-1">
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-red-500/20 to-red-500/10 text-red-400 border-2 border-red-500/40 shadow-lg group-hover:scale-110 group-hover:shadow-red-500/50 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -649,7 +678,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
           </article>
 
           <!-- Breakdown assistance -->
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-gold/10 via-card-dark to-card-dark border-2 border-gold/30 shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="200">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-gold/10 via-card-dark to-card-dark border-2 border-gold/30 shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" id="emergency-card-2">
             <div class="flex items-center gap-4 mb-6">
               <span class="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold border-2 border-gold/40 shadow-lg group-hover:scale-110 group-hover:shadow-gold/50 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -693,9 +722,10 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </section>
 
+      <div class="section-divider"></div>
       <!-- insurance coverage -->
-      <section id="insurance-coverage" data-aos="fade-up">
-        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20">
+      <section id="insurance-coverage">
+        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20" id="section-header-4">
           <span class="relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold shadow-lg shadow-gold/30 border-2 border-gold/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-3.866 0-7 2.239-7 5s3.134 5 7 5 7-2.239 7-5-3.134-5-7-5zm0-6v6m0 10v4" />
@@ -711,7 +741,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="grid md:grid-cols-3 gap-6">
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-green-500/30 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 hover:border-green-500/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="100">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-green-500/30 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 hover:border-green-500/50 transition-all duration-500 hover:scale-[1.02]" id="insurance-card-1">
             <div class="flex items-center gap-4 mb-6">
               <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-green-500/20 to-green-500/10 text-green-400 border-2 border-green-500/40 shadow-lg group-hover:scale-110 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -732,7 +762,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </article>
 
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-amber-500/30 shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="200">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-amber-500/30 shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 transition-all duration-500 hover:scale-[1.02]" id="insurance-card-2">
             <div class="flex items-center gap-4 mb-6">
               <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-amber-500/20 to-amber-500/10 text-amber-400 border-2 border-amber-500/40 shadow-lg group-hover:scale-110 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -753,7 +783,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </article>
 
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-gold/30 via-gold/20 to-gold/10 border-2 border-gold/50 shadow-2xl hover:shadow-gold/40 hover:border-gold/60 transition-all duration-500 hover:scale-[1.02] relative overflow-hidden" data-aos="zoom-in" data-aos-delay="300">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-gold/30 via-gold/20 to-gold/10 border-2 border-gold/50 shadow-2xl hover:shadow-gold/40 hover:border-gold/60 transition-all duration-500 hover:scale-[1.02] relative overflow-hidden" id="insurance-card-3">
             <div class="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full blur-3xl"></div>
             <div class="relative z-10">
               <div class="flex items-center gap-4 mb-6">
@@ -779,16 +809,17 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
           </article>
         </div>
         
-        <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-card-dark via-card to-card-dark border-2 border-gold/20 text-center shadow-lg" data-aos="fade-up">
+        <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-card-dark via-card to-card-dark border-2 border-gold/20 text-center shadow-lg" id="insurance-note">
           <p class="text-sm text-muted">
             <?= $text['insurance_note'] ?>
           </p>
         </div>
       </section>
 
+      <div class="section-divider"></div>
       <!-- Travel Essentials -->
-      <section id="travel-essentials" data-aos="fade-up">
-        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20">
+      <section id="travel-essentials">
+        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20" id="section-header-5">
           <span class="relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold shadow-lg shadow-gold/30 border-2 border-gold/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
@@ -809,14 +840,14 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
               <p><?= $text['no_travel_essentials'] ?? 'No travel essentials available at the moment.' ?></p>
             </div>
           <?php else: ?>
-            <?php foreach ($travelEssentials as $essential): 
+            <?php foreach ($travelEssentials as $loopIndex => $essential): 
               // Get language-specific name and description
               $nameKey = 'name_' . $lang;
               $descKey = 'description_' . $lang;
               $essentialName = !empty($essential[$nameKey]) ? $essential[$nameKey] : ($essential['name_en'] ?? $essential['name'] ?? '');
               $essentialDesc = !empty($essential[$descKey]) ? $essential[$descKey] : ($essential['description_en'] ?? $essential['description'] ?? '');
             ?>
-            <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in">
+            <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-essential-index="<?= $loopIndex ?? 0 ?>">
               <div class="flex items-center gap-4 mb-4">
                 <div class="flex-shrink-0 w-16 h-16 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 flex items-center justify-center border-2 border-gold/40 group-hover:scale-110 group-hover:shadow-gold/50 transition-all">
                   <?php if ($essential['icon']): ?>
@@ -840,8 +871,9 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
       </section>
 
-      <section id="insurance-claims" class="pb-10" data-aos="fade-up">
-        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20">
+      <div class="section-divider"></div>
+      <section id="insurance-claims" class="pb-10">
+        <div class="inline-flex items-center gap-4 mb-8 p-4 rounded-2xl bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/20" id="section-header-6">
           <span class="relative inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 text-gold shadow-lg shadow-gold/30 border-2 border-gold/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -857,7 +889,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="grid md:grid-cols-3 gap-6">
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="100">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" id="claims-card-1">
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 flex items-center justify-center mb-4 border-2 border-gold/40">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -867,7 +899,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-sm text-primary leading-relaxed"><?= $text['file_claim_desc'] ?></p>
           </article>
 
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="200">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" id="claims-card-2">
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 flex items-center justify-center mb-4 border-2 border-gold/40">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -894,7 +926,7 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </article>
 
-          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" data-aos="zoom-in" data-aos-delay="300">
+          <article class="group p-6 md:p-8 rounded-3xl bg-gradient-to-br from-card via-card-dark to-card border-2 border-border shadow-xl hover:shadow-2xl hover:shadow-gold/30 hover:border-gold/50 transition-all duration-500 hover:scale-[1.02]" id="claims-card-3">
             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gold/20 to-gold/10 flex items-center justify-center mb-4 border-2 border-gold/40">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -909,9 +941,333 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?php include 'footer.php'; ?>
 
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script>
-  AOS.init({ once: true, duration: 800 });
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check if GSAP is loaded
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      console.error('GSAP or ScrollTrigger not loaded');
+      return;
+    }
+    
+    // Register GSAP Plugins
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero Section Animations - Only animate if elements exist
+    const heroLogo = document.querySelector("#hero-logo");
+    const heroText = document.querySelector("#hero-text");
+    
+    if (heroLogo && heroText) {
+      // Set initial state first
+      gsap.set("#hero-logo", { opacity: 0, scale: 0.5, rotation: -10 });
+      gsap.set("#hero-text", { opacity: 0, y: 50 });
+      
+      // Then animate in
+      gsap.timeline({
+        defaults: { ease: "power3.out" }
+      })
+      .to("#hero-logo", {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1.2
+      })
+      .to("#hero-text", {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.2
+      }, "-=0.5");
+    }
+
+    // Parallax effect for hero background
+    gsap.to(".hero-image", {
+      yPercent: 30,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero-section",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // Section Headers Animation
+    const sectionHeaders = gsap.utils.toArray("#section-header-1, #section-header-2, #section-header-3, #section-header-4, #section-header-5, #section-header-6");
+    sectionHeaders.forEach((header) => {
+      if (header) {
+        // Set initial state
+        gsap.set(header, { opacity: 0, y: 30, scale: 0.95 });
+        // Animate in on scroll
+        gsap.to(header, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: header,
+            start: "top 80%",
+            end: "top 50%",
+            toggleActions: "play none none reverse"
+          }
+        });
+      }
+    });
+
+    // Cards Animation - Rental Guidelines
+    const card1 = document.querySelector("#card-1");
+    const card2 = document.querySelector("#card-2");
+    const card3 = document.querySelector("#card-3");
+    
+    if (card1) {
+      gsap.set("#card-1", { opacity: 0, x: -100 });
+      gsap.to("#card-1", {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: "#card-1",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+    
+    if (card2) {
+      gsap.set("#card-2", { opacity: 0, x: 100 });
+      gsap.to("#card-2", {
+        opacity: 1,
+        x: 0,
+        duration: 1,
+        scrollTrigger: {
+          trigger: "#card-2",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+    
+    if (card3) {
+      gsap.set("#card-3", { opacity: 0, scale: 0.8 });
+      gsap.to("#card-3", {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: "#card-3",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+
+    // Pricing Card Animation
+    gsap.set("#pricing-card", { opacity: 0, scale: 0.9, y: 50 });
+    gsap.to("#pricing-card", {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 1.2,
+      scrollTrigger: {
+        trigger: "#pricing-card",
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    // Emergency Cards Animation
+    gsap.set("#emergency-card-1", { opacity: 0, x: -80, rotation: -5 });
+    gsap.to("#emergency-card-1", {
+      opacity: 1,
+      x: 0,
+      rotation: 0,
+      duration: 1,
+      scrollTrigger: {
+        trigger: "#emergency-card-1",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    gsap.set("#emergency-card-2", { opacity: 0, x: 80, rotation: 5 });
+    gsap.to("#emergency-card-2", {
+      opacity: 1,
+      x: 0,
+      rotation: 0,
+      duration: 1,
+      scrollTrigger: {
+        trigger: "#emergency-card-2",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    // Insurance Cards Animation
+    gsap.set("#insurance-card-1", { opacity: 0, x: -60 });
+    gsap.to("#insurance-card-1", {
+      opacity: 1,
+      x: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#insurance-card-1",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    gsap.set("#insurance-card-2", { opacity: 0, scale: 0.8 });
+    gsap.to("#insurance-card-2", {
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#insurance-card-2",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    gsap.set("#insurance-card-3", { opacity: 0, x: 60 });
+    gsap.to("#insurance-card-3", {
+      opacity: 1,
+      x: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#insurance-card-3",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    gsap.set("#insurance-note", { opacity: 0, y: 30 });
+    gsap.to("#insurance-note", {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#insurance-note",
+        start: "top 90%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    // Travel Essentials Cards Animation
+    gsap.utils.toArray("#travel-essentials article").forEach((card, i) => {
+      gsap.set(card, { opacity: 0, scale: 0.8, y: 40 });
+      gsap.to(card, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.8,
+        delay: i * 0.1,
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    });
+
+    // Claims Cards Animation
+    gsap.set("#claims-card-1", { opacity: 0, x: -60 });
+    gsap.to("#claims-card-1", {
+      opacity: 1,
+      x: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#claims-card-1",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    gsap.set("#claims-card-2", { opacity: 0, scale: 0.8 });
+    gsap.to("#claims-card-2", {
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#claims-card-2",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    gsap.set("#claims-card-3", { opacity: 0, x: 60 });
+    gsap.to("#claims-card-3", {
+      opacity: 1,
+      x: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: "#claims-card-3",
+        start: "top 85%",
+        toggleActions: "play none none reverse"
+      }
+    });
+
+    // Car Slider Parallax
+    gsap.to(".car-slider-container", {
+      yPercent: -20,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".car-slider-container",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // Section Dividers Animation
+    gsap.utils.toArray(".section-divider").forEach((divider) => {
+      gsap.set(divider, { scaleX: 0, transformOrigin: "left center" });
+      gsap.to(divider, {
+        scaleX: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: divider,
+          start: "top 90%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    });
+
+    // Hover animations for cards
+    document.querySelectorAll("article.group").forEach((card) => {
+      card.addEventListener("mouseenter", () => {
+        gsap.to(card, {
+          scale: 1.02,
+          y: -5,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+      
+      card.addEventListener("mouseleave", () => {
+        gsap.to(card, {
+          scale: 1,
+          y: 0,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Refresh ScrollTrigger on window resize
+    window.addEventListener('resize', () => {
+      ScrollTrigger.refresh();
+    });
+  }); // End DOMContentLoaded
 </script>
 </body>
 </html>
