@@ -953,291 +953,355 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
     // Register GSAP Plugins
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero Section Animations - Only animate if elements exist
+    // ============================================
+    // NEW SCROLL EFFECTS SYSTEM
+    // ============================================
+
+    // Hero Section - Enhanced Entrance Animation
     const heroLogo = document.querySelector("#hero-logo");
     const heroText = document.querySelector("#hero-text");
     
     if (heroLogo && heroText) {
-      // Set initial state first
-      gsap.set("#hero-logo", { opacity: 0, scale: 0.5, rotation: -10 });
-      gsap.set("#hero-text", { opacity: 0, y: 50 });
-      
-      // Then animate in
+      // Create a more dramatic entrance
       gsap.timeline({
-        defaults: { ease: "power3.out" }
+        defaults: { ease: "back.out(1.7)" }
       })
-      .to("#hero-logo", {
-        opacity: 1,
-        scale: 1,
-        rotation: 0,
-        duration: 1.2
+      .from("#hero-logo", {
+        opacity: 0,
+        scale: 0.3,
+        rotation: -180,
+        y: -100,
+        duration: 1.5
       })
-      .to("#hero-text", {
-        opacity: 1,
-        y: 0,
+      .from("#hero-text h1", {
+        opacity: 0,
+        y: 80,
+        scale: 0.8,
         duration: 1,
-        stagger: 0.2
+        ease: "power4.out"
+      }, "-=0.8")
+      .from("#hero-text p", {
+        opacity: 0,
+        y: 40,
+        duration: 0.8,
+        ease: "power2.out"
       }, "-=0.5");
     }
 
-    // Parallax effect for hero background
+    // Enhanced Parallax Effects
     gsap.to(".hero-image", {
-      yPercent: 30,
+      yPercent: 50,
+      scale: 1.2,
       ease: "none",
       scrollTrigger: {
         trigger: ".hero-section",
         start: "top bottom",
         end: "bottom top",
-        scrub: true
+        scrub: 1.5
       }
     });
 
-    // Section Headers Animation
+    // Floating animation for hero logo
+    if (heroLogo) {
+      gsap.to("#hero-logo", {
+        y: -20,
+        rotation: 5,
+        duration: 3,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true
+      });
+    }
+
+    // Section Headers - Split Text Reveal Effect
     const sectionHeaders = gsap.utils.toArray("#section-header-1, #section-header-2, #section-header-3, #section-header-4, #section-header-5, #section-header-6");
-    sectionHeaders.forEach((header) => {
+    sectionHeaders.forEach((header, index) => {
       if (header) {
-        // Set initial state
-        gsap.set(header, { opacity: 0, y: 30, scale: 0.95 });
-        // Animate in on scroll
-        gsap.to(header, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
+        const icon = header.querySelector('span');
+        const text = header.querySelector('div');
+        
+        // Set initial states
+        gsap.set([icon, text], { opacity: 0 });
+        gsap.set(icon, { scale: 0, rotation: -180 });
+        gsap.set(text, { x: index % 2 === 0 ? -50 : 50, y: 20 });
+        
+        // Create reveal animation
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: header,
+            start: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        });
+        
+        tl.to(icon, {
+          opacity: 1,
+          scale: 1,
+          rotation: 0,
+          duration: 0.6,
+          ease: "back.out(2)"
+        })
+        .to(text, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out"
+        }, "-=0.4");
+      }
+    });
+
+    // Cards - Staggered 3D Flip Effect
+    const cards = gsap.utils.toArray("#card-1, #card-2, #card-3");
+    cards.forEach((card, index) => {
+      if (card) {
+        gsap.set(card, { 
+          opacity: 0,
+          rotationY: index % 2 === 0 ? -90 : 90,
+          transformPerspective: 1000,
+          transformStyle: "preserve-3d"
+        });
+        
+        gsap.to(card, {
+          opacity: 1,
+          rotationY: 0,
+          duration: 1.2,
+          delay: index * 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
             start: "top 80%",
-            end: "top 50%",
             toggleActions: "play none none reverse"
           }
         });
       }
     });
 
-    // Cards Animation - Rental Guidelines
-    const card1 = document.querySelector("#card-1");
-    const card2 = document.querySelector("#card-2");
-    const card3 = document.querySelector("#card-3");
-    
-    if (card1) {
-      gsap.set("#card-1", { opacity: 0, x: -100 });
-      gsap.to("#card-1", {
-        opacity: 1,
-        x: 0,
-        duration: 1,
-        scrollTrigger: {
-          trigger: "#card-1",
-          start: "top 85%",
-          toggleActions: "play none none reverse"
-        }
+    // Pricing Card - Zoom & Rotate Effect
+    const pricingCard = document.querySelector("#pricing-card");
+    if (pricingCard) {
+      gsap.set("#pricing-card", { 
+        opacity: 0, 
+        scale: 0.5,
+        rotation: 15,
+        transformOrigin: "center center"
       });
-    }
-    
-    if (card2) {
-      gsap.set("#card-2", { opacity: 0, x: 100 });
-      gsap.to("#card-2", {
-        opacity: 1,
-        x: 0,
-        duration: 1,
-        scrollTrigger: {
-          trigger: "#card-2",
-          start: "top 85%",
-          toggleActions: "play none none reverse"
-        }
-      });
-    }
-    
-    if (card3) {
-      gsap.set("#card-3", { opacity: 0, scale: 0.8 });
-      gsap.to("#card-3", {
+      
+      gsap.to("#pricing-card", {
         opacity: 1,
         scale: 1,
-        duration: 1,
+        rotation: 0,
+        duration: 1.5,
+        ease: "elastic.out(1, 0.5)",
         scrollTrigger: {
-          trigger: "#card-3",
-          start: "top 85%",
+          trigger: "#pricing-card",
+          start: "top 75%",
           toggleActions: "play none none reverse"
         }
       });
     }
 
-    // Pricing Card Animation
-    gsap.set("#pricing-card", { opacity: 0, scale: 0.9, y: 50 });
-    gsap.to("#pricing-card", {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      duration: 1.2,
-      scrollTrigger: {
-        trigger: "#pricing-card",
-        start: "top 80%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Emergency Cards Animation
-    gsap.set("#emergency-card-1", { opacity: 0, x: -80, rotation: -5 });
-    gsap.to("#emergency-card-1", {
-      opacity: 1,
-      x: 0,
-      rotation: 0,
-      duration: 1,
-      scrollTrigger: {
-        trigger: "#emergency-card-1",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    gsap.set("#emergency-card-2", { opacity: 0, x: 80, rotation: 5 });
-    gsap.to("#emergency-card-2", {
-      opacity: 1,
-      x: 0,
-      rotation: 0,
-      duration: 1,
-      scrollTrigger: {
-        trigger: "#emergency-card-2",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Insurance Cards Animation
-    gsap.set("#insurance-card-1", { opacity: 0, x: -60 });
-    gsap.to("#insurance-card-1", {
-      opacity: 1,
-      x: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#insurance-card-1",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    gsap.set("#insurance-card-2", { opacity: 0, scale: 0.8 });
-    gsap.to("#insurance-card-2", {
-      opacity: 1,
-      scale: 1,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#insurance-card-2",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    gsap.set("#insurance-card-3", { opacity: 0, x: 60 });
-    gsap.to("#insurance-card-3", {
-      opacity: 1,
-      x: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#insurance-card-3",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    gsap.set("#insurance-note", { opacity: 0, y: 30 });
-    gsap.to("#insurance-note", {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#insurance-note",
-        start: "top 90%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Travel Essentials Cards Animation
-    gsap.utils.toArray("#travel-essentials article").forEach((card, i) => {
-      gsap.set(card, { opacity: 0, scale: 0.8, y: 40 });
-      gsap.to(card, {
+    // Emergency Cards - Slide & Bounce Effect
+    const emergencyCard1 = document.querySelector("#emergency-card-1");
+    const emergencyCard2 = document.querySelector("#emergency-card-2");
+    
+    if (emergencyCard1) {
+      gsap.set("#emergency-card-1", { 
+        opacity: 0, 
+        x: -150,
+        rotation: -15,
+        scale: 0.8
+      });
+      gsap.to("#emergency-card-1", {
         opacity: 1,
+        x: 0,
+        rotation: 0,
         scale: 1,
+        duration: 1.2,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: "#emergency-card-1",
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+    
+    if (emergencyCard2) {
+      gsap.set("#emergency-card-2", { 
+        opacity: 0, 
+        x: 150,
+        rotation: 15,
+        scale: 0.8
+      });
+      gsap.to("#emergency-card-2", {
+        opacity: 1,
+        x: 0,
+        rotation: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: "#emergency-card-2",
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+
+    // Insurance Cards - Cascade Wave Effect
+    const insuranceCards = gsap.utils.toArray("#insurance-card-1, #insurance-card-2, #insurance-card-3");
+    insuranceCards.forEach((card, index) => {
+      if (card) {
+        const direction = index === 0 ? -1 : (index === 1 ? 0 : 1);
+        gsap.set(card, { 
+          opacity: 0,
+          y: 100,
+          x: direction * 80,
+          rotation: direction * 10,
+          scale: 0.7
+        });
+        
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          rotation: 0,
+          scale: 1,
+          duration: 1,
+          delay: index * 0.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        });
+      }
+    });
+
+    // Insurance Note - Fade & Slide Up
+    const insuranceNote = document.querySelector("#insurance-note");
+    if (insuranceNote) {
+      gsap.set("#insurance-note", { opacity: 0, y: 50, scale: 0.95 });
+      gsap.to("#insurance-note", {
+        opacity: 1,
         y: 0,
-        duration: 0.8,
-        delay: i * 0.1,
+        scale: 1,
+        duration: 0.9,
+        ease: "power2.out",
         scrollTrigger: {
-          trigger: card,
+          trigger: "#insurance-note",
           start: "top 85%",
           toggleActions: "play none none reverse"
         }
       });
-    });
+    }
 
-    // Claims Cards Animation
-    gsap.set("#claims-card-1", { opacity: 0, x: -60 });
-    gsap.to("#claims-card-1", {
-      opacity: 1,
-      x: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#claims-card-1",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
+    // Travel Essentials - Rotating Reveal
+    const travelEssentials = gsap.utils.toArray("#travel-essentials article");
+    travelEssentials.forEach((card, i) => {
+      if (card) {
+        gsap.set(card, { 
+          opacity: 0,
+          rotation: i % 2 === 0 ? -45 : 45,
+          scale: 0.5,
+          transformOrigin: "center center"
+        });
+        
+        gsap.to(card, {
+          opacity: 1,
+          rotation: 0,
+          scale: 1,
+          duration: 1,
+          delay: i * 0.12,
+          ease: "back.out(1.5)",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        });
       }
     });
 
-    gsap.set("#claims-card-2", { opacity: 0, scale: 0.8 });
-    gsap.to("#claims-card-2", {
-      opacity: 1,
-      scale: 1,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#claims-card-2",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
+    // Claims Cards - Staggered Slide & Fade
+    const claimsCards = gsap.utils.toArray("#claims-card-1, #claims-card-2, #claims-card-3");
+    claimsCards.forEach((card, index) => {
+      if (card) {
+        const positions = [-100, 0, 100];
+        gsap.set(card, { 
+          opacity: 0,
+          y: 60,
+          x: positions[index],
+          scale: 0.85
+        });
+        
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          scale: 1,
+          duration: 1.1,
+          delay: index * 0.15,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        });
       }
     });
 
-    gsap.set("#claims-card-3", { opacity: 0, x: 60 });
-    gsap.to("#claims-card-3", {
-      opacity: 1,
-      x: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: "#claims-card-3",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Car Slider Parallax
-    gsap.to(".car-slider-container", {
-      yPercent: -20,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".car-slider-container",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-
-    // Section Dividers Animation
-    gsap.utils.toArray(".section-divider").forEach((divider) => {
-      gsap.set(divider, { scaleX: 0, transformOrigin: "left center" });
-      gsap.to(divider, {
-        scaleX: 1,
-        duration: 1,
+    // Car Slider - Enhanced Parallax with Scale
+    const carSlider = document.querySelector(".car-slider-container");
+    if (carSlider) {
+      gsap.to(".car-slider-container", {
+        yPercent: -30,
+        scale: 1.1,
+        ease: "none",
         scrollTrigger: {
-          trigger: divider,
-          start: "top 90%",
-          toggleActions: "play none none reverse"
+          trigger: ".car-slider-container",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 2
         }
       });
+    }
+
+    // Section Dividers - Draw Animation
+    const sectionDividers = gsap.utils.toArray(".section-divider");
+    sectionDividers.forEach((divider) => {
+      if (divider) {
+        gsap.set(divider, { 
+          scaleX: 0, 
+          transformOrigin: "left center",
+          opacity: 0
+        });
+        gsap.to(divider, {
+          scaleX: 1,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: divider,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        });
+      }
     });
 
-    // Hover animations for cards
+    // Enhanced Hover Animations with 3D Tilt
     document.querySelectorAll("article.group").forEach((card) => {
       card.addEventListener("mouseenter", () => {
         gsap.to(card, {
-          scale: 1.02,
-          y: -5,
-          duration: 0.3,
+          scale: 1.03,
+          y: -8,
+          rotationY: 2,
+          rotationX: -2,
+          duration: 0.4,
           ease: "power2.out"
         });
       });
@@ -1246,7 +1310,9 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         gsap.to(card, {
           scale: 1,
           y: 0,
-          duration: 0.3,
+          rotationY: 0,
+          rotationX: 0,
+          duration: 0.4,
           ease: "power2.out"
         });
       });
@@ -1258,15 +1324,31 @@ $sliderCars = $sliderCarsStmt->fetchAll(PDO::FETCH_ASSOC);
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const offset = 80;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          
+          // Animate scroll using GSAP
+          gsap.to(window, {
+            duration: 1.2,
+            scrollTo: targetPosition,
+            ease: "power2.inOut"
+          });
         }
       });
     });
 
     // Refresh ScrollTrigger on window resize
+    let resizeTimer;
     window.addEventListener('resize', () => {
-      ScrollTrigger.refresh();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 250);
     });
+
+    // Initialize all animations
+    ScrollTrigger.refresh();
+    
   }); // End DOMContentLoaded
 </script>
 </body>
