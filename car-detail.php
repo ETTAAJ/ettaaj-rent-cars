@@ -613,12 +613,167 @@ $hasDiscount = $discount > 0;
 
 <!-- Green Book Button -->
 <style>
-  .new-book-btn {
-    background: linear-gradient(to right, #10b981, #059669) !important;
+  /* Infinite Animation Keyframes */
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6),
+                  0 0 40px rgba(16, 185, 129, 0.4),
+                  0 0 60px rgba(16, 185, 129, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.8),
+                  0 0 60px rgba(16, 185, 129, 0.6),
+                  0 0 90px rgba(16, 185, 129, 0.4);
+    }
   }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% center;
+    }
+    100% {
+      background-position: 200% center;
+    }
+  }
+
+  @keyframes shinyStrip {
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes buttonPulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+  }
+
+  .new-book-btn {
+    position: relative;
+    background: linear-gradient(90deg, #10b981, #059669, #047857, #059669, #10b981) !important;
+    background-size: 200% 100% !important;
+    animation: gradientShift 3s ease infinite,
+               pulseGlow 2s ease-in-out infinite,
+               buttonPulse 2s ease-in-out infinite;
+    overflow: hidden;
+  }
+
+  .new-book-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      rgba(255, 255, 255, 0.6),
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transform: skewX(-20deg);
+    animation: shinyStrip 3s infinite;
+    z-index: 2;
+  }
+
+  .new-book-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0.8),
+      transparent
+    );
+    transform: skewX(-20deg);
+    animation: shinyStrip 3.5s infinite 0.5s;
+    z-index: 2;
+    filter: blur(1px);
+  }
+
   .new-book-btn:hover {
-    background: linear-gradient(to right, #059669, #047857) !important;
+    background: linear-gradient(90deg, #059669, #047857, #065f46, #047857, #059669) !important;
+    background-size: 200% 100% !important;
     transform: scale(1.05);
+    animation: gradientShift 2s ease infinite,
+               pulseGlow 1.5s ease-in-out infinite,
+               buttonPulse 1.5s ease-in-out infinite;
+  }
+
+  .new-book-btn:hover::before {
+    animation: shinyStrip 2s infinite;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0.5),
+      transparent
+    );
+  }
+
+  .new-book-btn:hover::after {
+    animation: shinyStrip 2.5s infinite 0.3s;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 1),
+      rgba(255, 255, 255, 0.9),
+      transparent
+    );
+  }
+
+  .new-book-btn span,
+  .new-book-btn {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .new-book-btn {
+      animation: none !important;
+    }
+    .new-book-btn::before,
+    .new-book-btn::after {
+      animation: none !important;
+      display: none;
+    }
   }
 </style>
 
