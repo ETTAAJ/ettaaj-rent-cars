@@ -1,21 +1,26 @@
 <?php
 require 'config.php';
 
-// Function to validate same-day booking is not allowed
+// Function to validate same-day booking is not allowed (TIMEZONE-SAFE)
+// Uses DATE ONLY (YYYY-MM-DD) to ensure identical calculation on all devices
 function validateBookingDates($pickupDate, $returnDate) {
   $errors = [];
   
-  // Check if pickup date is today or in the past
-  $today = new DateTime();
-  $today->setTime(0, 0, 0);
+  // Validate date format (must be YYYY-MM-DD)
+  if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $pickupDate) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $returnDate)) {
+    $errors[] = "Invalid date format. Please select dates again.";
+    return $errors;
+  }
   
-  $pickup = new DateTime($pickupDate);
+  // Create DateTime objects normalized to midnight (00:00:00) - DATE ONLY
+  $today = new DateTime('today'); // Today at 00:00:00
+  $pickup = DateTime::createFromFormat('Y-m-d', $pickupDate);
   $pickup->setTime(0, 0, 0);
   
-  $return = new DateTime($returnDate);
+  $return = DateTime::createFromFormat('Y-m-d', $returnDate);
   $return->setTime(0, 0, 0);
   
-  // Same-day booking validation
+  // Same-day booking validation (pickup must be after today)
   if ($pickup <= $today) {
     $errors[] = "Same-day booking is not allowed. Please choose a date starting from tomorrow.";
   }
@@ -30,10 +35,13 @@ function validateBookingDates($pickupDate, $returnDate) {
     $errors[] = "Return date must be after pickup date.";
   }
   
-  // Minimum rental period (3 days)
+  // Calculate paid days: (endDate - startDate) in days + 1
+  // This matches the JavaScript calculation exactly
   $minDays = 3;
-  $daysDiff = $pickup->diff($return)->days;
-  if ($daysDiff < $minDays) {
+  $interval = $pickup->diff($return);
+  $paidDays = $interval->days + 1; // +1 because both start and end dates are included
+  
+  if ($paidDays < $minDays) {
     $errors[] = "Minimum rental period is {$minDays} days.";
   }
   

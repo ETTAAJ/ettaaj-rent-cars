@@ -1484,16 +1484,53 @@ function carImageUrl($image)
   AOS.init({ once: true, duration: 800 });
 
   // ============================================
-  // DATE CALCULATION HELPER
+  // DATE CALCULATION HELPER (TIMEZONE-SAFE)
   // ============================================
-  // Calculate days between two dates: (endDate - startDate) + 1 day
-  // Normalizes both dates using setHours(0,0,0,0) to avoid timezone issues
+  // Calculate paid days between two dates: (endDate - startDate in days) + 1
+  // Uses DATE ONLY (YYYY-MM-DD), normalizes both dates to midnight (00:00:00) LOCAL TIME
+  // This ensures identical calculation on PC and mobile devices regardless of timezone
+  function calculatePaidDays(startDate, endDate) {
+    // Parse dates as YYYY-MM-DD strings to avoid timezone issues
+    let startStr = typeof startDate === 'string' ? startDate : 
+                   startDate.getFullYear() + '-' + 
+                   String(startDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(startDate.getDate()).padStart(2, '0');
+    let endStr = typeof endDate === 'string' ? endDate : 
+                 endDate.getFullYear() + '-' + 
+                 String(endDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                 String(endDate.getDate()).padStart(2, '0');
+    
+    // Parse YYYY-MM-DD strings and create dates in LOCAL timezone normalized to 00:00:00
+    // This avoids timezone conversion issues
+    const startParts = startStr.split('-');
+    const endParts = endStr.split('-');
+    
+    const start = new Date(
+      parseInt(startParts[0], 10),  // year
+      parseInt(startParts[1], 10) - 1,  // month (0-indexed)
+      parseInt(startParts[2], 10),  // day
+      0, 0, 0, 0  // 00:00:00.000
+    );
+    
+    const end = new Date(
+      parseInt(endParts[0], 10),  // year
+      parseInt(endParts[1], 10) - 1,  // month (0-indexed)
+      parseInt(endParts[2], 10),  // day
+      0, 0, 0, 0  // 00:00:00.000
+    );
+    
+    // Calculate difference in days: (endDate - startDate) + 1
+    // Both dates are normalized to 00:00:00, so the difference is exact
+    const diffTime = end.getTime() - start.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    // paidDays = (endDate - startDate in days) + 1
+    return diffDays + 1;
+  }
+  
+  // Legacy function for backward compatibility
   function calculateDays(startDate, endDate) {
-    const start = new Date(startDate);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(endDate);
-    end.setHours(0, 0, 0, 0);
-    return (end - start) / 86400000 + 1;
+    return calculatePaidDays(startDate, endDate);
   }
 
   // ============================================
@@ -1715,9 +1752,11 @@ function carImageUrl($image)
         return true;
       }
 
-      // If start date is selected, disable dates that would result in less than minDays
+        // If start date is selected, disable dates that would result in less than minDays
       if (this.startDate && !this.endDate) {
-        const daysDiff = calculateDays(this.startDate, checkDate);
+        const startStr = this.formatDate(this.startDate);
+        const checkStr = this.formatDate(checkDate);
+        const daysDiff = calculatePaidDays(startStr, checkStr);
         if (daysDiff > 0 && daysDiff < this.minDays) {
           return true;
         }
@@ -1779,9 +1818,11 @@ function carImageUrl($image)
       
       // SECOND CLICK: Select return date (end date)
       if (this.startDate && !this.endDate) {
+        const startStr = this.formatDate(this.startDate);
+        const checkStr = this.formatDate(checkDate);
         const startDate = new Date(this.startDate);
         startDate.setHours(0, 0, 0, 0);
-        const daysDiff = calculateDays(this.startDate, checkDate);
+        const daysDiff = calculatePaidDays(startStr, checkStr);
         
         // If clicked date is before start date, make it the new start date
         if (checkDate < startDate) {
@@ -1913,7 +1954,9 @@ function carImageUrl($image)
         if (!dateStr) return;
 
         const endDragDate = new Date(dateStr);
-        const daysDiff = calculateDays(startDragDate, endDragDate);
+        const startStr = picker.formatDate(startDragDate);
+        const endStr = picker.formatDate(endDragDate);
+        const daysDiff = calculatePaidDays(startStr, endStr);
         
         if (daysDiff >= picker.minDays) {
           if (endDragDate >= startDragDate) {
@@ -2004,7 +2047,9 @@ function carImageUrl($image)
         if (!dateStr) return;
 
         const endDragDate = new Date(dateStr);
-        const daysDiff = calculateDays(startDragDate, endDragDate);
+        const startStr = picker.formatDate(startDragDate);
+        const endStr = picker.formatDate(endDragDate);
+        const daysDiff = calculatePaidDays(startStr, endStr);
         
         if (daysDiff >= picker.minDays) {
           if (endDragDate >= startDragDate) {
@@ -2044,7 +2089,9 @@ function carImageUrl($image)
 
     isValidRange() {
       if (!this.startDate || !this.endDate) return false;
-      const daysDiff = calculateDays(this.startDate, this.endDate);
+      const startStr = this.formatDate(this.startDate);
+      const endStr = this.formatDate(this.endDate);
+      const daysDiff = calculatePaidDays(startStr, endStr);
       return daysDiff >= this.minDays;
     }
 
@@ -2239,22 +2286,13 @@ function carImageUrl($image)
     };
   <?php endforeach; ?>
 
-  // Calculate car rental price based on duration (smart pricing)
-  function calculateCarPrice(days) {
-    if (days >= 30) {
-      // Use monthly pricing
-      const months = Math.floor(days / 30);
-      const remainingDays = days % 30;
-      return (months * pricePerMonth) + (remainingDays * pricePerDay);
-    } else if (days >= 7) {
-      // Use weekly pricing
-      const weeks = Math.floor(days / 7);
-      const remainingDays = days % 7;
-      return (weeks * pricePerWeek) + (remainingDays * pricePerDay);
-    } else {
-      // Use daily pricing
-      return days * pricePerDay;
-    }
+  // Calculate car rental price based on PAID DAYS
+  // Always use daily pricing: paidDays × daily price
+  // This ensures correct calculation: paidDays × pricePerDay
+  function calculateCarPrice(paidDays) {
+    // Simple calculation: paidDays × daily price
+    // Example: 7 paid days × 285 MAD/day = 1995 MAD
+    return paidDays * pricePerDay;
   }
 
   let updateFrame = null;
@@ -2275,6 +2313,7 @@ function carImageUrl($image)
 
   function updateTotal() {
     // Get dates from hidden inputs (updated by date range picker)
+    // Dates are in YYYY-MM-DD format (DATE ONLY, no time)
     const pickupDate = pickup?.value || '';
     const returnDate = ret?.value || '';
     
@@ -2285,15 +2324,23 @@ function carImageUrl($image)
       return; 
     }
     
-    // Calculate days difference (same-day booking not allowed)
-    const pickupDateObj = new Date(pickupDate);
-    const returnDateObj = new Date(returnDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    pickupDateObj.setHours(0, 0, 0, 0);
+    // Validate dates are in correct format (YYYY-MM-DD)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(pickupDate) || !/^\d{4}-\d{2}-\d{2}$/.test(returnDate)) {
+      if (error) error.classList.remove('hidden');
+      if (error) error.textContent = 'Invalid date format. Please select dates again.';
+      if (btn) btn.disabled = true;
+      if (totalEl) totalEl.textContent = formatPriceJS(0);
+      if (daysEl) daysEl.textContent = '';
+      return;
+    }
     
-    // Validate same-day booking is not allowed
-    if (pickupDateObj <= today) {
+    // Validate same-day booking is not allowed (using DATE ONLY comparison)
+    const today = new Date();
+    const todayStr = today.getFullYear() + '-' + 
+                     String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                     String(today.getDate()).padStart(2, '0');
+    
+    if (pickupDate <= todayStr) {
       if (error) error.classList.remove('hidden');
       if (error) error.textContent = 'Same-day booking is not allowed. Please choose a date starting from tomorrow.';
       if (btn) btn.disabled = true;
@@ -2302,10 +2349,11 @@ function carImageUrl($image)
       return;
     }
     
-    // Calculate days: (endDate - startDate) + 1 day (normalized)
-    const rentalDays = calculateDays(pickupDateObj, returnDateObj);
+    // Calculate PAID DAYS using timezone-safe calculation (DATE ONLY)
+    // paidDays = (endDate - startDate) in days + 1
+    const paidDays = calculatePaidDays(pickupDate, returnDate);
     
-    if (rentalDays < minDays || rentalDays <= 0) {
+    if (paidDays < minDays || paidDays <= 0) {
       if (error) error.classList.remove('hidden');
       if (btn) btn.disabled = true;
       if (totalEl) totalEl.textContent = formatPriceJS(0);
@@ -2317,22 +2365,23 @@ function carImageUrl($image)
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked').id;
     const insuranceCostPerDay = insurancePrices[selectedInsurance];
 
+    // Calculate extras using PAID DAYS only (free day does NOT affect pricing)
     let extrasTotal = 0;
     const selectedExtras = [];
     document.querySelectorAll('input[name="extras[]"]:checked').forEach(cb => {
       const id = cb.id;
       const item = extrasPrices[id];
       if (item) {
-        // Fix: Calculate per day correctly for daily extras
-        const cost = item.perDay ? (item.price * rentalDays) : item.price;
+        // Use paidDays for pricing (free day excluded)
+        const cost = item.perDay ? (item.price * paidDays) : item.price;
         extrasTotal += cost;
         selectedExtras.push(cb.value);
       }
     });
 
-    // Use smart pricing (weekly/monthly when appropriate)
-    const carTotal = calculateCarPrice(rentalDays);
-    const insuranceTotal = rentalDays * insuranceCostPerDay;
+    // Calculate pricing using PAID DAYS only (free day does NOT affect pricing)
+    const carTotal = calculateCarPrice(paidDays);
+    const insuranceTotal = paidDays * insuranceCostPerDay;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
 
     // Add animation class for price update
@@ -2343,27 +2392,18 @@ function carImageUrl($image)
       totalEl.classList.remove('updating');
     }, 150);
     
-    // Show pricing tier info (use rentalDays for display)
-    let pricingInfo = rentalDays + ' <?= $text['day'] ?>' + (rentalDays > 1 ? 's' : '');
-    if (rentalDays >= 30) {
-      const months = Math.floor(rentalDays / 30);
-      const remainingDays = rentalDays % 30;
-      pricingInfo += ` (${months} month${months > 1 ? 's' : ''}`;
-      if (remainingDays > 0) {
-        pricingInfo += ` + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
-      }
-      pricingInfo += ')';
-    } else if (rentalDays >= 7) {
-      const weeks = Math.floor(rentalDays / 7);
-      const remainingDays = rentalDays % 7;
-      pricingInfo += ` (${weeks} week${weeks > 1 ? 's' : ''}`;
-      if (remainingDays > 0) {
-        pricingInfo += ` + ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
-      }
-      pricingInfo += ')';
-    }
-    // Add "Free Day Included" message
-    pricingInfo += ' <span class="text-green-400 font-semibold">(Free Day Included)</span>';
+    // Calculate displayed duration: paidDays + 1 free day (for display only)
+    const displayedDays = paidDays + 1;
+    
+    // Show pricing tier info with FREE DAY clearly labeled
+    let pricingInfo = displayedDays + ' <?= $text['day'] ?>' + (displayedDays > 1 ? 's' : '');
+    
+    // Add breakdown showing paid days + free day
+    pricingInfo += ` (${paidDays} paid`;
+    if (paidDays > 1) pricingInfo += ' days';
+    else pricingInfo += ' day';
+    pricingInfo += ' + <span class="text-green-400 font-semibold">1 Free Day (No Charge)</span>)';
+    
     daysEl.innerHTML = pricingInfo;
     const basicPriceText = insurancePrices.basic > 0 
       ? formatPriceJS(insurancePrices.basic) + '/<?= $text['day'] ?>' 
@@ -2479,33 +2519,32 @@ function carImageUrl($image)
       return;
     }
 
-    // Calculate days (same-day booking not allowed)
-    // Normalize dates and calculate: (endDate - startDate) + 1 day
-    const pickupDateForCalc = new Date(pickup.value);
-    pickupDateForCalc.setHours(0, 0, 0, 0);
-    const returnDateForCalc = new Date(ret.value);
-    returnDateForCalc.setHours(0, 0, 0, 0);
-    const rentalDays = calculateDays(pickupDateForCalc, returnDateForCalc);
+    // Calculate PAID DAYS using timezone-safe calculation (DATE ONLY)
+    // Dates are already in YYYY-MM-DD format from hidden inputs
+    const paidDays = calculatePaidDays(pickup.value, ret.value);
+    const displayedDays = paidDays + 1; // Add 1 free day for display
     
     const selectedInsurance = document.querySelector('input[name="insurance"]:checked');
     const insuranceText = selectedInsurance.value;
 
+    // Calculate extras using PAID DAYS only (free day does NOT affect pricing)
     let extrasTotal = 0;
     const extrasList = [];
     document.querySelectorAll('input[name="extras[]"]:checked').forEach(cb => {
       const id = cb.id;
       const item = extrasPrices[id];
       if (item) {
-        const cost = item.perDay ? item.price * rentalDays : item.price;
+        // Use paidDays for pricing (free day excluded)
+        const cost = item.perDay ? item.price * paidDays : item.price;
         extrasTotal += cost;
         extrasList.push(cb.value);
       }
     });
 
-    // Use smart pricing (weekly/monthly when appropriate)
-    const carTotal = calculateCarPrice(rentalDays);
+    // Calculate pricing using PAID DAYS only (free day does NOT affect pricing)
+    const carTotal = calculateCarPrice(paidDays);
     const insuranceCostPerDay = insurancePrices[selectedInsurance.id];
-    const insuranceTotal = insuranceCostPerDay * rentalDays;
+    const insuranceTotal = insuranceCostPerDay * paidDays;
     const grandTotal = carTotal + insuranceTotal + extrasTotal;
 
     const discountText = hasDiscount ? ` (-${discountPercent}% discount applied)` : '';
@@ -2515,25 +2554,8 @@ function carImageUrl($image)
       ? `Insurance: ${insuranceText} (MAD${insuranceTotal.toLocaleString()})\n`
       : `Insurance: ${insuranceText}\n`;
 
-    // Get pricing breakdown (use rentalDays)
-    let pricingBreakdown = '';
-    if (rentalDays >= 30) {
-      const months = Math.floor(rentalDays / 30);
-      const remainingDays = rentalDays % 30;
-      pricingBreakdown = `${months} month(s) × MAD${pricePerMonth.toLocaleString()} = MAD${(months * pricePerMonth).toLocaleString()}`;
-      if (remainingDays > 0) {
-        pricingBreakdown += `\n${remainingDays} day(s) × MAD${pricePerDay.toLocaleString()} = MAD${(remainingDays * pricePerDay).toLocaleString()}`;
-      }
-    } else if (rentalDays >= 7) {
-      const weeks = Math.floor(rentalDays / 7);
-      const remainingDays = rentalDays % 7;
-      pricingBreakdown = `${weeks} week(s) × MAD${pricePerWeek.toLocaleString()} = MAD${(weeks * pricePerWeek).toLocaleString()}`;
-      if (remainingDays > 0) {
-        pricingBreakdown += `\n${remainingDays} day(s) × MAD${pricePerDay.toLocaleString()} = MAD${(remainingDays * pricePerDay).toLocaleString()}`;
-      }
-    } else {
-      pricingBreakdown = `${rentalDays} day(s) × MAD${pricePerDay.toLocaleString()}${discountText} = MAD${carTotal.toLocaleString()}`;
-    }
+    // Get pricing breakdown: paidDays × daily price
+    const pricingBreakdown = `${paidDays} day${paidDays > 1 ? 's' : ''} × MAD${pricePerDay.toLocaleString()}${discountText} = MAD${carTotal.toLocaleString()}`;
 
     const pickupLocation = form.pickup_location.value || 'Not specified';
     const pickupTime = form.pickup_time?.value || '10:00';
@@ -2549,9 +2571,9 @@ function carImageUrl($image)
                 `Pickup Date: ${pickup.value} at ${pickupTime}\n` +
                 `Return Date: ${ret.value} at ${returnTime}\n` +
                 `Pickup Location: ${pickupLocation}\n` +
-                `Duration: ${rentalDays} day${rentalDays > 1 ? 's' : ''}\n` +
-                `🎉 Last Day is FREE (included in rental)\n\n` +
-                `Car Rental Pricing:\n${pricingBreakdown}\n` +
+                `Duration: ${displayedDays} day${displayedDays > 1 ? 's' : ''} (${paidDays} paid + 1 FREE day)\n` +
+                `🎉 1 Free Day Included (No Charge)\n\n` +
+                `Car Rental Pricing (${paidDays} paid day${paidDays > 1 ? 's' : ''}):\n${pricingBreakdown}\n` +
                 `Car Total: MAD${carTotal.toLocaleString()}\n` +
                 `${insuranceDetail}` +
                 `${extrasText ? extrasText + "\n" : ""}` +
