@@ -263,6 +263,23 @@
   $baseUrl = 'https://www.ettaajrentcars.com';
   $currentUrl = $baseUrl . $_SERVER['REQUEST_URI'];
   
+  // Get base path for assets (works on both localhost and hosting)
+  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+  $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+  $scriptName = $_SERVER['SCRIPT_NAME'];
+  $basePath = dirname($scriptName);
+  // Normalize base path
+  if ($basePath === '/' || $basePath === '\\' || $basePath === '.' || $basePath === '') {
+    $basePath = '';
+  } else {
+    $basePath = rtrim(str_replace('\\', '/', $basePath), '/');
+    if (!empty($basePath) && $basePath[0] !== '/') {
+      $basePath = '/' . $basePath;
+    }
+  }
+  // Build base href for base tag
+  $baseHref = $protocol . '://' . $host . $basePath . '/';
+  
   // Language-specific titles and descriptions
   $seoData = [
     'en' => [
@@ -327,6 +344,9 @@
   <meta name="twitter:title" content="<?= htmlspecialchars($currentSeo['title']) ?>">
   <meta name="twitter:description" content="<?= htmlspecialchars($currentSeo['description']) ?>">
   <meta name="twitter:image" content="<?= $baseUrl ?>/pub_img/ettaaj-rent-cars.jpeg">
+  
+  <!-- Base URL for relative paths -->
+  <base href="<?= htmlspecialchars($baseHref) ?>">
   
   <!-- Favicon -->
   <link rel="icon" href="pub_img/ettaaj-rent-cars.jpeg">
@@ -1075,13 +1095,23 @@
       muted 
       playsinline
       class="hero-image w-full h-full object-cover object-center"
-      style="display: block;">
+      style="display: block;"
+      preload="auto"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
       <source src="vidio/vidio-marrakech.mp4" type="video/mp4">
       <!-- Fallback image if video doesn't load -->
       <img src="pub_img/ettaaj-rent-cars.jpeg" 
            alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
-           class="w-full h-full object-cover object-center">
+           class="w-full h-full object-cover object-center"
+           style="display: none;"
+           onerror="this.src='https://via.placeholder.com/1920x1080/353333/FFB22C?text=ETTAAJ+Rent+Cars';">
     </video>
+    <!-- Additional fallback image -->
+    <img src="pub_img/ettaaj-rent-cars.jpeg" 
+         alt="ETTAAJ Rent Cars - Premium Car Rental in Morocco" 
+         class="w-full h-full object-cover object-center"
+         style="display: none; position: absolute; top: 0; left: 0; z-index: 0;"
+         id="hero-fallback-image">
   </div>
   
   <!-- SEO Text Overlay -->
@@ -1480,6 +1510,39 @@
   els.gear.addEventListener('change', fetchCars);
   els.fuel.addEventListener('change', fetchCars);
   els.sort.addEventListener('change', fetchCars);
+
+  // Hero video fallback handler
+  const heroVideo = document.querySelector('.hero-section video');
+  const heroFallback = document.getElementById('hero-fallback-image');
+  
+  if (heroVideo && heroFallback) {
+    heroVideo.addEventListener('error', function() {
+      this.style.display = 'none';
+      if (heroFallback) {
+        heroFallback.style.display = 'block';
+      }
+    });
+    
+    // Check if video can play after load
+    heroVideo.addEventListener('loadeddata', function() {
+      this.play().catch(function(error) {
+        console.log('Video autoplay failed:', error);
+        if (heroFallback) {
+          heroFallback.style.display = 'block';
+        }
+      });
+    });
+    
+    // Fallback if video doesn't load within 3 seconds
+    setTimeout(function() {
+      if (heroVideo.readyState < 2) { // HAVE_CURRENT_DATA
+        heroVideo.style.display = 'none';
+        if (heroFallback) {
+          heroFallback.style.display = 'block';
+        }
+      }
+    }, 3000);
+  }
 </script>
 </body>
 </html>
