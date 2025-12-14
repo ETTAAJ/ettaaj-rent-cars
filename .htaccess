@@ -87,14 +87,12 @@ Options -Indexes
     
     # External redirect from .php to non-.php (301 permanent redirect)
     # EXCLUDE Admin directory from this rule
-    RewriteCond %{REQUEST_URI} !^/ettaaj-rent-cars/Admin/ [NC]
     RewriteCond %{REQUEST_URI} !^/Admin/ [NC]
-    RewriteCond %{THE_REQUEST} \s/+(?:ettaaj-rent-cars/)?(.+?)\.php[\s?] [NC]
-    RewriteRule ^(.*)$ /ettaaj-rent-cars/%1 [R=301,L,QSA]
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+    RewriteRule ^(.*)$ /%1 [R=301,L,QSA]
     
     # Internal rewrite to add .php extension (skip Admin directory)
     # Check if the requested file exists as a .php file
-    RewriteCond %{REQUEST_URI} !^/ettaaj-rent-cars/Admin/ [NC]
     RewriteCond %{REQUEST_URI} !^/Admin/ [NC]
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -102,7 +100,13 @@ Options -Indexes
     RewriteRule ^(.*)$ $1.php [L,QSA]
     
     # ============================================
-    # 3. PRESERVE QUERY STRINGS (lang, currency, id, etc.)
+    # 3. SITEMAP.XML REWRITE
+    # ============================================
+    # Rewrite sitemap.xml to sitemap.php
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+    
+    # ============================================
+    # 4. PRESERVE QUERY STRINGS (lang, currency, id, etc.)
     # ============================================
     # Query strings are automatically preserved by QSA flag
     # DO NOT remove query strings - they are needed for:
