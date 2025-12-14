@@ -39,7 +39,6 @@
           <li><a href="<?= langUrl('index.php') ?>#cars" class="hover:text-gold transition text-sm md:text-base"><?= $text['browse_cars'] ?></a></li>
           <li><a href="<?= langUrl('about.php') ?>" class="hover:text-gold transition text-sm md:text-base"><?= $text['about_us'] ?></a></li>
           <li><a href="<?= langUrl('rental-guide.php') ?>" class="hover:text-gold transition text-sm md:text-base"><?= $text['rental_guide'] ?></a></li>
-          <li><a href="<?= langUrl('contact.php') ?>" class="hover:text-gold transition text-sm md:text-base"><?= $text['contact'] ?></a></li>
         </ul>
       </div>
 

@@ -534,14 +534,6 @@ require_once 'config.php';
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
           </svg>
         </a>
-        <a href="<?= langUrl('contact.php') ?>" 
-           class="group relative inline-flex items-center justify-center gap-4 bg-white text-black font-bold text-xl py-6 px-12 rounded-2xl shadow-2xl hover:scale-110 transition-all duration-300 overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-          <span class="relative z-10"><?= $lang === 'ar' ? 'اتصل بنا' : ($lang === 'fr' ? 'Contactez-Nous' : 'Contact Us') ?></span>
-          <svg class="w-6 h-6 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-          </svg>
-        </a>
       </div>
     </div>
   </section>
