@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.ettaajrentcars.com/sitemap.xml
+
+# Disallow admin panel
+Disallow: /Admin/
+Disallow: /admin/
+
+# Allow all public pages
+Allow: /index.php
+Allow: /about.php
+Allow: /rental-guide.php
+Allow: /car-detail.php
+Allow: /booking.php
+Allow: /uploads/
+Allow: /pub_img/
+Allow: /vidio/
+
+# Crawl-delay
+Crawl-delay: 1

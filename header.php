@@ -356,7 +356,6 @@ require_once 'config.php';
         <a href="<?= langUrl('index.php') ?>#cars" class="nav-link block px-3 py-2 rounded-lg"><?= $text['cars'] ?></a>
         <a href="<?= langUrl('about.php') ?>" class="nav-link block px-3 py-2 rounded-lg"><?= $text['about'] ?></a>
         <a href="<?= langUrl('rental-guide.php') ?>" class="nav-link block px-3 py-2 rounded-lg"><?= $text['rental_guide'] ?></a>
-        <a href="<?= langUrl('contact.php') ?>" class="nav-link block px-3 py-2 rounded-lg"><?= $text['contact'] ?></a>
       </nav>
 
       <!-- Language Switcher Mobile -->
@@ -474,9 +473,6 @@ require_once 'config.php';
                 </a>
                 <a href="<?= langUrl('rental-guide.php') ?>" class="lang-option">
                   <span><?= $text['rental_guide'] ?></span>
-                </a>
-                <a href="<?= langUrl('contact.php') ?>" class="lang-option">
-                  <span><?= $text['contact'] ?></span>
                 </a>
               </div>
             </div>

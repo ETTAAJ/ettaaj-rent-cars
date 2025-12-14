@@ -268,17 +268,17 @@
     'en' => [
       'title' => 'Car Rental Marrakech & Casablanca Airport | ETTAAJ Rent Cars – , From 250 MAD/day',
       'description' => 'Best car rental in Marrakech & Casablanca airports. , free delivery 24/7, luxury & economy cars. Instant booking via WhatsApp +212 772 331 080. Rent a car in Morocco today!',
-      'keywords' => 'car rental Marrakech, car rental Casablanca, rent a car Morocco, car rental Marrakech airport, car rental Casablanca airport, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, no deposit car rental Marrakech, no deposit car rental Casablanca, car rental Morocco airport, vehicle rental Marrakech, vehicle rental Casablanca, ETTAAJ rent cars, rent car Marrakech, rent car Casablanca, car rental Marrakech Menara, car rental Casablanca Mohammed V'
+      'keywords' => 'rental cars, car rental, rental cars Morocco, rental cars Marrakech, rental cars Casablanca, car rental Marrakech, car rental Casablanca, rent a car Morocco, car rental Marrakech airport, car rental Casablanca airport, Morocco car hire, luxury car rental Morocco, cheap car rental Morocco, no deposit car rental Marrakech, no deposit car rental Casablanca, car rental Morocco airport, vehicle rental Marrakech, vehicle rental Casablanca, ETTAAJ rent cars, rent car Marrakech, rent car Casablanca, car rental Marrakech Menara, car rental Casablanca Mohammed V, best rental cars Morocco, affordable rental cars'
     ],
     'fr' => [
       'title' => 'Location de Voiture Aéroport Marrakech & Casablanca | ETTAAJ Rent Cars –  À partir de 250 MAD/jour',
       'description' => 'Meilleure location de voiture aux aéroports de Marrakech et Casablanca.  livraison gratuite 24/7, voitures de luxe et économiques. Réservation instantanée via WhatsApp +212 772 331 080. Louez une voiture au Maroc aujourd\'hui !',
-      'keywords' => 'location voiture Marrakech, location voiture Casablanca, location voiture Maroc, location voiture aéroport Marrakech, location voiture aéroport Casablanca, location voiture Marrakech Menara, location voiture Casablanca Mohammed V, location voiture sans caution Marrakech, location voiture sans caution Casablanca, ETTAAJ rent cars, louer voiture Marrakech, louer voiture Casablanca'
+      'keywords' => 'location voiture, voitures de location, location voiture Marrakech, location voiture Casablanca, location voiture Maroc, location voiture aéroport Marrakech, location voiture aéroport Casablanca, location voiture Marrakech Menara, location voiture Casablanca Mohammed V, location voiture sans caution Marrakech, location voiture sans caution Casablanca, ETTAAJ rent cars, louer voiture Marrakech, louer voiture Casablanca, meilleure location voiture Maroc'
     ],
     'ar' => [
       'title' => 'تأجير السيارات مطار مراكش والدار البيضاء | ETTAAJ Rent Cars –  من 250 درهم/يوم',
       'description' => 'أفضل تأجير سيارات في مطارات مراكش والدار البيضاء. بدون وديعة، توصيل مجاني 24/7، سيارات فاخرة واقتصادية. حجز فوري عبر واتساب +212 772 331 080. استأجر سيارة في المغرب اليوم!',
-      'keywords' => 'تأجير سيارات مراكش، تأجير سيارات الدار البيضاء، تأجير سيارات المغرب، تأجير سيارات مطار مراكش، تأجير سيارات مطار الدار البيضاء، تأجير سيارات بدون وديعة مراكش، تأجير سيارات بدون وديعة الدار البيضاء، ETTAAJ rent cars'
+      'keywords' => 'تأجير سيارات، سيارات للإيجار، تأجير سيارات مراكش، تأجير سيارات الدار البيضاء، تأجير سيارات المغرب، تأجير سيارات مطار مراكش، تأجير سيارات مطار الدار البيضاء، تأجير سيارات بدون وديعة مراكش، تأجير سيارات بدون وديعة الدار البيضاء، ETTAAJ rent cars، أفضل تأجير سيارات المغرب'
     ]
   ];
   
@@ -1340,6 +1340,66 @@
   </div>
 </section>
 
+<!-- SEO CONTENT SECTION - Rich Text for Search Engines -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] rounded-3xl mb-16 border border-gold/20">
+  <div class="prose prose-lg max-w-none" style="color: var(--muted);">
+    <?php if ($lang === 'en'): ?>
+      <h2 class="text-3xl font-bold text-white mb-6">Best Car Rental Service in Morocco - ETTAAJ Rent Cars</h2>
+      <p class="text-lg leading-relaxed mb-4">
+        Looking for <strong>rental cars</strong> in Morocco? ETTAAJ Rent Cars offers the best <strong>car rental</strong> experience in Marrakech and Casablanca airports. Whether you need a <strong>rental car</strong> for business or leisure, we provide premium vehicles with transparent pricing and exceptional service.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        Our <strong>car rental</strong> service covers both Marrakech Menara Airport (RAK) and Casablanca Mohammed V Airport (CMN). With our extensive fleet of <strong>rental cars</strong>, you can choose from economy to luxury vehicles. All our <strong>rental cars</strong> are well-maintained, fully insured, and ready for your journey across Morocco.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        Why choose ETTAAJ for your <strong>car rental</strong> needs? We offer <strong>rental cars</strong> with no deposit required, free airport delivery 24/7, and instant booking via WhatsApp. Our <strong>car rental</strong> prices start from just 250 MAD per day, making us one of the most affordable <strong>rental car</strong> services in Morocco.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        Book your <strong>rental car</strong> today and explore Morocco at your own pace. Our <strong>car rental</strong> service includes comprehensive insurance options, GPS navigation, and 24/7 roadside assistance. Whether you're looking for a compact <strong>rental car</strong> for city driving or a spacious SUV for family trips, we have the perfect <strong>rental car</strong> for you.
+      </p>
+      <h3 class="text-2xl font-bold text-white mt-8 mb-4">Rental Cars Available at Marrakech & Casablanca Airports</h3>
+      <p class="text-lg leading-relaxed mb-4">
+        ETTAAJ Rent Cars specializes in providing <strong>rental cars</strong> at major airports in Morocco. Our <strong>car rental</strong> locations at Marrakech and Casablanca airports ensure convenient pickup and drop-off services. All our <strong>rental cars</strong> come with full documentation, insurance coverage, and professional customer support.
+      </p>
+    <?php elseif ($lang === 'fr'): ?>
+      <h2 class="text-3xl font-bold text-white mb-6">Meilleur Service de Location de Voiture au Maroc - ETTAAJ Rent Cars</h2>
+      <p class="text-lg leading-relaxed mb-4">
+        Vous cherchez une <strong>location de voiture</strong> au Maroc ? ETTAAJ Rent Cars offre la meilleure expérience de <strong>location de voiture</strong> aux aéroports de Marrakech et Casablanca. Que vous ayez besoin d'une <strong>voiture de location</strong> pour affaires ou loisirs, nous proposons des véhicules premium avec des tarifs transparents et un service exceptionnel.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        Notre service de <strong>location de voiture</strong> couvre l'aéroport de Marrakech Menara (RAK) et l'aéroport de Casablanca Mohammed V (CMN). Avec notre vaste flotte de <strong>voitures de location</strong>, vous pouvez choisir parmi des véhicules économiques ou de luxe. Toutes nos <strong>voitures de location</strong> sont bien entretenues, entièrement assurées et prêtes pour votre voyage à travers le Maroc.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        Pourquoi choisir ETTAAJ pour vos besoins de <strong>location de voiture</strong> ? Nous proposons des <strong>voitures de location</strong> sans caution, livraison gratuite à l'aéroport 24h/24 et 7j/7, et réservation instantanée via WhatsApp. Nos tarifs de <strong>location de voiture</strong> commencent à partir de 250 MAD par jour, ce qui fait de nous l'un des services de <strong>location de voiture</strong> les plus abordables au Maroc.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        Réservez votre <strong>voiture de location</strong> dès aujourd'hui et explorez le Maroc à votre rythme. Notre service de <strong>location de voiture</strong> comprend des options d'assurance complètes, navigation GPS et assistance routière 24h/24 et 7j/7. Que vous recherchiez une <strong>voiture de location</strong> compacte pour la conduite en ville ou un SUV spacieux pour les voyages en famille, nous avons la <strong>voiture de location</strong> parfaite pour vous.
+      </p>
+      <h3 class="text-2xl font-bold text-white mt-8 mb-4">Voitures de Location Disponibles aux Aéroports de Marrakech et Casablanca</h3>
+      <p class="text-lg leading-relaxed mb-4">
+        ETTAAJ Rent Cars se spécialise dans la fourniture de <strong>voitures de location</strong> dans les principaux aéroports du Maroc. Nos emplacements de <strong>location de voiture</strong> aux aéroports de Marrakech et Casablanca garantissent des services de prise en charge et de retour pratiques. Toutes nos <strong>voitures de location</strong> sont livrées avec une documentation complète, une couverture d'assurance et un support client professionnel.
+      </p>
+    <?php else: ?>
+      <h2 class="text-3xl font-bold text-white mb-6">أفضل خدمة تأجير سيارات في المغرب - ETTAAJ Rent Cars</h2>
+      <p class="text-lg leading-relaxed mb-4">
+        تبحث عن <strong>تأجير سيارات</strong> في المغرب؟ تقدم ETTAAJ Rent Cars أفضل تجربة <strong>تأجير سيارات</strong> في مطارات مراكش والدار البيضاء. سواء كنت بحاجة إلى <strong>سيارة للإيجار</strong> للعمل أو الترفيه، نقدم مركبات ممتازة بأسعار شفافة وخدمة استثنائية.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        تغطي خدمة <strong>تأجير السيارات</strong> لدينا مطار مراكش منارة (RAK) ومطار الدار البيضاء محمد الخامس (CMN). مع أسطولنا الواسع من <strong>السيارات للإيجار</strong>، يمكنك الاختيار من بين المركبات الاقتصادية أو الفاخرة. جميع <strong>سياراتنا للإيجار</strong> محفوظة جيدًا ومؤمنة بالكامل وجاهزة لرحلتك عبر المغرب.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        لماذا تختار ETTAAJ لاحتياجات <strong>تأجير السيارات</strong>؟ نقدم <strong>سيارات للإيجار</strong> بدون وديعة مطلوبة، توصيل مجاني للمطار على مدار الساعة، وحجز فوري عبر واتساب. تبدأ أسعار <strong>تأجير السيارات</strong> لدينا من 250 درهم فقط في اليوم، مما يجعلنا واحدة من خدمات <strong>تأجير السيارات</strong> الأكثر بأسعار معقولة في المغرب.
+      </p>
+      <p class="text-lg leading-relaxed mb-4">
+        احجز <strong>سيارتك للإيجار</strong> اليوم واستكشف المغرب بوتيرتك الخاصة. تتضمن خدمة <strong>تأجير السيارات</strong> لدينا خيارات تأمين شاملة وملاحة GPS ومساعدة على الطريق على مدار الساعة. سواء كنت تبحث عن <strong>سيارة للإيجار</strong> صغيرة للقيادة في المدينة أو سيارة دفع رباعي واسعة للرحلات العائلية، لدينا <strong>السيارة للإيجار</strong> المثالية لك.
+      </p>
+      <h3 class="text-2xl font-bold text-white mt-8 mb-4">السيارات المتاحة للإيجار في مطارات مراكش والدار البيضاء</h3>
+      <p class="text-lg leading-relaxed mb-4">
+        تخصص ETTAAJ Rent Cars في توفير <strong>السيارات للإيجار</strong> في المطارات الرئيسية في المغرب. تضمن مواقع <strong>تأجير السيارات</strong> لدينا في مطارات مراكش والدار البيضاء خدمات استلام وإرجاع مريحة. تأتي جميع <strong>سياراتنا للإيجار</strong> مع وثائق كاملة وتغطية تأمينية ودعم عملاء احترافي.
+      </p>
+    <?php endif; ?>
+  </div>
+</section>
 
 <?php include 'footer.php'; ?>
 

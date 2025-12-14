@@ -102,7 +102,13 @@ Options -Indexes
     RewriteRule ^(.*)$ $1.php [L,QSA]
     
     # ============================================
-    # 3. PRESERVE QUERY STRINGS (lang, currency, id, etc.)
+    # 3. SITEMAP.XML REWRITE
+    # ============================================
+    # Rewrite sitemap.xml to sitemap.php
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+    
+    # ============================================
+    # 4. PRESERVE QUERY STRINGS (lang, currency, id, etc.)
     # ============================================
     # Query strings are automatically preserved by QSA flag
     # DO NOT remove query strings - they are needed for:
